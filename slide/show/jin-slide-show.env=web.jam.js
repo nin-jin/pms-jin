@@ -2,9 +2,21 @@ $jin.klass({ '$jin.slide.show': [ '$jin.view' ] })
 
 $jin.property({ '$jin.slide.show..stack': null })
 
+$jin.atom.prop({ '$jin.slide.show..resizeCount': {
+	pull: function( ){
+		$jin.dom.event.onResize.listen( window, function(){
+			this.resizeCount( this.resizeCount() + 1 )
+		}.bind( this ) )
+		return 0
+	}
+}})
+
 $jin.atom.prop({ '$jin.slide.show..zoom': {
 	pull: function( ){
-		return 3;
+		this.resizeCount()
+		var size = Math.min( document.documentElement.clientWidth, document.documentElement.clientHeight )
+		var next = size / 320
+		return next
 	}
 }})
 
