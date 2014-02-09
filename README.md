@@ -58,4 +58,4 @@ Then run building:
 
 	node --harmony build.js
 
-That builds all needed js and css files. You can find them in "-mix" subdirectories.s
+That builds all needed js and css files. You can find them in "-mix" subdirectories.
