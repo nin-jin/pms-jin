@@ -14,8 +14,8 @@ $jin.atom.prop({ '$jin.slide.show..resizeCount': {
 $jin.atom.prop({ '$jin.slide.show..zoom': {
 	pull: function( ){
 		this.resizeCount()
-		var size = Math.min( document.documentElement.clientWidth, document.documentElement.clientHeight )
-		var next = size / 320
+		var size = document.documentElement.clientWidth + document.documentElement.clientHeight
+		var next = size / 1024
 		return next
 	}
 }})
