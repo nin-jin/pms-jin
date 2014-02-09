@@ -11,7 +11,7 @@ Create build-script "build.js" and put into:
 with( require( 'pms' ) ) // loads prebuilded builder (may be old version)
 $pms.application( function( ){ // use $jin.persistent for rebuilding on file changes
     with( $jin.build4node.dev( 'jin' ).load() ){ // install, build and load $jin package
-    	$jin.build4web.js.release( 'jin/atom' ) // builds $jin.atom js-library
+    	$jin.build4web.js.release( 'jin/atom' ) // builds $jin.atom standalone js-library
 	
     	$jin.build4web.sample.release( 'foo/bar' ) // builds samples for $foo.bar
 	
@@ -58,4 +58,4 @@ Then run building:
 
 	node --harmony build.js
 
-That builds all needed js and css files. You can find tem in "-mix" subdirectories.s
+That builds all needed js and css files. You can find them in "-mix" subdirectories.s
