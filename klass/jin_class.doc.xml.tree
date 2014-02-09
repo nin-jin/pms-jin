@@ -1,0 +1,82 @@
+? xml-stylesheet
+	href =../../doc/-mix/index.stage=dev.xsl
+	type =text/xsl
+
+doc_root
+	@ doc_title =$jin_class
+	
+	p =Создаёт фабрику объектов на основе функции инициализации.
+	p
+		script
+			@ type =wc_test
+			=	test.ok( $jin_class )
+			
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( ){ } )
+			=	test.ok( Man )
+			
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( ){ } )
+			=	test.ok( Man() )
+	
+	p =В функцию инициализации передаётся два объекта: объект класса и прототип объектов.
+	p
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( Man, man ){
+			=		Man.title= 'Superman'
+			=	} )
+			=	test.ok( Man.title, 'Superman' )
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( Man, man ){
+			=		man.name= 'Bob'
+			=	} )
+			=	test.ok( Man().name, 'Bob' )
+	
+	p
+		=Методы объявляются как функции, первым аргументом принимающие объект. В конце инициализации класса все такие функции преобразуются в методы с помощью
+		a
+			@ wc_link =true
+			@ href =../method/jin_method.doc.xhtml
+			=$jin_method
+		=. Имейте ввиду, что "this" при их исполнении будет указывать куда попало, зато не надо будет сохранять его в переменную, чтобы передать в замыкание.
+	
+	p
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( Man, man ){
+			=		man.name= 'Bob'
+			=		man.makeMessage= function( man, message ){
+			=			return man.name + ': ' + message
+			=		}
+			=	} )
+			=	test.ok( Man().makeMessage( 'hi!' ), 'Bob: hi!' )
+		script
+			@ type =wc_test
+			=	var Man= $jin_class( function( Man, man ){
+			=		man.getThis= function( man ){
+			=			return this
+			=		}
+			=	} )
+			=	
+			=	var man= Man()
+			=	test.not( man.getThis(), man )
+		script
+			@ type =wc_test
+			=	test.timeout= 10
+			=	
+			=	var Man= $jin_class( function( Man, man ){
+			=		man.name= 'Bob'
+			=		man.testName= function( man ){
+			=			setTimeout( function( ){
+			=				test.ok( man.name, 'Bob' ).done()
+			=			}, 0 )
+			=		}
+			=	} )
+			=	
+			=	Man().testName()
+	
+	p =Создание объектов возможно как с помощью ключевого слова new (тогда создаётся неинициализированный объект), так и простым вызовом как функции (тогда создание объекта будет делегировано статическому методу "make", который при необходимости создаёт объект и производит его инициализацию методом "init" - оба метода существуют изначально и могут быть перегружены).

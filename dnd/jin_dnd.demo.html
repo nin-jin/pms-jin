@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="../../jin/-mix/index.env=web.locale=.stage=dev.js"></script>
+		<style>
+			.drag-block {
+				border: 1px solid steelblue;
+				width: 10em;
+				height: 10em;
+				background: white;
+				padding: 2em;
+			}
+			.drag-point {
+				border: 1px solid lightsteelblue;
+				background: snow;
+				padding: .5em;
+				max-width: 10em;
+			}
+			.drop-block {
+				border: 1px solid red;
+				width: 10em;
+				height: 10em;
+				background: white;
+				padding: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="drag-block" class="drag-block">
+			<b id="drag-point" class="drag-point"><i>drag</i> me with parent</b>
+		</div>
+		<div id="drag-self" class="drag-point">drag me self</div>
+		<div id="drag-hidden" class="drag-point">drag me hidden</div>
+		<div id="drop-self" class="drop-block">drop to <b>me</b> <iframe></iframe></div>
+		<script>
+			
+			$jin.dnd.onStart.listen( $jin.doc().findById( 'drag-point' ), function( event ){
+				event.data({ a: 1 })
+				event.view( $jin.doc().findById( 'drag-block' ) )
+			} )
+			
+			$jin.dnd.onStart.listen( $jin.doc().findById( 'drag-self' ), function( event ){
+				event.data({ b: 2 })
+			} )
+			
+			$jin.dnd.onStart.listen( $jin.doc().findById( 'drag-hidden' ), function( event ){
+				event.data({ c: 3 })
+				event.view( null )
+			} )
+			
+			
+			$jin.dnd.onDrag.listen( $jin.doc().findById( 'drag-hidden' ), function( event ){
+				console.dir(event.nativeEvent())
+				//event.catched( true )
+			} )
+			
+			$jin.dnd.onOver.listen( $jin.doc().findById( 'drop-self' ), function( event ){
+				//console.dir(event.nativeEvent())
+				event.catched( true )
+			} )
+			
+			$jin.doc().findById( 'drop-self' ).listen( 'mousemove', function( event ){
+				//console.dir(event.nativeEvent())
+				//event.catched( true )
+			} )
+			
+			$jin.dnd.onDrop.listen( $jin.doc().findById( 'drop-self' ), function( event ){
+				console.log( 'eated', event.data() )
+				event.catched( true )
+			} )
+			
+		</script>
+	</body>
+</html>

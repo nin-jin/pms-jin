@@ -1,0 +1,29 @@
+{
+    "name": "pms-jin",
+    "version": "1.0.2",
+    "description": "PMS modules from Nin Jin",
+    "homepage": "https://github.com/nin-jin/pms-jin",
+    "main": "-mix/index.env=node.stage=release.js",
+    "author": {
+        "name": "Nin Jin",
+        "email": "nin-jin@ya.ru"
+    },
+    "keywords": [
+        "javascript",
+        "framework",
+        "modules",
+        "assets"
+    ],
+    "bugs": {
+        "email": "nin-jin@ya.ru"
+    },
+    "dependencies": {
+        "pms": "*"
+    },
+    "engine": "node >= 0.4.1",
+    "readmeFilename": "README.md",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nin-jin/pms-jin.git"
+    }
+}

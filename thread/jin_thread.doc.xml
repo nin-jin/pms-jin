@@ -1,0 +1,33 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_thread"
+    >
+
+    <p>Создаёт обёртку вокруг функции, которая выполняет её в отдельном, но синхронном потоке.</p>
+
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_thread )
+        </script>
+        <script type="wc_test">
+            var thread= $jin_thread(function(){
+                return 123
+            })
+            test.ok( thread(), 123 )
+        </script>
+        <script type="wc_test">
+            var thread= $jin_thread(function(){
+                throw new Error( 'sample error' )
+            })
+            test.ok( thread(), void 0 )
+        </script>
+        <script type="wc_test">
+            var fact= $jin_thread(function( n ){
+                if (!( n > 1 )) return 1;
+                return n * fact( n - 1 );
+            });
+            test.ok( fact(5), 120 )
+        </script>
+    </p>
+
+</doc_root>

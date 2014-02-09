@@ -1,0 +1,45 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_event"
+    >
+
+    <p>Примесь, позволяющая классу выступать в качестве события. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_event )
+        </script>
+        <script type="wc_test">
+            $jin_event_test= $jin_class( function( onTest1, event ){
+                $jin_event.scheme( onTest1 )
+                onTest1.type= '$jin_event_test'
+                onTest1.bubbles= true
+            } )
+            
+            test.ok( $jin_event_test )
+        </script>
+        <script type="wc_test">
+            var done= false
+            var listener= $jin_event_test.listen( document, function( event ){
+                done= true
+            })
+            
+            $jin_event_test().scream( document )
+            
+            listener.destroy()
+            
+            test.ok( done )
+        </script>
+        <script type="wc_test">
+            var body= document.getElementsByTagName( 'body' )[ 0 ]
+            
+            var listener= $jin_event_test.listen( document, function( event ){
+                test.ok( event.target(), body )
+            })
+            
+            $jin_event_test().scream( body )
+            
+            listener.destroy()
+        </script>
+    </p>
+    
+</doc_root>

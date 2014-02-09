@@ -1,0 +1,33 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_onElemDrop"
+    >
+
+    <p>Событие возникающее, когда в поддерево заданного элемента добавляются новые элементы. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_onElemDrop )
+        </script>
+    </p>
+    <p>
+        <script type="wc_test">
+        <![CDATA[
+            test.timeout= 0
+            
+            var node= document.createElement( 'jin_onElemDrop_test' )
+            document.getElementsByTagName( 'body' )[0].appendChild( node )
+            
+            var listener=
+            $jin_onElemDrop.listen( node, test.callback( function( event ){
+                test.ok( event.target().localName ).done()
+            } ) )
+            
+            node.innerHTML= '<jin_onElemDrop_test2><jin_onElemDrop_test3></jin_onElemDrop_test3></jin_onElemDrop_test2>'
+            node.parentNode.removeChild( node )
+            listener.destroy()
+            
+        ]]>
+        </script>
+    </p>
+    
+</doc_root>

@@ -1,0 +1,225 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_class"
+    >
+
+    <p>Создаёт фабрику объектов на основе функции инициализации. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_class )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( ){ } )
+            test.ok( Man )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( ){ } )
+            test.ok( Man() )
+        </script>
+    </p>
+    
+    <p>В функцию инициализации передаётся два объекта: объект класса и прототип объектов. </p>
+    <p>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                Man.title= 'Superman'
+            } )
+            test.ok( Man.title, 'Superman' )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                man.name= 'Bob'
+            } )
+            test.ok( Man().name, 'Bob' )
+        </script>
+    </p>
+
+    <p>Методы объявляются как функции, первым аргументом принимающие объект. В конце инициализации класса все такие функции преобразуются в методы с помощью <a wc_link="true" href="../method/jin_method.doc.xml">$jin_method</a>. Имейте ввиду, что "this" при их исполнении будет указывать куда попало, зато не надо будет сохранять его в переменную, чтобы передать в замыкание.</p>
+    <p>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                man.name= 'Bob'
+                man.makeMessage= function( man, message ){
+                    return man.name + ': ' + message
+                }
+            } )
+            test.ok( Man().makeMessage( 'hi!' ), 'Bob: hi!' )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                man.getThis= function( man ){
+                    return this
+                }
+            } )
+            
+            var man= Man()
+            test.not( man.getThis(), man )
+        </script>
+        <script type="wc_test">
+            test.timeout= 10
+            
+            var Man= $jin_class( function( Man, man ){
+                man.name= 'Bob'
+                man.testName= function( man ){
+                    setTimeout( function( ){
+                        test.ok( man.name, 'Bob' ).done()
+                    }, 0 )
+                }
+            } )
+            
+            Man().testName()
+        </script>
+    </p>
+
+    <p>Создание объектов возможно как с помощью ключевого слова new (тогда создаётся неинициализированный объект), так и простым вызовом как функции (тогда создание объекта будет делегировано статическому методу "make", который при необходимости создаёт объект и производит его инициализацию методом "init" - оба метода существуют изначально и могут быть перегружены). </p>
+    <p>
+        <script type="wc_test">
+            var Man= $jin_class( function( ){ } )
+            test.ok( ( new Man ) instanceof Man )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( ){ } )
+            test.ok( Man() instanceof Man )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                man.name= null
+                
+                man.init= function( man, name ){
+                    man.name= name
+                }
+            } )
+            
+            test.ok( Man( 'Bob' ).name, 'Bob' )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                man.name= 'Bob'
+                
+                man.init= function( man ){
+                    man.name= 'Jim'
+                }
+            } )
+            
+            test.ok( ( new Man ).name, 'Bob' )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                Man.make= function( ){
+                    return 123
+                }
+            } )
+            test.ok( Man(), 123 )
+        </script>
+    </p>
+    
+    <p>Для разрушения объекта используется предопределённый метод destroy. Имейте ввиду, что он не просто удаляет храняющиеся в полях ссылки на объекты, но и пытается эти объекты уничтожить.</p>
+    <p>
+        <script type="wc_test">
+            test.timeout= 0
+            
+            var Man= $jin_class( function( Man, man ){
+                man.slave= null
+                
+                man.init= function( man ){
+                    man.slave1= new function( ){
+                        this.destroy= function( ){
+                            test.done()
+                        }
+                    }
+                }
+            } )
+            
+            Man().destroy()
+        </script>
+    </p>
+    
+    <p>Для наследования используется концепция "примесей". Функция инициализации сохраняется в качестве статического метода "scheme" и может быть вызвана внутри другой функции инициализации. </p>
+    <p>
+        <script type="wc_test">
+            var Coord= $jin_class( function( Coord, coord ){
+                coord.x= 0
+                coord.y= 0
+            } )
+            
+            var Point= $jin_class( function( Point, point ){
+                Coord.scheme( Point )
+                
+                point.toString= function( point ){
+                    return '[' + [ point.x, point.y ] + ']'
+                }
+            } )
+            
+            test.ok( Point().toString(), '[0,0]' )
+        </script>
+    </p>
+    
+    <p>Перед перегрузкой метода можно сохранить предыдущую версию в локальную переменную и вызвать её когда потребуется. Имейте ввиду, что это будет функция ещё не обработанная с помощью $jam_method.</p>
+    <p>
+        <script type="wc_test">
+            var Singleton= $jin_class( function( Singleton, ston ){
+                var instance= null
+                
+                var make= Singleton.make
+                Singleton.make= function( ){
+                    if( instance ) return instance
+                    
+                    return instance= make.apply( this, arguments )
+                }
+            } )
+            
+            var API= $jin_class( function( API, api ){
+                Singleton.scheme( API )
+                
+                api.name= null
+                
+                api.init= function( api, name ){
+                    api.name= name
+                }
+            } )
+            
+            test.ok( API( 'foo' ).name, API( 'bar' ).name, 'foo' )
+        </script>
+    </p>
+    
+    <p>Сравним скорость с иными реализациями.</p>
+    <wc_js-bench_list>
+        <wc_js-bench>
+            var Man= $jin_class( function( Man, man ){
+                man.name= null
+                man.init= function( man, name ){
+                    man.name= name
+                }
+                man.getName= function( man ){
+                    return man.name
+                }
+                man.setName= function( man, name ){
+                    man.name= name
+                    return man
+                }
+            } )
+            
+            _bench.begin()
+                Man( 'Bob' ).getName()
+            _bench.end()
+        </wc_js-bench>
+        <wc_js-bench>
+            var Man= function( name ){
+                this.name= name
+            }
+            Man.prototype.man= null
+            Man.prototype.getName= function( ){
+                return this.name
+            }
+            Man.prototype.setName= function( name ){
+                this.name= name
+                return this
+            }
+            
+            _bench.begin()
+                ( new Man( 'Bob' ) ).getName()
+            _bench.end()
+        </wc_js-bench>
+    </wc_js-bench_list>
+    
+</doc_root>

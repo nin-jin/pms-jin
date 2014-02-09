@@ -1,0 +1,225 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_test"
+    >
+
+    <p>Тестирует код на наличие ошибок. Результат можно узнать заглянув в поле "passed". </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_test )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' .. ')
+            test.not( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' (void 0)() ')
+            test.not( testo.passed )
+        </script>
+    </p>
+
+    <p>Возникающие в процессе работы ошибки логируются в массиве "errors". </p>
+    <p>
+        <script type="wc_test">
+            var testo= $jin_test(' (void 0)() ')
+            test.ok( testo.errors[0] )
+        </script>
+    </p>
+
+    <p>Кроме исходного кода в виде строки можно передать функцию, которая принимает параметром инстанс теста. Разумеется в этом случае обработка синтаксических ошибок будет уже на вашей совести. </p>
+    <p>
+        <script type="wc_test">
+            var testo= $jin_test( function( testo ){
+                testo.passed
+            } )
+            test.ok( testo.passed )
+        </script>
+    </p>
+
+    <p>Предоставляет исполняемому коду инстанс теста в качестве переменной "test". Он имеет два метода - ok и not. Вызванные без параметров они объявляют тест пройденным и проваленным соответственно. </p>
+    <p>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok() ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.not() ')
+            test.not( testo.passed )
+        </script>
+    </p>
+
+    <p>Если в "test.ok" или "test.not" передать одно значение, то тест будет пройден только если оно истинное и ложное соответственно.</p>
+    <p>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 1 ) ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 0 ) ')
+            test.not( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.not( 0 ) ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.not( 1 ) ')
+            test.not( testo.passed )
+        </script>
+    </p>
+    
+    <p>Если в "test.ok" или "test.not" передать два параметра, то тест будет пройден только если они равны или не равны соответственно. Сравнение строгое.</p>
+    <p>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 1, 1 ) ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 1, 2 ) ')
+            test.not( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.not( 2, 1 ) ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.not( 2, 2 ) ')
+            test.not( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( {}, {} ) ')
+            test.not( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 0 / 0, Number.NaN ) ')
+            test.ok( testo.passed )
+        </script>
+        <script type="wc_test">
+            var testo= $jin_test(' test.ok( 1 / 0, Number.POSITIVE_INFINITY ) ')
+            test.ok( testo.passed )
+        </script>
+    </p>
+    
+    <p>Чтобы сделать тест асинхронным нужно задать таймаут в миллисекундах до истечения которого тест по любому должен завершиться. Кроме того, по окончании всех асинхронных операций следует вызвать метод "done". Имейте ввиду, что асинхронные тесты стартуют последовательно, не дожидаясь завершения других асинхронных тестов.</p>
+    <p>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test(' test.timeout= 50 ')
+            
+            test.not( testo.passed ).done()
+        </script>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test(' test.timeout= 50 ')
+            
+            setTimeout( function( ){
+                test.not( testo.passed ).done()
+            }, 75 )
+        </script>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test(' test.timeout= 50; test.done() ')
+            
+            test.ok( testo.passed ).done()
+        </script>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test( function( testo ){
+                testo.timeout= 50
+                setTimeout( function( ){
+                    testo.done()
+                }, 25 )
+            } )
+            
+            setTimeout( function( ){
+                test.ok( testo.passed ).done()
+            }, 75 )
+        </script>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test( function( testo ){
+                testo.timeout= 25
+                setTimeout( function( ){
+                    testo.done()
+                }, 50 )
+            } )
+            
+            setTimeout( function( ){
+                test.not( testo.passed ).done()
+            }, 75 )
+        </script>
+    </p>
+    
+    <p>Чтобы ловить ошибки и в коллбэках, вызываемых асинхронно, стоит заворачивать их в "test.callback".</p>
+    <p>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test( function( testo ){
+                testo.timeout= 50
+                setTimeout( function( ){
+                    (void 0)()
+                }, 25 )
+            } )
+            
+            setTimeout( function( ){
+                test.ok( testo.errors[0].message, 'timeout(50)' ).done()
+            }, 75 )
+        </script>
+        <script type="wc_test">
+            test.timeout= 100
+            
+            var testo= $jin_test( function( testo ){
+                testo.timeout= 50
+                setTimeout( testo.callback( function( ){
+                    (void 0)()
+                } ), 25 )
+            } )
+            
+            setTimeout( function( ){
+                test.not( testo.errors[0].message, 'timeout(50)' ).done()
+            }, 75 )
+        </script>
+    </p>
+    
+    <p>Для отслеживания завершения асинхронного теста можно передать вторым параметром колбэк-функцию.</p>
+    <p>
+        <script type="wc_test">
+            test.timeout= 50
+            
+            var testo= $jin_test( function( testo ){
+                testo.timeout= 100
+                setTimeout( function( ){
+                    testo.done()
+                }, 25 )
+            }, function( testo ){
+                test.ok( testo.passed ).done()
+            } )
+        </script>
+    </p>
+    
+    <p>Исполняется тест в контексте сборщика мусора. Любые присвоенные его полям объекты будут уничтожены через их методы "destroy".</p>
+    <p>
+        <script type="wc_test">
+            test.timeout= 0
+            
+            var obj= { destroy: function( ){
+                test.done()
+            } }
+            
+            var testo= $jin_test( function( testo ){
+                this.foo= obj
+            })
+        </script>
+    </p>
+    
+</doc_root>

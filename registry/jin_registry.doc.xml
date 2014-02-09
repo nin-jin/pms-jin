@@ -1,0 +1,41 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_registry"
+    >
+
+    <p>Примесь, которая реализует кеширование экземпляров класса по первому переданному параметру. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_registry )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                $jin_registry.scheme( Man )
+            } )
+            test.ok( Man( 1 ), Man( 1 ) )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man, man ){
+                $jin_registry.scheme( Man )
+            } )
+            test.not( Man( 1 ), Man( 2 ) )
+        </script>
+    </p>
+    
+    <p>Может быть использована вместо $jin_class при определении класса - тогда будет создан класс с уже примешанным $jin_registry.</p>
+    <p>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man ){
+                $jin_registry.scheme( Man )
+            } )
+            test.ok( Man( 1 ), Man( 1 ) )
+        </script>
+        <script type="wc_test">
+            var Man= $jin_class( function( Man ){
+                $jin_registry.scheme( Man )
+            } )
+            test.not( Man( 1 ), Man( 2 ) )
+        </script>
+    </p>
+    
+</doc_root>

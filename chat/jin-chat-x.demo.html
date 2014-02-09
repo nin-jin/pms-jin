@@ -1,0 +1,216 @@
+<body>
+<script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
+<script>
+
+//	var local = new webkitRTCPeerConnection(null)
+//	var localStream
+//	navigator.webkitGetUserMedia({audio:true},function(stream){
+//		console.log('got local media', stream)
+//		localStream = stream
+//		local.addStream( stream )
+//		local.createOffer( function( desc ){
+//			console.log( 'got desc' )
+//			local.setLocalDescription( desc )
+//			remote.setRemoteDescription( desc )
+//			remote.createAnswer( function( desc ){
+//				local.setLocalDescription( desc )
+//				remote.setRemoteDescription( desc )
+//				console.log( 'got answer' )
+//			} )
+//		} )
+//	})
+//
+//	var remote = local//new webkitRTCPeerConnection(null)
+//	remote.onaddstream = function( event ){
+//		//if( event.stream.id === localStream.id ) return
+//		console.log( 'got new stream', event.stream )
+//		var audio = new webkitAudioContext
+//		var source = audio.createMediaStreamSource(event.stream)
+//		source.connect(audio.destination)
+//	}
+
+//	pc = new webkitRTCPeerConnection(null);
+//	pc.onaddstream = gotRemoteStream;
+//	//pc.addStream(localStream);
+//	pc.createOffer(gotOffer);
+//
+//	function gotOffer(desc) {
+//		pc.setLocalDescription(desc);
+//		console.log(desc)
+//		sendOffer(desc);
+//	}
+//
+//	function gotAnswer(desc) {
+//		pc.setRemoteDescription(desc);
+//	}
+//
+//	function gotRemoteStream(e) {
+//		attachMediaStream(remoteVideo, e.stream);
+//	}
+//
+//	function sendOffer( desc ){
+//		document.body.innerHTML = document.location + '#' + encodeURIComponent( desc.sdp )
+//	}
+
+//	var line = new webkitRTCPeerConnection( null )
+//
+//	line.onaddstream = function( event ){
+//		console.log( 'added stream', event.stream )
+//		var audio = new webkitAudioContext
+//		var source = audio.createMediaStreamSource( event.stream )
+//		source.connect( audio.destination )
+//	}
+//
+//	if( document.location.hash ){
+//		console.log( 'receive' )
+//
+//		var sdp = decodeURIComponent( document.location.hash.substring( 1 ) )
+//		var desc = new RTCSessionDescription({ sdp: sdp, type: 'offer' })
+//
+//		line.setRemoteDescription( desc )
+//
+//		line.createAnswer( function( desc ){
+//			console.log( 'answer created' )
+//			line.setLocalDescription( desc )
+//			document.body.innerHTML = document.location + '#' + encodeURIComponent( desc.sdp )
+//		} )
+//
+//	} else {
+//		console.log( 'send' )
+//
+//		line.createOffer( function( desc ){
+//			console.log( 'offer created' )
+//			line.setLocalDescription( desc )
+//			document.body.innerHTML = document.location + '#' + encodeURIComponent( desc.sdp )
+//		} )
+//	}
+//
+//	navigator.webkitGetUserMedia({ audio: true }, function( stream ){
+//		console.log('got local media', stream)
+//		line.addStream( stream )
+//	} )
+
+
+//var servers =
+//stun.l.google.com:19302
+//stun1.l.google.com:19302
+//stun2.l.google.com:19302
+//stun3.l.google.com:19302
+//stun4.l.google.com:19302
+//stun01.sipphone.com
+//stun.ekiga.net
+//stun.fwdnet.net
+//stun.ideasip.com
+//stun.iptel.org
+//stun.rixtelecom.se
+//stun.schlund.de
+//stunserver.org
+//stun.softjoys.com
+//stun.voiparound.com
+//stun.voipbuster.com
+//stun.voipstunt.com
+//stun.voxgratia.org
+//stun.xten.com
+
+if( !navigator.getUserMedia ) navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+if( !window.AudioContext ) window.AudioContext = window.mozAudioContext || window.webkitAudioContext
+var audio = new window.AudioContext
+var peer = new Peer( Math.random().toString( 32 ).substring( 2 ), { key: '31pxmweb1mgf1or' } )
+var lines = {}
+var medias = {}
+
+if( document.location.hash ){
+	document.location.hash.substring( 1 ).split( ';' ).map( function( id ){
+		if( peer.id === id ) return
+
+		var line = peer.connect( id )
+		line.on( 'open', function(){
+			addLine( line )
+			line.send( 'hi' )
+			recall()
+		} )
+	} )
+}
+
+save()
+
+peer.on( 'connection', function( line ){
+	addLine( line )
+	line.on( 'data', function( data ){
+		line.send( 'lo' )
+	} )
+});
+
+peer.on( 'call', function( line ){
+	if( !mediaStream ) return
+	line.answer( mediaStream )
+	addMedia( line )
+});
+
+var mediaStream
+navigator.getUserMedia({ audio: true }, function( stream ){
+	mediaStream = stream
+	recall()
+}, function( error ){
+	console.log( error )
+} )
+
+function recall( ){
+	if( !mediaStream ) return
+
+	for( var id in lines ){
+		if( medias[ id ] ) continue
+
+		var media = peer.call( id, mediaStream )
+		addMedia( media )
+	}
+}
+
+function addLine( line ){
+	lines[ line.peer ] = line
+	save()
+	line.on( 'close', function( ){
+		dropLine( line )
+	} )
+	line.on( 'error', function( error ){
+		console.error( error )
+		dropLine( line )
+	} )
+	line.on( 'data', function( data ){
+		console.log( data )
+	} )
+}
+
+function addMedia( line ){
+	medias[ line.peer ] = line
+	line.on( 'close', function( ){
+		dropMedia( line )
+	} )
+	line.on( 'error', function( error ){
+		console.error( error )
+		dropMedia( line )
+	} )
+	line.on( 'stream', function( stream ){
+		console.log( stream )
+		source = audio.createMediaStreamSource( stream )
+		source.connect( audio.destination )
+	} )
+}
+
+function dropLine( line ){
+	delete lines[ line.peer ]
+	save()
+}
+
+function dropMedia( line ){
+	delete medias[ line.peer ]
+}
+
+function save(){
+	var url = '#' + [ peer.id ].concat( Object.keys( lines ) ).join( ';' )
+	history.replaceState( null, null, url )
+}
+
+
+</script>
+</body>

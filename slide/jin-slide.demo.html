@@ -1,0 +1,87 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8" />
+	
+	<link href="-mix/index.stage=dev.css" rel="stylesheet" />
+	
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	
+</head>
+<body>
+	
+	<script src="-mix/index.env=web.stage=dev.js"></script>
+	<script src="-mix/slide.env=web.stage=release.sample.html.js"></script>
+	
+	<div jin-slide-demo="" jin-slide-show-page="0">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-title="">$jin.atom</div>
+		</div>
+	</div>
+	
+	<div jin-slide-demo="" jin-slide-show-page="1">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-header="">
+				<div jin-slide-show-title="">Фичи</div>
+			</div>
+			<div jin-slide-show-content="">
+				<div jin-slide-show-description="">
+					<ol>
+						<li><a href="#page=2">Автоматическое отслеживание зависимостей</a></li>
+						<li><a href="#page=3">Отложенное послойное обновление значений</a></li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div jin-slide-demo="" jin-slide-show-page="2">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-title="">Отслеживание зависимостей</div>
+		</div>
+	</div>
+	
+	<div jin-slide-demo="" jin-slide-show-page="3">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-header="">
+				<div jin-slide-show-title="">Распространение обновлений</div>
+			</div>
+			<div jin-slide-show-content="">
+				<svg width="200px" height="150px" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid">
+					
+					<line x1="100" y1="300" x2="100" y2="100" stroke="green" stroke-width="2" />
+					<line x1="200" y1="300" x2="200" y2="200" stroke="green" stroke-width="2" />
+					<line x1="200" y1="200" x2="100" y2="100" stroke="green" stroke-width="2" />
+					<line x1="200" y1="200" x2="200" y2="100" stroke="green" stroke-width="2" />
+					
+					<circle cx="100" cy="300" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					<circle cx="200" cy="300" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					<circle cx="300" cy="300" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					
+					<circle cx="200" cy="200" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					<circle cx="300" cy="200" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					
+					<circle cx="100" cy="100" r="20" stroke="green" stroke-width="2" fill="yellow" />
+					<circle cx="200" cy="100" r="20" stroke="green" stroke-width="2" fill="yellow" />
+				</svg>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$jin.slide.stack( 0 ).view( 'jin-slide-demo' ).element().parent( document.body )
+		
+		//$jin.atom({ pull: function( oldValue ){
+		//	var task = $jin.todo('main').task()
+		//	return document.title = task.title() || document.location.search + document.location.hash
+		//}}).update()
+		
+	</script>
+	
+</body>

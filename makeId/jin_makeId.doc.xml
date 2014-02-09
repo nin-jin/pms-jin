@@ -1,0 +1,16 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_makeId"
+    >
+
+    <p>Функция генерирующая уникльный идентификатор на основе переданного ей префикса. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_makeId )
+        </script>
+        <script type="wc_test">
+            test.not( $jin_makeId(), $jin_makeId() )
+        </script>
+    </p>
+    
+</doc_root>

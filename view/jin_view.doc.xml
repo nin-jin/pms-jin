@@ -1,0 +1,102 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_view"
+    >
+
+    <p>Класс, автоматически создающий виджеты при появлении в доме элементов с заданным именем или именем атрибута. А также уничтожающий виджеты при удалении этих элементов.</p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_view )
+        </script>
+        <script type="wc_test">
+            this.comp= $jin_view
+            (   $jin_makeId( 'jin_view' )
+            ,   function( ){ }
+            )
+            test.ok( this.comp )
+        </script>
+    </p>
+    <p>Не важно, в каком порядке добавляются компоненты и элементы. </p>
+    <p>
+        <script type="wc_test">
+            var result
+            
+            this.comp= $jin_view
+            (   $jin_makeId( 'jin_view' )
+            ,   function( node ){
+                    result= node
+                }
+            )
+            
+            var node= document.createElement( 'button' )
+            node.setAttribute( this.comp.id, 'true' )
+            document.body.appendChild( node )
+            
+            test.ok( result )
+            
+            node.parentNode.removeChild( node )
+        </script>
+        <script type="wc_test">
+            var id= $jin_makeId( 'jin_view' )
+            
+            var node= document.createElement( 'button' )
+            node.setAttribute( id, 'true' )
+            document.body.appendChild( node )
+            
+            var result
+            
+            this.comp= $jin_view
+            (   id
+            ,   function( node ){
+                    result= node
+                }
+            )
+            
+            test.ok( result )
+            
+            node.parentNode.removeChild( node )
+        </script>
+    </p>
+    <p>Уничтожение компоненты приводит к уничтожению всех созданных ею виджетов.</p>
+    <p>
+        <script type="wc_test_skip">
+            var result
+            
+            var comp= $jin_view
+            (   $jin_makeId( 'jin_view' )
+            ,   function( node ){
+                    return { destroy: function(){
+                        result= true
+                    } }
+                }
+            )
+            
+            var node= document.createElement( 'button' )
+            node.setAttribute( comp.id, 'true' )
+            document.body.appendChild( node )
+            comp.destroy()
+            
+            test.ok( result )
+            node.parentNode.removeChild( node )
+        </script>
+        <script type="wc_test">
+            var result
+            
+            this.comp= $jin_view
+            (   $jin_makeId( 'jin_view' )
+            ,   function( node ){
+                    return { destroy: function(){
+                        result= true
+                    } }
+                }
+            )
+            
+            var node= document.createElement( 'button' )
+            node.setAttribute( this.comp.id, 'true' )
+            document.body.appendChild( node )
+            
+            node.parentNode.removeChild( node )
+            test.ok( result )
+        </script>
+    </p>
+</doc_root>

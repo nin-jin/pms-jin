@@ -1,0 +1,38 @@
+<?xml-stylesheet href="../-mix/doc.stage=dev.xsl" type="text/xsl"?>
+<doc_root
+    doc_title="$jin_onElemAdd"
+    >
+
+    <p>Событие возникающее, когда в поддерево заданного элемента добавляются новые элементы. </p>
+    <p>
+        <script type="wc_test">
+            test.ok( $jin_onElemAdd )
+        </script>
+    </p>
+    <p>
+        <script type="wc_test">
+        <![CDATA[
+            var node= document.createElement( 'jin_onElemAdd_test' )
+            document.getElementsByTagName( 'body' )[0].appendChild( node )
+            
+            var result= []
+            var listener=
+            $jin_onElemAdd.listen( node, test.callback( function( event ){
+                result.push( event.target().localName )
+            } ) )
+            
+            node.innerHTML+= 'foo'
+            node.innerHTML+= '<?jin_onElemAdd_test0?>'
+            node.innerHTML+= '<!--hello-->'
+            node.innerHTML+= '<jin_onElemAdd_test1>world</jin_onElemAdd_test1>'
+            node.innerHTML+= '<jin_onElemAdd_test2><jin_onElemAdd_test3></jin_onElemAdd_test3></jin_onElemAdd_test2>'
+            
+            listener.destroy()
+            node.parentNode.removeChild( node )
+            
+            test.ok( result.join( ',' ), 'jin_onelemadd_test1,jin_onelemadd_test1,jin_onelemadd_test2,jin_onelemadd_test3' )
+        ]]>
+        </script>
+    </p>
+    
+</doc_root>
