@@ -81,3 +81,11 @@
 	padding: 0;
 	margin: 0;
 }
+
+[jin-slide-show-figure] {
+	margin: .5em;
+}
+
+[jin-slide-show-figure-descr] {
+	text-align: center;
+}

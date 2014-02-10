@@ -43,6 +43,7 @@ $jin.method( '$jin.klass..init', '$jin.atom..init', function $jin_atom__init( co
 	if( config.pull ) this._pull = config.pull
 	if( config.push ) this._push = config.push
 	if( config.merge ) this._merge = config.merge
+	this._value = config.value
 	this._context = config.context
 })
 

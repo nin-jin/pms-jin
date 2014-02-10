@@ -39,6 +39,7 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 		,	pull: pull
 		,	push: push
 		,	merge: merge
+		,	value: config.value
 		} )
     }
 
