@@ -44,11 +44,10 @@
 	<div jin-slide-demo="" jin-slide-show-page="deps-ko">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Отслеживание зависимостей</div>
+				<div jin-slide-show-title="">Зависимости в KnockOut</div>
 			</div>
 			<div jin-slide-show-content="">
 				<div jin-slide-show-figure="">
-    				<div jin-slide-show-figure-descr="">KnockOut</div>
 					<pre>
 <font color="steelblue">function</font> AppViewModel( ){
     <font color="steelblue">this</font>.firstName = ko.observable( <font color="green">'Bert'</font> )
@@ -66,11 +65,10 @@
 	<div jin-slide-demo="" jin-slide-show-page="deps-angular">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Отслеживание зависимостей</div>
+				<div jin-slide-show-title="">Зависимости в AngularJS</div>
 			</div>
 			<div jin-slide-show-content="">
 				<div jin-slide-show-figure="">
-    				<div jin-slide-show-figure-descr="">AngularJS</div>
 					<pre>
 <font color="steelblue">function</font> AppViewModel( <font color="navy">$scope</font> ){
     <font color="navy">$scope.firstName</font> = <font color="green">'Bert'</font>
@@ -88,11 +86,10 @@
 	<div jin-slide-demo="" jin-slide-show-page="deps-atom">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Отслеживание зависимостей</div>
+				<div jin-slide-show-title="">Зависимости в $jin.atom</div>
 			</div>
 			<div jin-slide-show-content="">
 				<div jin-slide-show-figure="">
-    				<div jin-slide-show-figure-descr="">$jin.atom</div>
 					<pre>
 <font color="navy">$foo.app.view</font> = <font color="steelblue">function</font>( ){ }
 
@@ -111,7 +108,7 @@
 		</div>
 	</div>
     
-	<div jin-slide-demo="" jin-slide-show-page="4">
+	<div jin-slide-demo="" jin-slide-show-page="induction">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
 				<div jin-slide-show-title="">Распространение обновлений</div>
@@ -169,7 +166,6 @@
 				</div>
 				<div jin-slide-show-figure="">
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
-						
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
 						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
 						<line x1="200" y1="200" x2="100" y2="100" stroke="black" stroke-width="2" />
@@ -178,15 +174,47 @@
 						<line x1="300" y1="300" x2="300" y2="200" stroke="black" stroke-width="2" />
 						<line x1="300" y1="200" x2="200" y2="100" stroke="black" stroke-width="2" />
 						
-						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="80" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="85" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="90" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="95" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+                        
+						<circle cx="180" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="185" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="190" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="195" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+                        
+						<circle cx="280" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="285" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="290" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="295" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
 						
-						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="180" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="185" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="190" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="195" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
+                        
+						<circle cx="280" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="285" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="290" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="295" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
 						
-						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="80" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="85" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="90" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="95" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
+                        
+						<circle cx="180" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="185" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="190" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="195" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 					</svg>
 					<div jin-slide-show-figure-descr="">AngularJS</div>
 					<div jin-slide-show-figure-descr="">4x digest</div>
