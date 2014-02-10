@@ -20,7 +20,7 @@ $jin.atom.prop({ '$jin.slide.show..zoom': {
 	}
 }})
 
-$jin.atom.prop({ '$jin.slide.show..pageNodes': {
+$jin.atom.prop({ '$jin.slide.show..pageNodeList': {
 	pull: function( ){
 		var nodes = $jin.doc().cssSelect( '[' + this.id() + ']' )
 		nodes.forEach( function( node ){
@@ -30,24 +30,41 @@ $jin.atom.prop({ '$jin.slide.show..pageNodes': {
 	}
 }})
 
-$jin.atom.prop({ '$jin.slide.show..pageNumber': {
+$jin.atom.prop({ '$jin.slide.show..pageNodeMap': {
+	pull: function( ){
+		var map = {}
+		this.pageNodeList().forEach( function( node ){
+			map[ node.attr( 'jin-slide-show-page' ) ] = node
+		} )
+		return map
+	}
+}})
+
+$jin.atom.prop({ '$jin.slide.show..pageNodeCurrent': {
 	pull: function( prev ){
-		var next = Number( $jin.state.url.item( 'page' ) ) || 0
-		return Math.min( next, this.pageNodes().length - 1 )
+		var id = $jin.state.url.item( 'slide' )
+		return this.pageNodeMap()[ id ] || this.pageNodeList()[ 0 ]
 	},
 	put: function( next, prev ){
-		if(( next >= 0 )&&( next < this.pageNodes().length )){
-			$jin.state.url.item( 'page', next )
+		if( !next ) return prev
+		
+		$jin.state.url.item( 'slide', next.attr( 'jin-slide-show-page' ) )
+		return next
+	}
+}})
+
+$jin.atom.prop({ '$jin.slide.show..pageNumber': {
+	pull: function( prev ){
+		return this.pageNodeList().indexOf( this.pageNodeCurrent() )
+	},
+	put: function( next, prev ){
+		var nodes = this.pageNodeList()
+		if(( next >= 0 )&&( next < nodes.length )){
+			this.pageNodeCurrent( nodes[ next ] )
 			return next
 		} else {
 			return prev
 		}
-	}
-}})
-
-$jin.atom.prop({ '$jin.slide.show..currentPage': {
-	pull: function( ){
-		return this.pageNodes()[ this.pageNumber() ]
 	}
 }})
 

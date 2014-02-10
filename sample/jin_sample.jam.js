@@ -26,16 +26,26 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 	
 	function collect( node ){
 		
-		var attrs = node.attributes
+		var attrs = [].slice.call( node.attributes )
 		if( attrs ){
 			for( var i = 0; i < attrs.length; ++i ){
 				var attr = attrs[ i ]
 				
-				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
-				if( !found ) continue
-				var key = found[1]
-				
-				rules.push({ key: key, path: path.slice(), attrName: attr.nodeName })
+				var nameFound = /^(on)(\w+)$/.exec( attr.nodeName )
+				if( nameFound ){
+					var type = nameFound[1]
+					var name = nameFound[2]
+					
+					node.removeAttribute( attr.nodeName )
+					
+					rules.push({ key: attr.nodeValue, path: path.slice(), eventName: name })
+				} else {
+					var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
+					if( !found ) continue
+					var key = found[1]
+					
+					rules.push({ key: key, path: path.slice(), attrName: attr.nodeName })
+				}
 			}
 			
 			var props = node.getAttribute( 'jin-sample-props' )
@@ -160,6 +170,18 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 					return current[ rule.fieldName ] = next
 				}
 			})
+		} else if( rule.eventName ){
+			var listener = $jin.dom( current ).listen( rule.eventName, function eventHandler( event ){
+				var view = sample.view()
+				if( !view ) return
+				
+				var handler = view[ rule.key ]
+				if( !handler ) throw new Error( 'View handler in not defined (' + rule.key + ')' )
+				
+				handler.call( view, $jin.dom.event( event ) )
+			})
+			sample.entangle( listener )
+			return
 		} else if( rule.event ){
 			var listener = rule.event.listen( current, function eventHandler( event ){
 				var view = sample.view()
