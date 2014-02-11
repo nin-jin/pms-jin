@@ -83,8 +83,11 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 	try {
 		var newValue = this._pull ? this._pull.call( this._context, this._value ) : this._value
 	} finally {
-		if( $jin.atom.slaves[0] !== this ) throw new Error( 'Atom is not on top of stack' )
-		$jin.atom.slaves.shift()
+		var stack = $jin.atom.slaves
+		while( stack.length ){
+			var top = stack.shift()
+			if( top === this ) break
+		}
 	}
 
 	for( var masterId in oldMasters ){
