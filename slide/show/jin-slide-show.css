@@ -82,6 +82,15 @@
 	margin: 0;
 }
 
+[jin-slide-show-description] a {
+	text-decoration: none;
+	color: steelblue;
+}
+
+[jin-slide-show-description] a:hover {
+	text-decoration: underline;
+}
+
 [jin-slide-show-figure] {
 	margin: .5em;
 }

@@ -28,14 +28,15 @@
 	<div jin-slide-demo="" jin-slide-show-page="contents">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Фичи</div>
+				<div jin-slide-show-title="">Критерии оценки</div>
 			</div>
 			<div jin-slide-show-content="">
 				<div jin-slide-show-description="">
 					<ol>
-						<li><a href="#slide=deps-ko">Автоматическое отслеживание зависимостей</a></li>
-						<li><a href="#slide=induction">Отложенное послойное обновление значений</a></li>
-						<li><a href="#slide=size">Компактный размер</a></li>
+						<li><a href="#slide=deps-ko">Способ объявления зависимостей</a></li>
+						<li><a href="#slide=binds-ko">Способ привязки к DOM</a></li>
+						<li><a href="#slide=induction">Способ распространения изменений</a></li>
+						<li><a href="#slide=size">Размер исходного кода</a></li>
 					</ol>
 				</div>
 			</div>
@@ -74,10 +75,14 @@
 <font color="steelblue">function</font> AppViewModel( <font color="navy">$scope</font> ){
     <font color="navy">$scope.firstName</font> = <font color="green">'Bert'</font>
     <font color="navy">$scope.lastName</font> = <font color="green">'Bertington'</font>
-    <font color="navy">$scope.remaining</font> = function( ){
+    <font color="navy">$scope.fullName</font> = <font color="green">''</font>
+    <font color="navy">$scope.$watch</font>( <font color="steelblue">function</font>( ){
         <font color="steelblue">return</font> <font color="navy">$scope.firstName</font> + <font color="green">' '</font> + <font color="navy">$scope.lastName</font>
-    }
+    }, <font color="steelblue">function</font>( next ){
+        <font color="steelblue">this</font>.fullName = next
+    })
 }
+
 					</pre>
 				</div>
 			</div>
@@ -109,6 +114,72 @@
 		</div>
 	</div>
     
+	<div jin-slide-demo="" jin-slide-show-page="binds-ko">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-header="">
+				<div jin-slide-show-title="">Привязки в KnockOut</div>
+			</div>
+			<div jin-slide-show-content="">
+				<div jin-slide-show-figure="">
+					<pre>
+<font color="steelblue">function</font> MyFriends( ){
+    <font color="steelblue">this</font>.names = ko.observableArray([ <font color="green">'Bart'</font>, <font color="green">'John'</font> ])
+}</pre>
+					<pre>
+&lt;ul <font color="maroon">data-bind</font>=<font color="green">"foreach: names()"</font>&gt;
+    &lt;li <font color="maroon">data-bind</font>=<font color="green">"text: $data"</font>&gt;&lt;/li&gt;
+&lt;/ul&gt;</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div jin-slide-demo="" jin-slide-show-page="binds-angular">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-header="">
+				<div jin-slide-show-title="">Привязки в AngularJS</div>
+			</div>
+			<div jin-slide-show-content="">
+				<div jin-slide-show-figure="">
+					<pre>
+<font color="steelblue">function</font> MyFriends( ){
+    <font color="steelblue">this</font>.names = [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ]
+}</pre>
+					<pre>
+&lt;ul ng-repeat="name in names"&gt;
+    &lt;li&gt;<font color="magenta">{{name}}</font>&lt;/li&gt;
+&lt;/ul&gt;</pre>
+                </div>
+			</div>
+		</div>
+	</div>
+	
+	<div jin-slide-demo="" jin-slide-show-page="binds-atom">
+		<div jin-slide-show-paper="">
+			<div jin-slide-show-header="">
+				<div jin-slide-show-title="">Привязки в $jin.atom</div>
+			</div>
+			<div jin-slide-show-content="">
+				<div jin-slide-show-figure="">
+					<pre>
+<font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.list'</font>: [ <font color="green">'$jin.view'</font> ] })
+<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..names'</font>: { value: [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ] } })
+<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..friendViews'</font>: { pull: <font color="steelblue">function</font>( ){
+  <font color="steelblue">return this</font>.names().map( <font color="steelblue">function</font>( name, index ){
+    <font color="steelblue">return this</font>.make( <font color="green">'friend='</font> + index, MyFriends.item ).name( name )
+  }.bind( <font color="steelblue">this</font> ) )
+} } })
+
+<font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.item'</font>: [ <font color="green">'$jin.view'</font> ] })
+<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.item..name'</font>: { merge: String } })</pre>
+					<pre>
+&lt;ul MyFriends-list="<font color="magenta">{id}</font>"&gt;<font color="magenta">{friends}</font>&lt;/ul&gt;
+&lt;li MyFriends-item="<font color="magenta">{id}</font>"&gt;<font color="magenta">{name}</font>&lt;/li&gt;</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div jin-slide-demo="" jin-slide-show-page="induction">
 		<div jin-slide-show-paper="">
 			<div jin-slide-show-header="">
