@@ -2,6 +2,7 @@ Contents
 ========
 
 [$jin.method](method/jin-method.doc.md) - method definer
+[$jin.atom](atom/jin-atom.doc.md) - FRP in your JS
 
 
 Building
