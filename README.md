@@ -1,3 +1,10 @@
+Contents
+
+++=========
+
+[$jin.method](method/jin-method.doc.md) - method definer
+
+
 Building
 =======
 
