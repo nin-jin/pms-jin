@@ -162,6 +162,16 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 					else current.setAttribute( rule.attrName, String( next ) )
 				}
 			})
+			if( /^(value|checked)$/i.test( rule.attrName ) && /^(select|input|textarea)$/i.test( current.nodeName ) ){
+				var handler = function( event ){
+					var view = sample.view()
+					if( !view ) return
+					view[ rule.key ]( current[ rule.attrName ] )
+				}
+				sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
+				sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
+				sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
+			}
 		} else if( rule.fieldName ){
 			var cover = $jin.atom(
 			{	name: rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key

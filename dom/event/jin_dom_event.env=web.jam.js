@@ -5,7 +5,6 @@ $jin.property( '$jin.dom.event.cancelable', Boolean )
 
 $jin.method( '$jin.event.listen', '$jin.dom.event.listen', function( crier, handler ){
 	crier = $jin.dom( crier )
-	handler = $jin.defer.callback( handler )
     return this[ '$jin.event.listen' ]( crier, handler )
 } )
 

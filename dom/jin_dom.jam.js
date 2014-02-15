@@ -325,6 +325,7 @@ $jin.method( '$jin.dom..makeTree', function( json ){
 } )
 
 $jin.method( '$jin.dom..listen', function( eventName, handler ){
+	handler = $jin.defer.callback( handler )
     this.nativeNode().addEventListener( eventName, handler, false )
     return $jin.listener().crier( this ).eventName( eventName ).handler( handler )
 } )
