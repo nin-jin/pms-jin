@@ -7,6 +7,11 @@ $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, fun
 	
 	if( !func.jin_method_resolves ) func.jin_method_resolves = resolveList
 	
+	Object.toString.call( func ).replace( /'(\$[.\w]+)'/g, function( str, token ){
+		if( resolveList.indexOf( token ) >= 0 ) return str
+		resolveList.push( token )
+	})
+	
     var funcName = func.jin_method_path
     if( !funcName ) funcName = func.jin_method_path = name
     //throw new Error( 'jin_method_path is not defined in [' + func + ']' )
