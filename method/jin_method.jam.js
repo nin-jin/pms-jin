@@ -5,12 +5,13 @@ $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, fun
 	var name = resolveList.pop()
 	if( !name ) throw new Error( 'Not defined method name' )
 	
-	if( !func.jin_method_resolves ) func.jin_method_resolves = resolveList
-	
-	Object.toString.call( func ).replace( /'(\$[.\w]+)'/g, function( str, token ){
-		if( resolveList.indexOf( token ) >= 0 ) return str
-		resolveList.push( token )
-	})
+	if( !func.jin_method_resolves ){
+		func.jin_method_resolves = resolveList
+		Object.toString.call( func ).replace( /'(\$[.\w]+)'/g, function( str, token ){
+			if( resolveList.indexOf( token ) >= 0 ) return str
+			resolveList.push( token )
+		})
+	}
 	
     var funcName = func.jin_method_path
     if( !funcName ) funcName = func.jin_method_path = name
