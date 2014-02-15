@@ -1,94 +1,104 @@
-	$jin.method - регистрирует функцию в качестве метода какого-либо глобально доступного объекта.
-	
-	Типичный пример:
-	
-	$jin.method({ '$my.app.init': funciton( ){
-		console.log( 'init' )
-	}})
-	
-	Теперь можно вызвать её, например, так:
-	
-	$my.app.init()
-	
-	Двойная точка означает свойство prototype:
-	
-	$my.cat = function(){}
-	$jin.method({ '$my.cat..mew': funciton( ){
-		console.log( 'mew' )
-	}})
-	
-	;(new $my.cat).mew()
-	
-	Не допускается случайное переопределение существующего метода:
-	
-	$jin.method({ '$my.app.init': function( ){
-		console.log( 'init' )
-	}})
-	
-	$jin.method({ '$my.app.init': function( ){
-		console.log( 'init2' )
-	}})
-	
-	$my.app.init() // тут будет исключение
-	
-	Чтобы намеренно переопределить метод, нужно упомянуть полное имя переопределяемого метода в теле функции:
-	
-	$jin.method({ '$my.app.init': function( ){
-		console.log( 'init' )
-	}})
-	
-	$jin.method({ '$my.app.init2': function( ){
-		override: '$my.app.init'
-		console.log( 'init2' )
-	}})
-	
-	$jin.method({ '$my.app.init': $my.app.init2 })
-	
-	$my.app.init() // тут будет выведено только init2
-	
-	Но зачастую надо не просто переопределять, а дополнять исходный метод. Все регистрируемые методы доступны в объекте по полному имени:
+$jin.method - регистрирует функцию в качестве метода какого-либо глобально доступного объекта.
 
-	$jin.method({ '$my.app.init': function( ){
-		console.log( 'init' )
-	}})
-	
-	$jin.method({ '$my.app.init2': function( ){
-		this['$my.app.init']()
-		console.log( 'init2' )
-	}})
-	
-	$jin.method({ '$my.app.init': $my.app.init2 })
-	
-	$my.app.init() // тут будет выведено init, а потом init2
+Типичный пример:
+```js
+$jin.method({ '$my.app.init': funciton( ){
+	console.log( 'init' )
+}})
+```
 
-	Почему используется такой странный синтаксис регистрации методов?
-	+ отслеживаются конфликты, когда один метод случайно затирает другой
-	+ автоматически создаются промежуточные неймспейсы
-	+ в дебагере и профайлере хрома и ие выводится полное имя вида "$jin.method.$my.app.init2" вместо абстрактного "(anonymous function)"
-	+ возможность определять методы в произвольном порядке
-	
-	Недостатки:
-	- несколько громоздкая запись
-	- IDE без специальных JSDoc-ов не понимают что тут происходит
-	
-	Как писать JSDoc для IDE:
-	
-	/** @name $my.cat#mew */
-	$jin.method({ '$my.cat..mew': function( ){
-		console.log( 'mew' )
-	}})
-	
-	Возможно стоит заменить двойную точку на решётку для универсальности. Также возможно имеет смысл сделать автогенератор JSDoc-ов.
-	
-	$jin.method({ '$my.app.init2': function( ){
-		this['$my.app.init']()
-		console.log( 'init2' )
-	}})
-	
-	$jin.method({ '$my.app.init': $my.app.init2 })
-	
-	$jin.method({ '$my.app.init': function( ){
-		console.log( 'init' )
-	}})
-	
-	$my.app.init() // тут будет выведено init, а потом init2
+Теперь можно вызвать её, например, так:
+```js
+$my.app.init()
+```
+
+Двойная точка означает свойство prototype:
+```js
+$my.cat = function(){}
+$jin.method({ '$my.cat..mew': funciton( ){
+	console.log( 'mew' )
+}})
+
+;(new $my.cat).mew()
+```
+
+Не допускается случайное переопределение существующего метода:
+```js
+$jin.method({ '$my.app.init': function( ){
+	console.log( 'init' )
+}})
+
+$jin.method({ '$my.app.init': function( ){
+	console.log( 'init2' )
+}})
+
+$my.app.init() // тут будет исключение
+```
+
+Чтобы намеренно переопределить метод, нужно упомянуть полное имя переопределяемого метода в теле функции:
+```js
+$jin.method({ '$my.app.init': function( ){
+	console.log( 'init' )
+}})
+
+$jin.method({ '$my.app.init2': function( ){
+	override: '$my.app.init'
+	console.log( 'init2' )
+}})
+
+$jin.method({ '$my.app.init': $my.app.init2 })
+
+$my.app.init() // тут будет выведено только init2
+```
+
+Но зачастую надо не просто переопределять, а дополнять исходный метод. Все регистрируемые методы доступны в объекте по полному имени:
+```js
+$jin.method({ '$my.app.init': function( ){
+	console.log( 'init' )
+}})
+
+$jin.method({ '$my.app.init2': function( ){
+	this['$my.app.init']()
+	console.log( 'init2' )
+}})
+
+$jin.method({ '$my.app.init': $my.app.init2 })
+
+$my.app.init() // тут будет выведено init, а потом init2
+```
+
+Порядок определения конфликтующих методов не важен:
+```js
+$jin.method({ '$my.app.init2': function( ){
+	this['$my.app.init']()
+	console.log( 'init2' )
+}})
+
+$jin.method({ '$my.app.init': $my.app.init2 })
+
+$jin.method({ '$my.app.init': function( ){
+	console.log( 'init' )
+}})
+
+$my.app.init() // тут будет выведено init, а потом init2
+```
+
+Почему используется такой странный синтаксис регистрации методов?
++ отслеживаются конфликты, когда один метод случайно затирает другой
++ автоматически создаются промежуточные неймспейсы
++ в дебагере и профайлере хрома и ие выводится полное имя вида "$jin.method.$my.app.init2" вместо абстрактного "(anonymous function)"
++ возможность определять методы в произвольном порядке
+
+Недостатки:
+- несколько громоздкая запись
+- IDE без специальных JSDoc-ов не понимают что тут происходит
+
+Как писать JSDoc для IDE:
+```js
+/** @name $my.cat#mew */
+$jin.method({ '$my.cat..mew': function( ){
+	console.log( 'mew' )
+}})
+```
+
+Возможно стоит заменить двойную точку на решётку для универсальности. Также возможно имеет смысл сделать автогенератор JSDoc-ов.
