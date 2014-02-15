@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4web.all', function( mod, vary ){
+$jin.method({ '$jin.build4web.all': function( mod, vary ){
     mod= $jin.sourceFile( mod )
     
     var res= { dev: {}, release: {} }
@@ -19,4 +19,4 @@ $jin.method( '$jin.build4web.all', function( mod, vary ){
     //res.release.doc= $jin.build4web.doc.release( mod, vary )
     
     return res
-} )
+}})

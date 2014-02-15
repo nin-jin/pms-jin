@@ -1,4 +1,4 @@
-$jin.method( '$jin.coverage', function( pack ){
+$jin.method({ '$jin.coverage': function( pack ){
     pack= $jin.pack( pack )
     from= pack.mod( '-mix' )
     to= pack.mod( '-cov' )
@@ -6,4 +6,4 @@ $jin.method( '$jin.coverage', function( pack ){
     $jin.execute( 'jscoverage', [ '' + from, '' + to ] )
     
     return to
-} )
+}})

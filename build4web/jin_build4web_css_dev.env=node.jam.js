@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4web.css.dev', function( mod, vary ){
+$jin.method({ '$jin.build4web.css.dev': function( mod, vary ){
     mod = $jin.sourceFile( mod )
     
     vary = vary || {}
@@ -37,4 +37,4 @@ $jin.method( '$jin.build4web.css.dev', function( mod, vary ){
     }
     
     return indexFile.content( index.join( '\n' ) )
-} )
+}})

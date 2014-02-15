@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4node.release', function( mod, vary ){
+$jin.method({ '$jin.build4node.release': function( mod, vary ){
     mod = $jin.sourceFile( mod )
     
     vary = vary || {}
@@ -16,4 +16,4 @@ $jin.method( '$jin.build4node.release', function( mod, vary ){
     } )
 
     return buildFile.content( 'with( this ){\n' + index.join( '\n' ) + '\n}' )
-} )
+}})

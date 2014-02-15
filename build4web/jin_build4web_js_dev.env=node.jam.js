@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4web.js.dev', function( mod, vary, mods ){
+$jin.method({ '$jin.build4web.js.dev': function( mod, vary, mods ){
     mod = $jin.sourceFile( mod )
     
     vary = vary || {}
@@ -47,4 +47,4 @@ void function( modules ){                                               \n\
     index.push( " null ])" )
     
     return buildFile.content( index.join( '\n' ) )
-} )
+}})

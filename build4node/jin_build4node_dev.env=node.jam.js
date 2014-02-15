@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4node.dev', function( mod, vary ){
+$jin.method({ '$jin.build4node.dev': function( mod, vary ){
     mod = $jin.sourceFile( mod )
     
     vary = vary || {}
@@ -27,4 +27,4 @@ void function( path ){                                   \n\
     " )
     
     return buildFile.content( index.join( '\n' ) )
-} )
+}})

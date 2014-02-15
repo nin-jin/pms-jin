@@ -35,7 +35,8 @@ $jin.method({ '$jin.atom.schedule': function( ){
 	this._deferred = $jin.defer( this.induce )
 }})
 
-$jin.method( '$jin.klass..init', '$jin.atom..init', function $jin_atom__init( config ){
+$jin.method({ '$jin.atom..init': function $jin_atom__init( config ){
+	override: '$jin.klass..init'
 	this._id = $jin.makeId( '$jin.atom' )
 	this._name = config.name || this._id
 	this._slaves = {}
@@ -45,7 +46,7 @@ $jin.method( '$jin.klass..init', '$jin.atom..init', function $jin_atom__init( co
 	if( config.merge ) this._merge = config.merge
 	this._value = config.value
 	this._context = config.context
-})
+}})
 
 $jin.method({ '$jin.atom..id': function( ){
 	return this._id
@@ -213,17 +214,17 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 	this._slice = 0
 }})
 
-$jin.method( '$jin.klass..destroy', '$jin.atom..destroy', function( ){
+$jin.method({ '$jin.atom..destroy': function( ){
 	this.disobeyAll()
 	this.disleadAll()
 	return $jin.method['$jin.klass..destroy']()
-})
+}})
 
 $jin.method({ '$jin.atom.enableLogs': function( ){
 	$jin.mixin( '$jin.atom.logging', '$jin.atom' )
 }})
 
-$jin.method( '$jin.atom..notify', '$jin.atom.logging..notify', function( ){
+$jin.method({ '$jin.atom.logging..notify': function( ){
 	var ctor = this.constructor
 
 	ctor.log().push([ this._name, this._value, this._masters ])
@@ -241,7 +242,7 @@ $jin.method( '$jin.atom..notify', '$jin.atom.logging..notify', function( ){
 	}
 
 	return this[ '$jin.atom..notify' ]()
-})
+}})
 
 $jin.property({ '$jin.atom.logging.log': function( ){
 	return []

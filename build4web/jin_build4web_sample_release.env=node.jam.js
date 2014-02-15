@@ -1,4 +1,4 @@
-$jin.method( '$jin.build4web.sample.release', function( mod, vary ){
+$jin.method({ '$jin.build4web.sample.release': function( mod, vary ){
     mod = $jin.sourceFile( mod )
     
     vary = vary || {}
@@ -16,4 +16,4 @@ $jin.method( '$jin.build4web.sample.release', function( mod, vary ){
     sources = "$jin.sample.strings( '" + sources.join( '\n' ).replace( /\'/g, "\\'" ).replace( /[\r\n]+/g, '\\n' ) + "' )"
     
     return mod.buildFile( mod.name(), vary, 'sample.html.js' ).content( sources )
-} )
+}})

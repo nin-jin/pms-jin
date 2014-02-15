@@ -1,4 +1,4 @@
-$jin.method( '$jin.async2defer', function( func ){
+$jin.method({ '$jin.async2defer': function( func ){
     return $jin.proxy
     (   {   apply:
             function( func, self, args ){
@@ -46,4 +46,4 @@ $jin.method( '$jin.async2defer', function( func ){
             }
         }
     )( func )
-} )
+}})
