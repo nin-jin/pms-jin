@@ -67,6 +67,14 @@ $jin.test( function resetting( test ){
     test.unique( y1, y2 )
 } )
 
+$jin.test( function mutating( test ){
+    var atom = $jin.atom({ value: 1 })
+	atom.mutate( function( prev ){
+		return prev + 1
+	} )
+	test.equal( atom.get(), 2 )
+} )
+
 //$jin.test( function reaping( test ){
 //	test.timeout( 100 )
 //    var x = 1

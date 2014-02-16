@@ -111,6 +111,12 @@ $jin.method({ '$jin.atom..put': function( next ){
 	return this
 }})
 
+$jin.method({ '$jin.atom..mutate': function( mutator ){
+	var next = mutator.call( this._context, this._value )
+	this.put( next )
+	return this
+}})
+
 $jin.method({ '$jin.atom..value': function( value ){
 	var oldValue = this._value
 
