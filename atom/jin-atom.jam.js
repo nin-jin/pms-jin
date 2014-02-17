@@ -36,7 +36,7 @@ $jin.method({ '$jin.atom.schedule': function( ){
 }})
 
 $jin.method({ '$jin.atom..init': function $jin_atom__init( config ){
-	override: '$jin.klass..init'
+	this['$jin.klass..init']
 	this._id = $jin.makeId( '$jin.atom' )
 	this._name = config.name || this._id
 	this._slaves = {}

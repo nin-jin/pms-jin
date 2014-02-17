@@ -12,7 +12,7 @@ $jin.atom.prop({ '$jin.date.today':
 		var delay = dailyMS - nowMS
 
 		$jin.schedule( delay, function( ){
-			$jin.date.todayAtom().pull()
+			$jin.date.today_atom().pull()
 		} )
 
 		return now

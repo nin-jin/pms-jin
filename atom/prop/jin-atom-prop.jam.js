@@ -45,11 +45,11 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 
 	prop.jin_method_resolves = config.resolves || []
 	propAtom.jin_method_resolves = prop.jin_method_resolves.map( function( path ){
-		return path + 'Atom'
+		return path + '_atom'
 	} )
 
 	$jin.method( path, prop )
-	$jin.method( path + 'Atom', propAtom )
+	$jin.method( path + '_atom', propAtom )
 
     return prop
 }})
@@ -59,7 +59,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	
 	var propName = path.replace( /([$\w]*\.)+/, '' )
 	
-	$jin.method( path + 'Add', function( newItems ){
+	$jin.method( path + '_add', function( newItems ){
         var items = this[propName]() || []
         
 		if( config.merge ) newItems = config.merge.call( this, newItems )
@@ -74,7 +74,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 		return this
 	} )
 	
-	$jin.method( path + 'Drop', function( oldItems ){
+	$jin.method( path + '_drop', function( oldItems ){
 		var items = this[propName]() || []
         
 		if( config.merge ) oldItems = config.merge.call( this, oldItems )
@@ -88,7 +88,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 		return this
     } )
 	
-	$jin.method( path + 'Has', function( item ){
+	$jin.method( path + '_has', function( item ){
 		if( config.merge ) item = config.merge.call( this, [ item ] )[ 0 ]
 		var items = this[propName]()
         

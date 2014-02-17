@@ -62,7 +62,7 @@ var $my = { timer: {} }
 $jin.atom.prop({ '$my.timer.tick':
 {   pull: function( prev ){
 		setTimeout( function( ){
-			$my.timer.tickAtom().pull()
+			$my.timer.tick_atom().pull()
 		}, 1000 )
 		
 		return ( Number( next ) || 0 ) + 1

@@ -68,7 +68,7 @@ $jin.atom.prop({ '$jin.audio.output': {
 		
 		prev.push( next )
 		
-		$jin.audio.outputAtom().notify()
+		$jin.audio.output_atom().notify()
 		
 		return prev
 	}

@@ -1,4 +1,4 @@
-[jin-slide-show] {
+[jin-slide] {
     font: 1em/1.25 'Cambria', serif;
 	color: black;
 	position: absolute;
@@ -7,44 +7,38 @@
 	right: 0;
 	bottom: 0;
 	overflow: auto;
-}
-
-[jin-slide-show-page] {
-	position relative;
-	background: #ddd;
-	width: 100%;
-	height: 100%;
-	box-sizing: border-box;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	flex-flow: column;
+	background: #ddd;
 }
 
-@-webkit-keyframes jin-slide-show-paper
+@-webkit-keyframes jin-slide-page
 {
 	from {
-		-webkit-transform: translateY( -100% );
+		-webkit-transform: translateY( -10% );
 	}
 }
 
-@keyframes jin-slide-show-paper
+@keyframes jin-slide-page
 {
 	from {
-		transform: translateY( -100% );
+		transform: translateY( -10% );
 	}
 }
 
-[jin-slide-show-paper] {
+[jin-slide-page] {
 	background: white;
 	box-shadow: 0 0 6px rgba( 0, 0, 0, .5 );
-	padding: 3%;
+	padding: .5em 1em;
 	display: flex;
 	flex-flow: column;
 	justify-content: center;
-	-webkit-animation: jin-slide-show-paper .25s;
-	animation: jin-slide-show-paper .25s;
+	-webkit-animation: jin-slide-page .25s;
+	animation: jin-slide-page .25s;
 	position: relative;
+	-webkit-transform: translateY( 1% );
+	transform: translateY( 1% );
 }
 
 [jin-slide-show-header] {
@@ -60,34 +54,38 @@
 	justify-content: center;
 }
 
-[jin-slide-show-title] {
+[jin-slide-page] h {
 	/*background: lime;*/
 	text-align: center;
 	font-size: 2em;
 	display: inline-block;
-	margin: 0 .25em;
 	overflow: hidden;
-}
-
-[jin-slide-show-description] {
-	/*background: red;*/
-	display: inline-block;
-	margin: .5em;
-	overflow: hidden;
-}
-
-[jin-slide-show-description] ol {
-	list-style-position: inside;
-	padding: 0;
+	font-weight: normal;
+	padding: .25em;
 	margin: 0;
 }
 
-[jin-slide-show-description] a {
+[jin-slide-page] pre {
+	margin: 0;
+	padding: .5em;
+}
+
+[jin-slide-page] ol {
+	list-style-position: inside;
+}
+
+[jin-slide-page] ul {
+	list-style: none;
+	margin: 0;
+	padding: .5em;
+}
+
+[jin-slide-page] a {
 	text-decoration: none;
 	color: steelblue;
 }
 
-[jin-slide-show-description] a:hover {
+[jin-slide-page] a:hover {
 	text-decoration: underline;
 }
 
@@ -98,3 +96,20 @@
 [jin-slide-show-figure-descr] {
 	text-align: center;
 }
+
+[jin-slide-row] {
+	display: flex;
+	justify-content: center;
+	flex-flow: row;
+	padding: .5em;
+	margin: 0;
+}
+
+[jin-slide-col] {
+	display: flex;
+	justify-content: flex-start;
+	flex-flow: column;
+	padding: .5em;
+	margin: 0;
+}
+

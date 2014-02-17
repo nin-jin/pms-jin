@@ -1,9 +1,11 @@
-<div jin-slide-show="{id}"
+<div jin-slide="{id}"
 	jin-sample-props="
 		style.zoom=zoom
 	"
-	onwheel="onWheel"
-	onkeydown="onPress"
+	jin-sample-events="
+		onwheel=onWheel
+		onkeydown=onPress
+	"
 	tabindex="0"
 	>
 	{pageNodeCurrent}

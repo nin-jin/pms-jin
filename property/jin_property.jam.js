@@ -49,11 +49,11 @@ $jin.definer({ '$jin.property.hash': function( path, config ){
 		if( !storage ) storage = this[ fieldName ] = {}
 		if( arguments.length > 1 ){
 			var value2 = put ? put.call( key, value ) : value
-			if( value2 === void 0 ) delete storage[ '?' + key ]
-			else storage[ '?' + key ] = value2
+			if( value2 === void 0 ) delete storage[ key ]
+			else storage[ key ] = value2
 		} else if( arguments.length ) {
-			var value2 = storage[ '?' + key ]
-			if( pull && value2 === void 0 ) value2 = storage[ '?' + key ] = pull.call( this, key )
+			var value2 = storage[ key ]
+			if( pull && value2 === void 0 ) value2 = storage[ key ] = pull.call( this, key )
 			return value2
 		} else {
 			return storage

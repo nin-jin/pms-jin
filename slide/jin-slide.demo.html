@@ -19,59 +19,37 @@
 	<script src="-mix/index.env=web.stage=dev.js"></script>
 	<script src="-mix/slide.env=web.stage=release.sample.html.js"></script>
 	
-	<div jin-slide-demo="" jin-slide-show-page="name">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-title="">$jin.atom</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="contents">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Критерии оценки</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-description="">
-					<ol>
-						<li><a href="#slide=deps-ko">Способ объявления зависимостей</a></li>
-						<li><a href="#slide=binds-ko">Способ привязки к DOM</a></li>
-						<li><a href="#slide=induction">Способ распространения изменений</a></li>
-						<li><a href="#slide=size">Размер исходного кода</a></li>
-					</ol>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="deps-ko">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Зависимости в KnockOut</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+    <section id="jin-slide-demo">
+        
+        <section jin-slide-page="name">
+            <h>$jin.atom</h>
+        </section>
+        
+        <section jin-slide-page="contents">
+            <h>Критерии оценки</h>
+            <ol jin-slide-col="">
+                <li><a href="#slide=deps-ko">Способ объявления зависимостей</a></li>
+                <li><a href="#slide=binds-ko">Способ привязки к DOM</a></li>
+                <li><a href="#slide=induction">Способ распространения изменений</a></li>
+                <li><a href="#slide=size">Размер исходного кода</a></li>
+            </ol>
+        </section>
+        
+        <section jin-slide-page="deps-ko">
+            <h>Зависимости в KnockOut</h>
+            <pre>
 <font color="steelblue">function</font> AppViewModel( ){
     <font color="steelblue">this</font>.firstName = ko.observable( <font color="green">'Bert'</font> )
     <font color="steelblue">this</font>.lastName = ko.observable( <font color="green">'Bertington'</font> )
     <font color="steelblue">this</font>.fullName = ko.computed( <font color="steelblue">function</font>( ){
         <font color="steelblue">return</font> <font color="steelblue">this</font>.firstName() + <font color="green">' '</font> + <font color="steelblue">this</font>.lastName()
     }, <font color="steelblue">this</font> )
-}
-					</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="deps-angular">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Зависимости в AngularJS</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+}</pre>
+        </section>
+        
+		<section jin-slide-page="deps-angular">
+            <h>Зависимости в AngularJS</h>
+            <pre>
 <font color="steelblue">function</font> AppViewModel( <font color="navy">$scope</font> ){
     <font color="navy">$scope.firstName</font> = <font color="green">'Bert'</font>
     <font color="navy">$scope.lastName</font> = <font color="green">'Bertington'</font>
@@ -81,22 +59,11 @@
     }, <font color="steelblue">function</font>( next ){
         <font color="steelblue">this</font>.fullName = next
     })
-}
-
-					</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="deps-atom">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Зависимости в $jin.atom</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+}</pre>
+		</section>
+		<section jin-slide-page="deps-atom">
+            <h>Зависимости в $jin.atom</h>
+            <pre>
 <font color="navy">$foo.app.view</font> = <font color="steelblue">function</font>( ){ }
 
 <font color="navy">$jin.atom.prop</font>(
@@ -107,61 +74,36 @@
             <font color="steelblue">return</font> <font color="steelblue">this</font>.firstName() + <font color="green">' '</font> + <font color="steelblue">this</font>.lastName()
         }
     }
-})
-                    </pre>
-				</div>
-			</div>
-		</div>
-	</div>
-    
-	<div jin-slide-demo="" jin-slide-show-page="binds-ko">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Привязки в KnockOut</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+})</pre>
+		</section>
+        
+		<section jin-slide-page="binds-ko">
+			<h>Привязки в KnockOut</h>
+            <pre>
 <font color="steelblue">function</font> MyFriends( ){
     <font color="steelblue">this</font>.names = ko.observableArray([ <font color="green">'Bart'</font>, <font color="green">'John'</font> ])
 }</pre>
-					<pre>
+			<pre>
 &lt;ul <font color="maroon">data-bind</font>=<font color="green">"foreach: names()"</font>&gt;
     &lt;li <font color="maroon">data-bind</font>=<font color="green">"text: $data"</font>&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="binds-angular">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Привязки в AngularJS</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+		</section>
+        
+		<section jin-slide-page="binds-angular">
+            <h>Привязки в AngularJS</h>
+            <pre>
 <font color="steelblue">function</font> MyFriends( ){
     <font color="steelblue">this</font>.names = [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ]
 }</pre>
-					<pre>
+            <pre>
 &lt;ul ng-repeat="name in names"&gt;
     &lt;li&gt;<font color="magenta">{{name}}</font>&lt;/li&gt;
 &lt;/ul&gt;</pre>
-                </div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="binds-atom">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Привязки в $jin.atom</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
-					<pre>
+		</section>
+        
+		<section jin-slide-page="binds-atom">
+            <h>Привязки в $jin.atom</h>
+            <pre>
 <font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.list'</font>: [ <font color="green">'$jin.view'</font> ] })
 <font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..names'</font>: { value: [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ] } })
 <font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..friendViews'</font>: { pull: <font color="steelblue">function</font>( ){
@@ -172,21 +114,16 @@
 
 <font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.item'</font>: [ <font color="green">'$jin.view'</font> ] })
 <font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.item..name'</font>: { merge: String } })</pre>
-					<pre>
+            <pre>
 &lt;ul MyFriends-list="<font color="magenta">{id}</font>"&gt;<font color="magenta">{friends}</font>&lt;/ul&gt;
 &lt;li MyFriends-item="<font color="magenta">{id}</font>"&gt;<font color="magenta">{name}</font>&lt;/li&gt;</pre>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="induction">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Распространение обновлений</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-figure="">
+		</section>
+        
+		<section jin-slide-page="induction">
+			<h>Распространение обновлений</h>
+			<div jin-slide-row="">
+				<div jin-slide-col="">
+					<div jin-slide-show-figure-descr="">KnockOut</div>
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
 						
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
@@ -211,10 +148,10 @@
 						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="green" />
 						<circle cx="210" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 					</svg>
-					<div jin-slide-show-figure-descr="">KnockOut</div>
-					<div jin-slide-show-figure-descr="">2x recalc</div>
+					<div jin-slide-show-figure-descr="">1.5x recalc</div>
 				</div>
-				<div jin-slide-show-figure="">
+				<div jin-slide-col="">
+					<div jin-slide-show-figure-descr="">$jin.atom</div>
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
 						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
@@ -234,9 +171,9 @@
 						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 					</svg>
-					<div jin-slide-show-figure-descr="">$jin.atom</div>
 				</div>
-				<div jin-slide-show-figure="">
+				<div jin-slide-col="">
+					<div jin-slide-show-figure-descr="">AngularJS</div>
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
 						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
@@ -250,83 +187,75 @@
 						<circle cx="85" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="90" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="95" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-                        
+
 						<circle cx="180" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="185" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="190" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="195" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-                        
+
 						<circle cx="280" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="285" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="290" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="295" cy="300" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-						
+
 						<circle cx="180" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="185" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="190" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="195" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
-                        
+
 						<circle cx="280" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="285" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="290" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="295" cy="200" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
-						
+
 						<circle cx="80" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="85" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="90" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="95" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
-						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
-                        
+
 						<circle cx="180" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="185" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="190" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
 						<circle cx="195" cy="100" r="20" stroke="black" stroke-width="2" fill="yellow" />
+
+						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						
+						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
+						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
+						
+						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="green" />
+						<circle cx="110" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
 					</svg>
-					<div jin-slide-show-figure-descr="">AngularJS</div>
 					<div jin-slide-show-figure-descr="">4x digest</div>
 				</div>
 			</div>
-		</div>
-	</div>
-
-	<div jin-slide-demo="" jin-slide-show-page="size">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Размер</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-description="">
-                    <div>AngularJS ~ 717KB ~ 10KL</div>
-                    <div>KnockOut ~ 205KB ~ 5KL</div>
-                    <div>$jin.atom ~ 21KB ~ 1KL</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div jin-slide-demo="" jin-slide-show-page="links">
-		<div jin-slide-show-paper="">
-			<div jin-slide-show-header="">
-				<div jin-slide-show-title="">Сcылки</div>
-			</div>
-			<div jin-slide-show-content="">
-				<div jin-slide-show-description="">
-                    <a href="http://hyoo.ru/?article=%D0%90%D1%82%D0%BE%D0%BC%D1%8B+%D0%BD%D0%B0+JS;author=Jin">$jin.atom</a>
-                    <a href="http://knockoutjs.com/">KnockOut</a>
-                    <a href="http://angularjs.org/">AngularJS</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	
+		</section>
+        
+		<section jin-slide-page="size">
+            <h>Размер</h>
+            <ul>
+                <li>AngularJS ~ 717KB ~ 10KL</li>
+                <li>KnockOut ~ 205KB ~ 5KL</li>
+                <li>$jin.atom ~ 21KB ~ 1KL</li>
+            </ul>
+		</section>
+        
+		<section jin-slide-page="links">
+            <h>Сcылки</h>
+            <ul>
+                <li><a href="http://hyoo.ru/?article=%D0%90%D1%82%D0%BE%D0%BC%D1%8B+%D0%BD%D0%B0+JS;author=Jin">$jin.atom</a></li>
+                <li><a href="http://knockoutjs.com/">KnockOut</a></li>
+                <li><a href="http://angularjs.org/">AngularJS</a></li>
+                <li><a href="https://github.com/nin-jin/pms-jin/tree/master/slide/show">$jin.slide</a></li>
+            </ul>
+		</section>
+        
+    </section>
 	<script>
-		$jin.slide.show( 'jin-slide-demo' ).element().parent( document.body )
+		$jin.slide( 'jin-slide-demo' ).element().parent( document.body )
 	</script>
 	
 </body>

@@ -8,8 +8,9 @@ $jin.property.hash( '$jin.view..sample', { pull: function( protoId ){
     var proto = $jin.sample.proto( protoId )
 	
 	var sample = proto.make( this )
-	this.entangle( sample )
-	sample.activated( true )
+	sample.view( this )
+	//this.entangle( sample )
+	//sample.activated( true )
 	
     return sample
 } } )
@@ -27,16 +28,26 @@ $jin.method( '$jin.view..element', function( key ){
 $jin.property( '$jin.view..freezed', function( val ){
     if( !arguments.length ) return true
 	
-	var samples = this.sample()
-	
-	for( var protoId in samples ){
-		samples[ protoId ].activated( !val )
+	if( val ){
+		var samples = this.sample()
+		
+		for( var protoId in samples ){
+			//samples[ protoId ].activated( false )
+			samples[ protoId ].view( null ).free()
+			this.sample( protoId, void 0 )
+		}
+	} else {
+		var samples = this.sample()
+		
+		for( var protoId in samples ){
+			//samples[ protoId ].activated( true )
+		}
 	}
 	
 	return !!val
 } )
 
-$jin.property( '$jin.view..nativeNode', function( node ){
+$jin.method( '$jin.view..nativeNode', function( ){
     return this.element().nativeNode()
 } )
 

@@ -42,7 +42,7 @@ $jin.method({ '$my.app.init': function( ){
 }})
 
 $jin.method({ '$my.app.init2': function( ){
-	override: '$my.app.init'
+	this['$my.app.init']
 	console.log( 'init2' )
 }})
 

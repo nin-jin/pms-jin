@@ -26,26 +26,34 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 	
 	function collect( node ){
 		
+		if( node.childNodes ){
+			for( var i = 0; i < node.childNodes.length; ++i ){
+				var child = node.childNodes[i]
+				
+				if( child.nodeName === '#text' ){
+					var found = /\{(\w+)\}/g.exec( child.nodeValue )
+					if( !found ) continue
+					var key = found[1]
+					
+					rules.push({ key: key, path: path.slice() })
+				} else {
+					path.push( 'childNodes', i )
+						collect( child )
+					path.pop(); path.pop()
+				}
+			}
+		}
+		
 		var attrs = [].slice.call( node.attributes )
 		if( attrs ){
 			for( var i = 0; i < attrs.length; ++i ){
 				var attr = attrs[ i ]
 				
-				var nameFound = /^(on)(\w+)$/.exec( attr.nodeName )
-				if( nameFound ){
-					var type = nameFound[1]
-					var name = nameFound[2]
-					
-					node.removeAttribute( attr.nodeName )
-					
-					rules.push({ key: attr.nodeValue, path: path.slice(), eventName: name })
-				} else {
-					var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
-					if( !found ) continue
-					var key = found[1]
-					
-					rules.push({ key: key, path: path.slice(), attrName: attr.nodeName })
-				}
+				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
+				if( !found ) continue
+				var key = found[1]
+				
+				rules.push({ key: key, path: path.slice(), attrName: attr.nodeName })
 			}
 			
 			var props = node.getAttribute( 'jin-sample-props' )
@@ -72,31 +80,21 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 					var eventName = chunk.split( /[-_:=.]/g )
 					var key = eventName.pop()
 					eventName = eventName.join( '.' )
-					var event = $jin.glob( eventName )
-					if( !event ) throw new Error( 'Unknown event [' + eventName + ']' )
-					rules.push({ key: key, path: path.slice(), event: event })
+					
+					var shortFound = /^(on)(\w+)$/.exec( eventName )
+					if( shortFound ){
+						var type = shortFound[1]
+						var name = shortFound[2]
+						rules.push({ key: key, path: path.slice(), eventName: name })
+					} else {
+						var event = $jin.glob( eventName )
+						if( !event ) throw new Error( 'Unknown event [' + eventName + ']' )
+						rules.push({ key: key, path: path.slice(), event: event })
+					}
 				} )
 				node.removeAttribute( 'jin-sample-events' )
 			}
 			
-		}
-		
-		if( node.childNodes ){
-			for( var i = 0; i < node.childNodes.length; ++i ){
-				var child = node.childNodes[i]
-				
-				if( child.nodeName === '#text' ){
-					var found = /\{(\w+)\}/g.exec( child.nodeValue )
-					if( !found ) continue
-					var key = found[1]
-					
-					rules.push({ key: key, path: path.slice() })
-				} else {
-					path.push( 'childNodes', i )
-						collect( child )
-					path.pop(); path.pop()
-				}
-			}
 		}
 	}
 	
@@ -105,7 +103,7 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 	return rules
 }})
 
-$jin.property({ '$jin.sample..view': null })
+$jin.atom.prop({ '$jin.sample..view': {} })
 
 $jin.property({ '$jin.sample..covers': null })
 
@@ -114,11 +112,11 @@ $jin.property({ '$jin.sample..activated': function( val ){
 	var covers = this.covers()
 	
 	if( val ){
-		$jin.atom.slaves.unshift( null )
+		//$jin.atom.slaves.unshift( null )
 		covers.forEach( function( cover ){
-			cover.pull()
+			cover.update()
 		} )
-		$jin.atom.slaves.shift()
+		//$jin.atom.slaves.shift()
 	} else {
 		covers.forEach( function( cover ){
 			cover.disobeyAll()
@@ -127,10 +125,27 @@ $jin.property({ '$jin.sample..activated': function( val ){
 }})
 
 $jin.method({ '$jin.sample.proto..make': function( view ){
-	var rules = this.rules()
-	var node = this.nativeNode().cloneNode( true )
-	return $jin.sample( node ).view( view ).rules( rules )
+	var pool = $jin.sample.pool( this.id() )
+	var sample = pool.pop()
+	if( !sample ){
+		var rules = this.rules()
+		var node = this.nativeNode().cloneNode( true )
+		sample = $jin.sample( node ).proto( this ).rules( rules )
+	}
+	//sample.view( view )
+	return sample
 }})
+
+$jin.property.hash({ '$jin.sample.pool': { pull: function( ){
+	return []
+}}})
+
+$jin.method({ '$jin.sample..free': function( ){
+	//this.view( null )
+	$jin.sample.pool( this.proto().id() ).push( this )
+}})
+
+$jin.property({ '$jin.sample..proto': null })
 
 $jin.method({ '$jin.sample..rules': function( rules ){
 	if( !arguments.length ) throw new Error( 'Rules is not getter' )
@@ -177,7 +192,9 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 			{	name: rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
 			,	pull: pull
 			,	push: function fieldPush( next, prev ){
-					return current[ rule.fieldName ] = next
+					if( next === void 0 ) return
+					if( current[ rule.fieldName ] == next ) return
+					current[ rule.fieldName ] = next
 				}
 			})
 		} else if( rule.eventName ){
@@ -210,9 +227,8 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 			,	push: function(){}
 			, 	pull: function contentPull( oldValue ){
 					var view = sample.view()
-					if( !view ) return
 					
-					var value = view[ rule.key ]()
+					var value = view ? view[ rule.key ]() : null
 					
 					if( typeof value !== 'object' ){
 						var content = ( value == null ) ? '' : String( value )
@@ -283,6 +299,10 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 		sample.entangle( cover )
 		
 		covers.push( cover )
+		
+		$jin.atom.slaves.unshift( null )
+		cover.pull()
+		$jin.atom.slaves.shift()
 	} )
 	
 	this.covers( covers )
