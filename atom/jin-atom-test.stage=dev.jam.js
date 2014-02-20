@@ -60,10 +60,10 @@ $jin.test( function tracking( test ){
 $jin.test( function resetting( test ){
     var x = 1
     var y = $jin.atom({ pull: function(){ return x + 1 } })
-    y1 = y.get()
+    var y1 = y.get()
     x = 2
     y.value( void 0 )
-    y2 = y.get()
+    var y2 = y.get()
     test.unique( y1, y2 )
 } )
 
@@ -73,6 +73,27 @@ $jin.test( function mutating( test ){
 		return prev + 1
 	} )
 	test.equal( atom.get(), 2 )
+} )
+
+$jin.test( function pull_failing( test ){
+    test.timeout( 100 )
+	var error = new Error( 'error' )
+    var x = $jin.atom({ merge: Boolean })
+    var y = $jin.atom({ pull: function(){
+		if( x.get() ) throw error
+		else return 1
+	} })
+    var z = $jin.atom({ pull: function(){ return y + 1 } })
+	z1 = z.get()
+	x.put( true )
+    $jin.defer( function( ){
+		try {
+			z2 = z.get()
+		} catch( err ){
+			test.equal( error, err )
+	        test.done( true )
+		}
+    })
 } )
 
 //$jin.test( function reaping( test ){

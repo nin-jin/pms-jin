@@ -44,7 +44,7 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 			}
 		}
 		
-		var attrs = [].slice.call( node.attributes )
+		var attrs = node.attributes
 		if( attrs ){
 			for( var i = 0; i < attrs.length; ++i ){
 				var attr = attrs[ i ]
@@ -68,7 +68,6 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 					
 					rules.push({ key: key, path: path.concat( subPath ), fieldName: fieldName })
 				} )
-				node.removeAttribute( 'jin-sample-props' )
 			}
 			
 			var events = node.getAttribute( 'jin-sample-events' )
@@ -92,7 +91,6 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 						rules.push({ key: key, path: path.slice(), event: event })
 					}
 				} )
-				node.removeAttribute( 'jin-sample-events' )
 			}
 			
 		}
@@ -153,6 +151,7 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 	var node = this.nativeNode()
 	var sample = this
 	var covers = []
+	var protoId = this.proto().id()
 	
 	rules.forEach( function ruleIterator( rule ){
 		var current = node
@@ -164,14 +163,19 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 			return view[ rule.key ]()
 		}
 		
+		var fail = function( error ){
+			console.error( error )
+		}
+		
 		rule.path.forEach( function pathIterator( name ){
 			current = current[ name ]
 		} )
 		
 		if( rule.attrName ){
 			var cover = $jin.atom(
-			{	name: rule.path.join( '/' ) + '/@' + rule.attrName + '=' + rule.key
+			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/@' + rule.attrName + '=' + rule.key
 			,	pull: pull
+			,	fail: fail
 			,	push: function attrPush( next, prev ){
 					if( next == null ) current.removeAttribute( rule.attrName )
 					else current.setAttribute( rule.attrName, String( next ) )
@@ -189,14 +193,34 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 			}
 		} else if( rule.fieldName ){
 			var cover = $jin.atom(
-			{	name: rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
+			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
 			,	pull: pull
+			,	fail: fail
 			,	push: function fieldPush( next, prev ){
 					if( next === void 0 ) return
 					if( current[ rule.fieldName ] == next ) return
 					current[ rule.fieldName ] = next
 				}
 			})
+			if( /^(value|checked)$/i.test( rule.fieldName ) && /^(select|input|textarea)$/i.test( current.nodeName ) ){
+				var handler = function( event ){
+					var view = sample.view()
+					if( !view ) return
+					view[ rule.key ]( current[ rule.fieldName ] )
+				}
+				sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
+				sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
+				sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
+			}
+			if( rule.fieldName === 'scrollTop' ){
+				var handler = function( event ){
+					var view = sample.view()
+					if( !view ) return
+					
+					view[ rule.key ]( current.scrollTop )
+				}
+				sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
+			}
 		} else if( rule.eventName ){
 			var listener = $jin.dom( current ).listen( rule.eventName, function eventHandler( event ){
 				var view = sample.view()
@@ -223,8 +247,9 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 			return
 		} else {
 			var cover = $jin.atom(
-			{	name: rule.path.join( '/' ) + '=' + rule.key
+			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
 			,	push: function(){}
+			,	fail: fail
 			, 	pull: function contentPull( oldValue ){
 					var view = sample.view()
 					

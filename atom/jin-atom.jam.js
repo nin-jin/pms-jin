@@ -5,6 +5,7 @@ $jin.atom.scheduled = []
 $jin.atom._deferred = null
 
 $jin.glob( '$jin.atom.._value', void 0 )
+$jin.glob( '$jin.atom.._error', void 0 )
 $jin.glob( '$jin.atom.._slice', 0 )
 $jin.glob( '$jin.atom.._scheduled', false )
 
@@ -35,6 +36,20 @@ $jin.method({ '$jin.atom.schedule': function( ){
 	this._deferred = $jin.defer( this.induce )
 }})
 
+$jin.method({ '$jin.atom.bound': function( handler ){
+	$jin.atom.slaves.unshift( null )
+	try {
+		handler()
+	} finally {
+		var stack = $jin.atom.slaves
+		while( stack.length ){
+			var top = stack.shift()
+			if( top === null ) break
+		}
+	}
+	return this
+}})
+
 $jin.method({ '$jin.atom..init': function $jin_atom__init( config ){
 	this['$jin.klass..init']
 	this._id = $jin.makeId( '$jin.atom' )
@@ -44,6 +59,7 @@ $jin.method({ '$jin.atom..init': function $jin_atom__init( config ){
 	if( config.pull ) this._pull = config.pull
 	if( config.push ) this._push = config.push
 	if( config.merge ) this._merge = config.merge
+	if( config.fail ) this._fail = config.fail
 	this._value = config.value
 	this._context = config.context
 }})
@@ -58,9 +74,11 @@ $jin.method({ '$jin.atom..get': function( ){
 		slave.obey( this )
 		this._slaves[ slave.id() ] = slave
 	}
+	
+	if( this._pull && ( this._scheduled || ( this._value === void 0 ) ) ) this.pull()
 
-	if( this._pull && ( this._scheduled || ( this._value === void 0 ) ) ) return this.pull()
-
+	if( this._error ) throw this._error
+	
 	return this._value
 }})
 
@@ -74,7 +92,9 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 		queue[ this._id ] = null
 		this.scheduled = false
 	}
-
+	
+	this._error = void 0
+	
 	var oldMasters = this._masters
 	this._masters = {}
 	this._slice = 0
@@ -82,7 +102,10 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 	if( ~$jin.atom.slaves.indexOf( this ) ) throw new Error( 'Recursive atom' )
 	$jin.atom.slaves.unshift( this )
 	try {
-		var newValue = this._pull ? this._pull.call( this._context, this._value ) : this._value
+		this.put( this._pull ? this._pull.call( this._context, this._value ) : this._value )
+	} catch( error ){
+		this.put( null )
+		this._error = error
 	} finally {
 		var stack = $jin.atom.slaves
 		while( stack.length ){
@@ -96,36 +119,71 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 		oldMasters[ masterId ].dislead( this )
 	}
 
-	//if( newValue === void 0 ) return this._value
-
-	if( this._merge ) newValue = this._merge.call( this._context, newValue, this._value )
-
-	this.value( newValue )
-
-	return newValue
+	return this._value
 }})
 
 $jin.method({ '$jin.atom..put': function( next ){
-	if( this._merge ) next = this._merge.call( this._context, next, this._value )
+	
+	var merge = this._merge
+	if( merge ){
+		var context = this._context
+		var prev = this._value
+		$jin.atom.bound( function mutate( ){
+			next = merge.call( context, next, prev )
+		})
+	}
+	
 	this.value( next )
+	this._error = void 0
+	
+	return this
+}})
+
+$jin.method({ '$jin.atom..fail': function( error ){
+	this._error = error
+	this.value( null )
 	return this
 }})
 
 $jin.method({ '$jin.atom..mutate': function( mutator ){
-	var next = mutator.call( this._context, this._value )
-	this.put( next )
+	var context = this._context
+	var prev = this._value
+	var atom = this
+	
+	$jin.atom.bound( function mutate( ){
+		atom.put( mutator.call( context, prev ) )
+	})
+	
 	return this
 }})
 
-$jin.method({ '$jin.atom..value': function( value ){
-	var oldValue = this._value
+$jin.method({ '$jin.atom..value': function( next ){
+	var prev = this._value
 
-	if( !arguments.length ) return oldValue
+	if( !arguments.length ) return prev
 
-	if( value === oldValue ) return this
+	if( next === prev ) return this
 
-	this._value = value
-	if( this._push ) this._push.call( this._context, value, oldValue )
+	this._value = next
+	
+	var context = this._context
+	
+	var error = this._error
+	if( error ){
+		var fail = this._fail
+		if( fail ){
+			$jin.atom.bound( function( ){
+				fail.call( context, error, prev )
+			})
+		}
+	} else {
+		var push = this._push
+		if( push ){
+			$jin.atom.bound( function( ){
+				push.call( context, next, prev )
+			})
+		}
+	}
 
 	this.notify()
 
