@@ -79,53 +79,53 @@
         
 		<section jin-slide-page="binds-ko">
 			<h>Привязки в KnockOut</h>
-            <pre>
-<font color="steelblue">function</font> MyFriends( ){
-    <font color="steelblue">this</font>.names = ko.observableArray([ <font color="green">'Bart'</font>, <font color="green">'John'</font> ])
-}</pre>
 			<pre>
 &lt;ul <font color="maroon">data-bind</font>=<font color="green">"foreach: names()"</font>&gt;
     &lt;li <font color="maroon">data-bind</font>=<font color="green">"text: $data"</font>&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
+            <p>Шаблон завязан на фиксированный формат данных.</p>
 		</section>
         
 		<section jin-slide-page="binds-angular">
             <h>Привязки в AngularJS</h>
             <pre>
-<font color="steelblue">function</font> MyFriends( ){
-    <font color="steelblue">this</font>.names = [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ]
-}</pre>
-            <pre>
 &lt;ul ng-repeat="name in names"&gt;
     &lt;li&gt;<font color="magenta">{{name}}</font>&lt;/li&gt;
 &lt;/ul&gt;</pre>
+            <p>Шаблон завязан на фиксированный формат данных.</p>
 		</section>
         
 		<section jin-slide-page="binds-atom">
             <h>Привязки в $jin.atom</h>
             <pre>
-<font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.list'</font>: [ <font color="green">'$jin.view'</font> ] })
-<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..names'</font>: { value: [ <font color="green">'Bart'</font>, <font color="green">'John'</font> ] } })
-<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.list..friendViews'</font>: { pull: <font color="steelblue">function</font>( ){
-  <font color="steelblue">return this</font>.names().map( <font color="steelblue">function</font>( name, index ){
-    <font color="steelblue">return this</font>.make( <font color="green">'friend='</font> + index, MyFriends.item ).name( name )
-  }.bind( <font color="steelblue">this</font> ) )
-} } })
-
-<font color="maroon">$jin.klass</font>({ <font color="green">'MyFriends.item'</font>: [ <font color="green">'$jin.view'</font> ] })
-<font color="maroon">$jin.atom.prop</font>({ <font color="green">'MyFriends.item..name'</font>: { merge: String } })</pre>
-            <pre>
 &lt;ul MyFriends-list="<font color="magenta">{id}</font>"&gt;<font color="magenta">{friends}</font>&lt;/ul&gt;
 &lt;li MyFriends-item="<font color="magenta">{id}</font>"&gt;<font color="magenta">{name}</font>&lt;/li&gt;</pre>
+            <p>Шаблон предостовляет слоты, в которые можно поместить любые данные.</p>
 		</section>
         
 		<section jin-slide-page="induction">
 			<h>Распространение обновлений</h>
 			<div jin-slide-row="">
 				<div jin-slide-col="">
+					<div jin-slide-show-figure-descr="">slices</div>
+					<svg width="50px" height="150px" viewBox="50 50 100 300" preserveAspectRatio="xMidYMid">
+						
+						<line x1="50" y1="150" x2="150" y2="150" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+						<line x1="50" y1="250" x2="150" y2="250" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+                        
+                        <text x="90" y="110" font-size="30" fill="black">V</text>
+                        <text x="80" y="210" font-size="30" fill="black">VM</text>
+                        <text x="85" y="310" font-size="30" fill="black">M</text>
+                        
+					</svg>
+				</div>
+				<div jin-slide-col="">
 					<div jin-slide-show-figure-descr="">KnockOut</div>
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
 						
+						<line x1="50" y1="150" x2="350" y2="150" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+						<line x1="50" y1="250" x2="350" y2="250" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+                        
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
 						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
 						<line x1="200" y1="200" x2="100" y2="100" stroke="black" stroke-width="2" />
@@ -151,30 +151,11 @@
 					<div jin-slide-show-figure-descr="">1.5x recalc</div>
 				</div>
 				<div jin-slide-col="">
-					<div jin-slide-show-figure-descr="">$jin.atom</div>
-					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
-						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
-						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
-						<line x1="200" y1="200" x2="100" y2="100" stroke="black" stroke-width="2" />
-						<line x1="200" y1="200" x2="200" y2="100" stroke="black" stroke-width="2" />
-						<line x1="200" y1="300" x2="300" y2="200" stroke="black" stroke-width="2" />
-						<line x1="300" y1="300" x2="300" y2="200" stroke="black" stroke-width="2" />
-						<line x1="300" y1="200" x2="200" y2="100" stroke="black" stroke-width="2" />
-						
-						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
-						
-						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
-						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
-						
-						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
-						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
-					</svg>
-				</div>
-				<div jin-slide-col="">
 					<div jin-slide-show-figure-descr="">AngularJS</div>
 					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
+						<line x1="50" y1="150" x2="350" y2="150" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+						<line x1="50" y1="250" x2="350" y2="250" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+                        
 						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
 						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
 						<line x1="200" y1="200" x2="100" y2="100" stroke="black" stroke-width="2" />
@@ -231,6 +212,32 @@
 					</svg>
 					<div jin-slide-show-figure-descr="">4x digest</div>
 				</div>
+				<div jin-slide-col="">
+					<div jin-slide-show-figure-descr="">$jin.atom</div>
+					<svg width="150px" height="150px" viewBox="50 50 300 300" preserveAspectRatio="xMidYMid">
+						<line x1="50" y1="150" x2="350" y2="150" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+						<line x1="50" y1="250" x2="350" y2="250" stroke="gray" stroke-width="1" stroke-dasharray="5,5" />
+                        
+						<line x1="100" y1="300" x2="100" y2="100" stroke="black" stroke-width="2" />
+						<line x1="200" y1="300" x2="200" y2="200" stroke="black" stroke-width="2" />
+						<line x1="200" y1="200" x2="100" y2="100" stroke="black" stroke-width="2" />
+						<line x1="200" y1="200" x2="200" y2="100" stroke="black" stroke-width="2" />
+						<line x1="200" y1="300" x2="300" y2="200" stroke="black" stroke-width="2" />
+						<line x1="300" y1="300" x2="300" y2="200" stroke="black" stroke-width="2" />
+						<line x1="300" y1="200" x2="200" y2="100" stroke="black" stroke-width="2" />
+						
+						<circle cx="100" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						<circle cx="200" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						<circle cx="300" cy="300" r="20" stroke="black" stroke-width="2" fill="red" />
+						
+						<circle cx="200" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
+						<circle cx="300" cy="200" r="20" stroke="black" stroke-width="2" fill="green" />
+						
+						<circle cx="100" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
+						<circle cx="200" cy="100" r="20" stroke="black" stroke-width="2" fill="blue" />
+					</svg>
+					<div jin-slide-show-figure-descr="">all ok</div>
+				</div>
 			</div>
 		</section>
         
@@ -249,7 +256,7 @@
                 <li><a href="http://hyoo.ru/?article=%D0%90%D1%82%D0%BE%D0%BC%D1%8B+%D0%BD%D0%B0+JS;author=Jin">$jin.atom</a></li>
                 <li><a href="http://knockoutjs.com/">KnockOut</a></li>
                 <li><a href="http://angularjs.org/">AngularJS</a></li>
-                <li><a href="https://github.com/nin-jin/pms-jin/tree/master/slide/show">$jin.slide</a></li>
+                <li><a href="https://github.com/nin-jin/pms-jin/tree/master/slide">$jin.slide</a></li>
             </ul>
 		</section>
         

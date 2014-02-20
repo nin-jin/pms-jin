@@ -70,6 +70,11 @@
 	padding: .5em;
 }
 
+[jin-slide-page] p {
+	margin: 0;
+	padding: .5em;
+}
+
 [jin-slide-page] ol {
 	list-style-position: inside;
 }
