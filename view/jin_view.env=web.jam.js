@@ -8,7 +8,7 @@ $jin.property.hash( '$jin.view..sample', { pull: function( protoId ){
     var proto = $jin.sample.proto( protoId )
 	
 	var sample = proto.make( this )
-	sample.view( this )
+	//sample.view( this )
 	//this.entangle( sample )
 	//sample.activated( true )
 	
@@ -28,19 +28,17 @@ $jin.method( '$jin.view..element', function( key ){
 $jin.property( '$jin.view..freezed', function( val ){
     if( !arguments.length ) return true
 	
+	var samples = this.sample()
+	
 	if( val ){
-		var samples = this.sample()
-		
 		for( var protoId in samples ){
 			//samples[ protoId ].activated( false )
-			samples[ protoId ].view( null ).free()
+			samples[ protoId ].view( null )
 			this.sample( protoId, void 0 )
 		}
 	} else {
-		var samples = this.sample()
-		
 		for( var protoId in samples ){
-			//samples[ protoId ].activated( true )
+			samples[ protoId ].view( this )
 		}
 	}
 	

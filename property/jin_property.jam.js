@@ -5,20 +5,20 @@ $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, f
     var fieldName = '_' + name
 	
 	if( filter ){
-		var property = function( value ){
+		var property = function( next ){
 			if( arguments.length ){
-				if( value === void 0 ){
-					this[ fieldName ] = value
+				if( next === void 0 ){
+					this[ fieldName ] = next
 				} else {
-					this[ fieldName ] = filter.call( this, value )
+					this[ fieldName ] = filter.call( this, next )
 				}
 				return this
 			} else {
-				var value = this[ fieldName ]
-				if( value === void 0 ){
+				var prev = this[ fieldName ]
+				if( prev === void 0 ){
 					return this[ fieldName ] = filter.call( this )
 				} else {
-					return value
+					return prev
 				}
 			}
 		}

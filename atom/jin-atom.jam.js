@@ -7,6 +7,8 @@ $jin.atom._deferred = null
 $jin.glob( '$jin.atom.._value', void 0 )
 $jin.glob( '$jin.atom.._error', void 0 )
 $jin.glob( '$jin.atom.._slice', 0 )
+$jin.glob( '$jin.atom.._pulled', 0 )
+$jin.glob( '$jin.atom.._slavesCount', 0 )
 $jin.glob( '$jin.atom.._scheduled', false )
 
 $jin.method({ '$jin.atom.induce': function( ){
@@ -72,7 +74,7 @@ $jin.method({ '$jin.atom..get': function( ){
 	var slave = $jin.atom.slaves[0]
 	if( slave ){
 		slave.obey( this )
-		this._slaves[ slave.id() ] = slave
+		this.lead( slave )
 	}
 	
 	if( this._pull && ( this._scheduled || ( this._value === void 0 ) ) ) this.pull()
@@ -114,6 +116,8 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 		}
 	}
 
+	this._pulled = true
+	
 	for( var masterId in oldMasters ){
 		if( this._masters[ masterId ] ) continue
 		oldMasters[ masterId ].dislead( this )
@@ -135,6 +139,7 @@ $jin.method({ '$jin.atom..put': function( next ){
 	
 	this.value( next )
 	this._error = void 0
+	this._pulled = false
 	
 	return this
 }})
@@ -200,19 +205,18 @@ $jin.method({ '$jin.atom..slice': function( ){
 
 $jin.method({ '$jin.atom..notify': function( ){
 	if( $jin.atom.logger ) $jin.atom.log.push( this._name, value )
-
-	for( var id in this._slaves ){
-		var slave = this._slaves[ id ]
+	
+	var slaves = this._slaves
+	for( var id in slaves ){
+		var slave = slaves[ id ]
 		if( !slave ) continue
 		slave.update()
 	}
 
-	//this._slaves = {}
-
 	return this
 }})
 
-$jin.method({ '$jin.atom..update': function( slice, atom ){
+$jin.method({ '$jin.atom..update': function( ){
 	var slice = this._slice
 
 	var queue = $jin.atom.scheduled[ slice ]
@@ -228,8 +232,12 @@ $jin.method({ '$jin.atom..update': function( slice, atom ){
 $jin.method({ '$jin.atom..lead': function( slave ){
 	if( slave === this ) throw new Error( 'Self leading atom' )
 	var id = slave.id()
-
-	this._slaves[ id ] = slave
+	
+	var slaves = this._slaves
+	if( !slaves[ id ] ){
+		slaves[ id ] = slave
+		++ this._slavesCount
+	}
 
 	return this
 }})
@@ -237,6 +245,7 @@ $jin.method({ '$jin.atom..lead': function( slave ){
 $jin.method({ '$jin.atom..obey': function( master ){
 	if( master === this ) throw new Error( 'Self obey atom' )
 	var id = master.id()
+	
 	this._masters[ id ] = master
 
 	var masterSlice = master.slice()
@@ -247,8 +256,12 @@ $jin.method({ '$jin.atom..obey': function( master ){
 
 $jin.method({ '$jin.atom..dislead': function( slave ){
 	var id = slave.id()
-
-	this._slaves[ id ] = void 0
+	
+	var slaves = this._slaves
+	if( slaves[ id ] ){
+		slaves[ id ] = void 0
+		if( !-- this._slavesCount ) this.reap()
+	}
 
 	return this
 }})
@@ -264,9 +277,11 @@ $jin.method({ '$jin.atom..disobey': function( master ){
 $jin.method({ '$jin.atom..disleadAll': function( ){
 	var slaves = this._slaves
 	this._slaves = {}
+	this._slavesCount = 0
 	for( var id in slaves ){
 		slaves[ id ].disobey( this )
 	}
+	this.reap()
 }})
 
 $jin.method({ '$jin.atom..disobeyAll': function( ){
@@ -278,9 +293,24 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 	this._slice = 0
 }})
 
+$jin.method({ '$jin.atom..reap': function( ){
+	if( this._push ) return this
+	if( !this._pulled ) return this
+	
+	$jin.defer( function( ){
+		if( this._slavesCount ) return
+		this.disobeyAll()
+		this._value = void 0
+		this._error = void 0
+		this._slice = 0
+	}.bind( this ))
+	
+	return this
+}})
+
 $jin.method({ '$jin.atom..destroy': function( ){
-	this.disobeyAll()
 	this.disleadAll()
+	this.disobeyAll()
 	return $jin.method['$jin.klass..destroy']()
 }})
 

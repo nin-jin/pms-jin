@@ -33,9 +33,12 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 				if( child.nodeName === '#text' ){
 					var found = /\{(\w+)\}/g.exec( child.nodeValue )
 					if( !found ) continue
-					var key = found[1]
 					
+					var key = found[1]
 					rules.push({ key: key, path: path.slice() })
+					
+					while( node.firstChild ) node.removeChild( node.firstChild )
+					break;
 				} else {
 					path.push( 'childNodes', i )
 						collect( child )
@@ -101,26 +104,14 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 	return rules
 }})
 
-$jin.atom.prop({ '$jin.sample..view': {} })
-
-$jin.property({ '$jin.sample..covers': null })
-
-$jin.property({ '$jin.sample..activated': function( val ){
-	if( !arguments.length ) return
-	var covers = this.covers()
-	
-	if( val ){
-		//$jin.atom.slaves.unshift( null )
-		covers.forEach( function( cover ){
-			cover.update()
-		} )
-		//$jin.atom.slaves.shift()
-	} else {
-		covers.forEach( function( cover ){
-			cover.disobeyAll()
-		} )
+$jin.atom.prop({ '$jin.sample..view': {
+	put: function( next, prev ){
+		if( next == null ) $jin.sample.pool( this.proto().id() ).push( this )
+		return next
 	}
 }})
+
+$jin.property({ '$jin.sample..covers': null })
 
 $jin.method({ '$jin.sample.proto..make': function( view ){
 	var pool = $jin.sample.pool( this.id() )
@@ -130,7 +121,7 @@ $jin.method({ '$jin.sample.proto..make': function( view ){
 		var node = this.nativeNode().cloneNode( true )
 		sample = $jin.sample( node ).proto( this ).rules( rules )
 	}
-	//sample.view( view )
+	sample.view( view )
 	return sample
 }})
 
@@ -140,7 +131,6 @@ $jin.property.hash({ '$jin.sample.pool': { pull: function( ){
 
 $jin.method({ '$jin.sample..free': function( ){
 	//this.view( null )
-	$jin.sample.pool( this.proto().id() ).push( this )
 }})
 
 $jin.property({ '$jin.sample..proto': null })
@@ -158,7 +148,7 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 		
 		var pull = function( prev ){
 			var view = sample.view()
-			if( !view ) return
+			if( !view ) return null
 			
 			return view[ rule.key ]()
 		}
@@ -248,51 +238,38 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 		} else {
 			var cover = $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
-			,	push: function(){}
+			,	pull: pull
 			,	fail: fail
-			, 	pull: function contentPull( oldValue ){
-					var view = sample.view()
+			, 	merge: function contentPull( n, p ){
+					var next = n
+					var prev = p
 					
-					var value = view ? view[ rule.key ]() : null
+					if( !prev ) prev = []
 					
-					if( typeof value !== 'object' ){
-						var content = ( value == null ) ? '' : String( value )
-						
-						if( 'textContent' in current ) var oldContent = current.textContent
-						else var oldContent = current.innerText
-						
-						if( content === oldContent ) return 
-						
-						if( 'textContent' in current ) current.textContent = content
-						else current.innerText = content
-						
-						return value
+					if( next == null ){
+						next = []
+					} else if( typeof next !== 'object' ){
+						next = [ String( next ) ]
+					} else {
+						next = [].concat( next )
 					}
 					
-					if(( value == null )||( typeof oldValue !== 'object' )){
-						var child; while( child = current.firstChild ) current.removeChild( child )
-						oldValue = []
-					}
-					
-					if( value == null ) return value
-					
-					if(!( value.length >= 0 )) value = [ value ]
-					
-					if( oldValue === value ) return value
-					
-					value = value.map( function( item, index ){
-						if( item == null ) return
-						
-						if( typeof item !== 'object' ) item = document.createTextNode( String( item ) )
-						
-						return item
+					next = next.filter( function( item ){
+						return ( item != null )&&( item !== '' )
+					} )
+					next = next.map( function( item ){
+						return ( typeof item === 'object' ) ? item : String( item )
 					} )
 					
-					oldValue = oldValue || []
-					
-					oldValue = oldValue.filter( function( item ){
-						var newIndex = value.indexOf( item )
-						if( ~newIndex ) return true
+					var prevKeys = []
+					prev = prev.filter( function( item ){
+						var key = ( item.nodeName === '#text' ) ? item.nodeValue : item
+						
+						var nextIndex = next.indexOf( key )
+						if( nextIndex >= 0 ){
+							prevKeys.push( key )
+							return true
+						}
 						
 						if( typeof item.nativeNode === 'function' ) var itemNode = item.nativeNode()
 						else var itemNode = item
@@ -305,18 +282,25 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 						return false
 					} )
 					
-					value.forEach( function( item, index ){
-						var oldItem = oldValue[ index ]
-						if( oldItem === item ) return
+					next = next.map( function( item, index ){
+						if( item === prevKeys[ index ] ) return prev[ index ]
+						
+						if( typeof item === 'string' ) item = document.createTextNode( item )
 						
 						if( typeof item.freezed === 'function' ) item.freezed( false )
 						
-						if( typeof item.nativeNode === 'function' ) item = item.nativeNode()
-						if( oldItem && ( typeof oldItem.nativeNode === 'function' ) ) oldItem = oldItem.nativeNode()
-						current.insertBefore( item, oldItem || null )
+						var node = ( typeof item.nativeNode === 'function' ) ? item.nativeNode() : item
+						
+						var prevItem = prev[ index ]
+						
+						if( prevItem && ( typeof prevItem.nativeNode === 'function' ) ) prevItem = prevItem.nativeNode()
+						
+						current.insertBefore( node, prevItem || null )
+						
+						return item
 					} )
 					
-					return value
+					return next
 				}
 			} )
 		}
@@ -325,9 +309,9 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 		
 		covers.push( cover )
 		
-		$jin.atom.slaves.unshift( null )
-		cover.pull()
-		$jin.atom.slaves.shift()
+		$jin.atom.bound( function( ){
+			cover.pull()
+		})
 	} )
 	
 	this.covers( covers )
