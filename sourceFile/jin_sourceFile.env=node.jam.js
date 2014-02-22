@@ -29,7 +29,7 @@ $jin.method( '$jin.sourceFile..deepModuleList', function( ){
 $jin.method( '$jin.sourceFile..require', function( ){
     if( this.exists() ) return this
     
-    console.log( 'Module (' + this.path() + ') not found. Search (' + this.name() + ') in repository...' )
+    $jin.log.warn( 'Module (' + this.path() + ') not found. Search (' + this.name() + ') in repository...' )
     
     $jin.async2sync( $node.npm.load ).call( $node.npm, {} )
     var meta = $jin.async2sync( $node.npm.commands.view ).call( $node.npm.commands, [ this.name(), 'repository' ] )
@@ -44,7 +44,7 @@ $jin.method( '$jin.sourceFile..require', function( ){
         throw new Error( 'Please, install this package manualy from (' + repo + ')' )
     }
     
-    console.log( 'Installing (' + this.path() + ') from (' + repo + ')...' )
+    $jin.log.info( 'Installing (' + this.path() + ') from (' + repo + ')...' )
     
     $jin.execute( 'git', [ 'clone', repo, this.path() ] )
     

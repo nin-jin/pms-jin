@@ -154,7 +154,7 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 		}
 		
 		var fail = function( error ){
-			console.error( error )
+			$jin.log.error( error )
 		}
 		
 		rule.path.forEach( function pathIterator( name ){

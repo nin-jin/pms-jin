@@ -3,7 +3,7 @@ $jin.method( '$jin.thread', function( proc ){
         try {
             proc.apply( this, arguments )
         } catch( error ){
-            console.error( error.stack )
+            $jin.log.error( error )
         }
     }
 } )

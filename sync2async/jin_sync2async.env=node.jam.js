@@ -6,7 +6,7 @@ $jin.proxy( { apply: function( func, self, args ){
     
     if( !callback ) callback = function( error ){
         if( !error ) return
-        console.error( String( error ) + '\n' + String( error.stack ).split( String( error ) ).join( '' ) )
+        $jin.log.error( error )
         process.exit( 1 )
     }
     

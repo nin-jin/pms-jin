@@ -19,7 +19,7 @@ $jin.method( '$jin.thread', function( proc ){
 			try {
 				launcher()
 			} catch( error ){
-				if( console.error ) console.error( error )
+				$jin.log.error( error )
 			}
 		}
         

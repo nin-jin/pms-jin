@@ -145,7 +145,7 @@ $jin.property( '$jin.dom.event..data', function( data ){
 		try {
 			return JSON.parse( str )
 		} catch( error ){
-			console.error( error )
+			$jin.log.error( error )
 			return null
 		}
 	}

@@ -92,7 +92,7 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 	if( !skipUnScheduling && this._scheduled ){
 		var queue = $jin.atom.scheduled[ this._slice ]
 		queue[ this._id ] = null
-		this.scheduled = false
+		this._scheduled = false
 	}
 	
 	this._error = void 0
@@ -106,8 +106,7 @@ $jin.method({ '$jin.atom..pull': function( skipUnScheduling  ){
 	try {
 		this.put( this._pull ? this._pull.call( this._context, this._value ) : this._value )
 	} catch( error ){
-		this.put( null )
-		this._error = error
+		this.fail( error )
 	} finally {
 		var stack = $jin.atom.slaves
 		while( stack.length ){
@@ -311,7 +310,11 @@ $jin.method({ '$jin.atom..reap': function( ){
 $jin.method({ '$jin.atom..destroy': function( ){
 	this.disleadAll()
 	this.disobeyAll()
-	return $jin.method['$jin.klass..destroy']()
+	if( this._scheduled ){
+		var queue = $jin.atom.scheduled[ this._slice ]
+		queue[ this._id ] = null
+	}
+	return this['$jin.klass..destroy']()
 }})
 
 $jin.method({ '$jin.atom.enableLogs': function( ){
@@ -328,7 +331,7 @@ $jin.method({ '$jin.atom.logging..notify': function( ){
 			ctor._deferedLogging = null
 			console.groupCollapsed('$jin.atom.log')
 			ctor.log().forEach( function( row ){
-				console.log.apply( console, row )
+				$jin.log.apply( $jin, row )
 			} )
 			console.groupEnd('$jin.atom.log')
 			ctor.log( [] )

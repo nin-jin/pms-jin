@@ -8,7 +8,7 @@ $jin.atom.prop({ '$jin.audio.input': {
 		}
 		
 		var onError = function( error ){
-			console.error( error )
+			$jin.log.error( error )
 		}
 		
 		var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia
@@ -38,7 +38,7 @@ $jin.atom.prop({ '$jin.audio.inputText': {
 		}
 		
 		recognition.onerror = function( event ){
-			console.log( event )
+			$jin.log( event )
 		}
 		
 		recognition.onend = function( event ){
@@ -64,7 +64,7 @@ $jin.atom.prop({ '$jin.audio.output': {
 		var context = new AudioContext
 		var source = context.createMediaStreamSource( next )
 		source.connect( context.destination )
-		console.log( 'source', source )
+		$jin.log( 'source', source )
 		
 		prev.push( next )
 		
