@@ -1,5 +1,4 @@
 $jin.klass({ '$jin.sample': [ '$jin.dom' ] })
-$jin.klass({ '$jin.sample.proto': [ '$jin.registry' ] })
 
 $jin.property({ '$jin.sample.strings': String })
 
@@ -9,99 +8,22 @@ $jin.property({ '$jin.sample.templates': function( ){
 	return $jin.dom( '<div xmlns="http://www.w3.org/1999/xhtml">' + $jin.sample.strings() + '</div>' )
 }})
 
-$jin.property({ '$jin.sample.proto..nativeNode': function( ){
-	var selector = '[' + this.id() + ']'
-	
-	var node = $jin.sample.templates().cssFind( selector )
-	if( !node ) throw new Error( 'Sample not found (' + selector + ')' )
-	
-	return node.raw()
-}})
+$jin.property.hash({ '$jin.sample.pool': { pull: function( ){
+	return []
+}}})
 
-$jin.property({ '$jin.sample.proto..rules': function( ){
-	var node = this.nativeNode()
+$jin.method({ '$jin.sample.exec': function( type ){
+	var pool = $jin.sample.pool( type )
+	var sample = pool.pop()
 	
-	var path = []
-	var rules = []
-	
-	function collect( node ){
-		
-		if( node.childNodes ){
-			for( var i = 0; i < node.childNodes.length; ++i ){
-				var child = node.childNodes[i]
-				
-				if( child.nodeName === '#text' ){
-					var found = /\{(\w+)\}/g.exec( child.nodeValue )
-					if( !found ) continue
-					
-					var key = found[1]
-					rules.push({ key: key, path: path.slice() })
-					
-					while( node.firstChild ) node.removeChild( node.firstChild )
-					break;
-				} else {
-					path.push( 'childNodes', i )
-						collect( child )
-					path.pop(); path.pop()
-				}
-			}
-		}
-		
-		var attrs = node.attributes
-		if( attrs ){
-			for( var i = 0; i < attrs.length; ++i ){
-				var attr = attrs[ i ]
-				
-				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
-				if( !found ) continue
-				var key = found[1]
-				
-				rules.push({ key: key, path: path.slice(), attrName: attr.nodeName })
-			}
-			
-			var props = node.getAttribute( 'jin-sample-props' )
-			if( props ){
-				props.split( /[;\s&]+/g )
-				.forEach( function( chunk ){
-					if( !chunk ) return
-					
-					var subPath = chunk.split( /[-_:=.]/g )
-					var key = subPath.pop()
-					var fieldName = subPath.pop()
-					
-					rules.push({ key: key, path: path.concat( subPath ), fieldName: fieldName })
-				} )
-			}
-			
-			var events = node.getAttribute( 'jin-sample-events' )
-			if( events ){
-				events.split( /[;\s&]+/g )
-				.forEach( function( chunk ){
-					if( !chunk ) return
-					
-					var eventName = chunk.split( /[-_:=.]/g )
-					var key = eventName.pop()
-					eventName = eventName.join( '.' )
-					
-					var shortFound = /^(on)(\w+)$/.exec( eventName )
-					if( shortFound ){
-						var type = shortFound[1]
-						var name = shortFound[2]
-						rules.push({ key: key, path: path.slice(), eventName: name })
-					} else {
-						var event = $jin.glob( eventName )
-						if( !event ) throw new Error( 'Unknown event [' + eventName + ']' )
-						rules.push({ key: key, path: path.slice(), event: event })
-					}
-				} )
-			}
-			
-		}
+	if( !sample ){
+		var proto = $jin.sample.proto( type )
+		proto.rules()
+		var node = proto.nativeNode().cloneNode( true )
+		sample = this[ '$jin.dom.exec' ]( node ).proto( proto )
 	}
 	
-	collect( node )
-	
-	return rules
+	return sample
 }})
 
 $jin.atom.prop({ '$jin.sample..view': {
@@ -113,35 +35,13 @@ $jin.atom.prop({ '$jin.sample..view': {
 
 $jin.property({ '$jin.sample..covers': null })
 
-$jin.method({ '$jin.sample.proto..make': function( view ){
-	var pool = $jin.sample.pool( this.id() )
-	var sample = pool.pop()
-	if( !sample ){
-		var rules = this.rules()
-		var node = this.nativeNode().cloneNode( true )
-		sample = $jin.sample( node ).proto( this ).rules( rules )
-	}
-	sample.view( view )
-	return sample
-}})
-
-$jin.property.hash({ '$jin.sample.pool': { pull: function( ){
-	return []
-}}})
-
-$jin.method({ '$jin.sample..free': function( ){
-	//this.view( null )
-}})
-
-$jin.property({ '$jin.sample..proto': null })
-
-$jin.method({ '$jin.sample..rules': function( rules ){
-	if( !arguments.length ) throw new Error( 'Rules is not getter' )
+$jin.property({ '$jin.sample..proto': function( proto ){
 	
 	var node = this.nativeNode()
+	var rules = proto.rules()
 	var sample = this
 	var covers = []
-	var protoId = this.proto().id()
+	var protoId = proto.id()
 	
 	rules.forEach( function ruleIterator( rule ){
 		var current = node
@@ -316,5 +216,5 @@ $jin.method({ '$jin.sample..rules': function( rules ){
 	
 	this.covers( covers )
 	
-	return this
+	return proto
 }})

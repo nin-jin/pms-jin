@@ -4,15 +4,8 @@ $jin.method( '$jin.view..state', function( ){
     return $jin.state.local.item.apply( $jin.state.local, arguments )
 } )
 
-$jin.property.hash( '$jin.view..sample', { pull: function( protoId ){
-    var proto = $jin.sample.proto( protoId )
-	
-	var sample = proto.make( this )
-	//sample.view( this )
-	//this.entangle( sample )
-	//sample.activated( true )
-	
-    return sample
+$jin.property.hash( '$jin.view..sample', { pull: function( type ){
+    return $jin.sample( type ).view( this )
 } } )
 
 $jin.property( '$jin.view..htmlID', function( ){
@@ -35,10 +28,6 @@ $jin.property( '$jin.view..freezed', function( val ){
 			//samples[ protoId ].activated( false )
 			samples[ protoId ].view( null )
 			this.sample( protoId, void 0 )
-		}
-	} else {
-		for( var protoId in samples ){
-			samples[ protoId ].view( this )
 		}
 	}
 	
