@@ -18,22 +18,6 @@ $jin.method( '$jin.view..element', function( key ){
 	return this.sample( protoId )
 } )
 
-$jin.property( '$jin.view..freezed', function( val ){
-    if( !arguments.length ) return true
-	
-	var samples = this.sample()
-	
-	if( val ){
-		for( var protoId in samples ){
-			//samples[ protoId ].activated( false )
-			samples[ protoId ].view( null )
-			this.sample( protoId, void 0 )
-		}
-	}
-	
-	return !!val
-} )
-
 $jin.method( '$jin.view..nativeNode', function( ){
     return this.element().nativeNode()
 } )

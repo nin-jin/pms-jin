@@ -27,8 +27,13 @@ $jin.method({ '$jin.sample.exec': function( type ){
 }})
 
 $jin.atom.prop({ '$jin.sample..view': {
-	put: function( next, prev ){
+	merge: function( next, prev ){
+		if( next === prev ) return prev
+		
+		if( prev ) prev.sample( this.proto().id(), void 0 )
+		
 		if( next == null ) $jin.sample.pool( this.proto().id() ).push( this )
+		
 		return next
 	}
 }})
@@ -158,7 +163,9 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 						return ( item != null )&&( item !== '' )
 					} )
 					next = next.map( function( item ){
-						return ( typeof item === 'object' ) ? item : String( item )
+						if( typeof item !== 'object' ) return String( item )
+						if( item['$jin.view..element'] ) return item.element()
+						return item
 					} )
 					
 					var prevKeys = []
@@ -176,7 +183,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 						
 						if( itemNode.parentNode === current ){
 							current.removeChild( itemNode )
-							if( typeof item.freezed === 'function' ) item.freezed( true )
+							if( typeof item['$jin.sample..view'] === 'function' ) item.view( null )
 						}
 						
 						return false
@@ -186,8 +193,6 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 						if( item === prevKeys[ index ] ) return prev[ index ]
 						
 						if( typeof item === 'string' ) item = document.createTextNode( item )
-						
-						if( typeof item.freezed === 'function' ) item.freezed( false )
 						
 						var node = ( typeof item.nativeNode === 'function' ) ? item.nativeNode() : item
 						
