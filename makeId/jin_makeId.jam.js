@@ -1,6 +1,7 @@
 $jin.makeId = function( prefix ){
-	var seed = $jin.makeId.seeds[ prefix ] || 0
-	$jin.makeId.seeds[ prefix ] = seed + 1
+	var seeds = $jin.makeId.seeds 
+	var seed = seeds[ prefix ] || 0
+	seeds[ prefix ] = seed + 1
     return prefix + ':' + seed
 }
 
