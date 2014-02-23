@@ -12,7 +12,7 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 	var merge = config.merge
 	if( merge ) merge.jin_method_path = path + '.merge'
 
-    var prop = function $jin_atom_prop_accessor( next ){
+    var prop = function jin_atom_prop_accessor( next ){
         var atom = propAtom.call( this )
         if( !arguments.length ) return atom.get()
         
@@ -28,7 +28,7 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
     
     var fieldName = '_' + path
     
-    var propAtom = function $jin_atom_prop_stor( ){
+    var propAtom = function jin_atom_prop_stor( ){
         var atom = this[ fieldName ]
         
         if( atom ) return atom

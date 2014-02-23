@@ -52,7 +52,7 @@ $jin.method({ '$jin.atom.bound': function( handler ){
 	return this
 }})
 
-$jin.method({ '$jin.atom..init': function $jin_atom__init( config ){
+$jin.method({ '$jin.atom..init': function jin_atom__init( config ){
 	this['$jin.klass..init']
 	this._id = $jin.makeId( '$jin.atom' )
 	this._name = config.name || this._id
@@ -131,7 +131,7 @@ $jin.method({ '$jin.atom..put': function( next ){
 	if( merge ){
 		var context = this._context
 		var prev = this._value
-		$jin.atom.bound( function mutate( ){
+		$jin.atom.bound( function jin_atom_mergeBound( ){
 			next = merge.call( context, next, prev )
 		})
 	}
@@ -176,14 +176,14 @@ $jin.method({ '$jin.atom..value': function( next ){
 	if( error ){
 		var fail = this._fail
 		if( fail ){
-			$jin.atom.bound( function( ){
+			$jin.atom.bound( function jin_atom_failBound( ){
 				fail.call( context, error, prev )
 			})
 		}
 	} else {
 		var push = this._push
 		if( push ){
-			$jin.atom.bound( function( ){
+			$jin.atom.bound( function jin_atom_pushBound( ){
 				push.call( context, next, prev )
 			})
 		}
@@ -296,7 +296,7 @@ $jin.method({ '$jin.atom..reap': function( ){
 	if( this._push ) return this
 	if( !this._pulled ) return this
 	
-	$jin.defer( function( ){
+	$jin.defer( function jin_atom_defferedReap( ){
 		if( this._slavesCount ) return
 		this.disobeyAll()
 		this._value = void 0
@@ -330,7 +330,7 @@ $jin.method({ '$jin.atom.logging..notify': function( ){
 		ctor._deferedLogging = $jin.schedule( 0, function defferedLogging( ){
 			ctor._deferedLogging = null
 			console.groupCollapsed('$jin.atom.log')
-			ctor.log().forEach( function( row ){
+			ctor.log().forEach( function jin_atom_defferedLog( row ){
 				$jin.log.apply( $jin, row )
 			} )
 			console.groupEnd('$jin.atom.log')

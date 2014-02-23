@@ -51,7 +51,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 	rules.forEach( function ruleIterator( rule ){
 		var current = node
 		
-		var pull = function( prev ){
+		var pull = function jin_sample_pull( prev ){
 			var view = sample.view()
 			if( !view ) return null
 			
@@ -145,67 +145,80 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
 			,	pull: pull
 			,	fail: fail
-			, 	merge: function contentPull( n, p ){
-					var next = n
-					var prev = p
+			, 	merge: function contentPull( nextItems, prevItems ){
 					
-					if( !prev ) prev = []
+					if( !prevItems ) prevItems = []
 					
-					if( next == null ){
-						next = []
-					} else if( typeof next !== 'object' ){
-						next = [ String( next ) ]
+					if( nextItems == null ){
+						nextItems = [ '' ]
+					} else if( typeof nextItems === 'object' ){
+						nextItems = [].concat( nextItems )
 					} else {
-						next = [].concat( next )
+						nextItems = [ String( nextItems ) ]
 					}
 					
-					next = next.filter( function( item ){
-						return ( item != null )&&( item !== '' )
+					nextItems = nextItems.filter( function jin_sample_filterNulls( item ){
+						return( item != null )
 					} )
-					next = next.map( function( item ){
+					
+					if( !nextItems.length ) nextItems.push( '' )
+					
+					nextItems = nextItems.map( function jin_sample_normalizeNext( item ){
 						if( typeof item !== 'object' ) return String( item )
 						if( item['$jin.view..element'] ) return item.element()
 						return item
 					} )
 					
-					var prevKeys = []
-					prev = prev.filter( function( item ){
-						var key = ( item.nodeName === '#text' ) ? item.nodeValue : item
-						
-						var nextIndex = next.indexOf( key )
-						if( nextIndex >= 0 ){
-							prevKeys.push( key )
-							return true
+					var textNodes = []
+					var elements = []
+					
+					var nodes = current.childNodes
+					for( var i = 0; i < nodes.length; ++i ){
+						var node = nodes[i]
+						if( node.nodeName === '#text' ) textNodes.push( node )
+						else elements.push( node )
+					}
+					
+					var nextNodes = nextItems.map( function jin_sample_generateNodes( item ){
+						if( typeof item === 'string' ){
+							var node = textNodes.pop()
+							if( !node ) node = document.createTextNode( item )
+							else if( node.nodeValue !== item ) node.nodeValue = item
+							return node
+						} else {
+							var node = item[ '$jin.dom..nativeNode' ] ? item.nativeNode() : item
+							var index = elements.indexOf( node )
+							if( index >= 0 ) elements[ index ]  = null
+							return node
 						}
-						
-						if( typeof item.nativeNode === 'function' ) var itemNode = item.nativeNode()
-						else var itemNode = item
-						
-						if( itemNode.parentNode === current ){
-							current.removeChild( itemNode )
-							if( typeof item['$jin.sample..view'] === 'function' ) item.view( null )
-						}
-						
-						return false
 					} )
 					
-					next = next.map( function( item, index ){
-						if( item === prevKeys[ index ] ) return prev[ index ]
-						
-						if( typeof item === 'string' ) item = document.createTextNode( item )
-						
-						var node = ( typeof item.nativeNode === 'function' ) ? item.nativeNode() : item
-						
-						var prevItem = prev[ index ]
-						
-						if( prevItem && ( typeof prevItem.nativeNode === 'function' ) ) prevItem = prevItem.nativeNode()
-						
-						current.insertBefore( node, prevItem || null )
-						
-						return item
+					var removeNode = function jin_sample_removeNode( node ){
+						if( !node ) return
+						current.removeChild( node )
+					}
+					
+					elements.forEach( removeNode )
+					textNodes.forEach( removeNode )
+					
+					prevItems.map( function jin_sample_freePrevs( item ){
+						if( typeof item === 'string' ) return
+						if( !item['$jin.sample..view'] ) return
+						if( nextItems.indexOf( item ) >= 0 ) return
+						item.view( null )
 					} )
 					
-					return next
+					for( var i = nextNodes.length; i > 0; --i ){
+						var next = nextNodes[ i ]
+						var node = nextNodes[ i - 1 ]
+						if( next ){
+							if( node.nextNode !== next ) current.insertBefore( node, next )
+						} else {
+							if( node.parentNode !== current ) current.appendChild( node )
+						}
+					}
+					
+					return nextItems
 				}
 			} )
 		}
