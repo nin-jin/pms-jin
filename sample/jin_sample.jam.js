@@ -146,7 +146,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			,	pull: pull
 			,	fail: fail
 			, 	merge: function contentPull( nextItems, prevItems ){
-					
+					if( nextItems === 'q' ) debugger
 					if( !prevItems ) prevItems = []
 					
 					if( nextItems == null ){
@@ -181,7 +181,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 					
 					var nextNodes = nextItems.map( function jin_sample_generateNodes( item ){
 						if( typeof item === 'string' ){
-							var node = textNodes.pop()
+							var node = textNodes.shift()
 							if( !node ) node = document.createTextNode( item )
 							else if( node.nodeValue !== item ) node.nodeValue = item
 							return node
