@@ -146,7 +146,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			,	pull: pull
 			,	fail: fail
 			, 	merge: function contentPull( nextItems, prevItems ){
-					if( nextItems === 'q' ) debugger
+					
 					if( !prevItems ) prevItems = []
 					
 					if( nextItems == null ){
