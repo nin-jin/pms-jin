@@ -1,3 +1,5 @@
+$jin.error({ '$jin.atom.wait': [] })
+
 $jin.klass({ '$jin.atom': [] })
 
 $jin.atom.slaves = []
@@ -19,13 +21,13 @@ $jin.method({ '$jin.atom.induce': function( ){
 		var queue = scheduled[i]
 		if( !queue ) continue
 		scheduled[i] = null
-
+		
 		for( var atomId in queue ){
 			var atom = queue[ atomId ]
 			if( !atom ) continue
-
+			
 			atom.pull()
-
+			
 			i = -1
 		}
 	}
@@ -72,14 +74,14 @@ $jin.method({ '$jin.atom..id': function( ){
 }})
 
 $jin.method({ '$jin.atom..get': function( ){
+	if( this._config.pull && ( this._scheduled || ( this._value === void 0 ) ) ) this.pull()
+
 	var slave = $jin.atom.slaves[0]
 	if( slave ){
 		slave.obey( this )
 		this.lead( slave )
 	}
 	
-	if( this._config.pull && ( this._scheduled || ( this._value === void 0 ) ) ) this.pull()
-
 	if( this._error ) throw this._error
 	
 	return this._value

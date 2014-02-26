@@ -3,12 +3,6 @@ $jin.definer({ '$jin.klass': function( path, mixins ){
     return $jin.mixin.apply( this, mixins.concat([ path ]) )
 }})
 
-$jin.klass.old = function( ){ // arguments: sourceName*, targetName
-    var name = arguments[ arguments.length - 1 ]
-    $jin.mixin( '$jin.klass', name )
-    return $jin.mixin.apply( this, arguments )
-}
-
 $jin.method( '$jin.klass.exec', function( ){
 	return new this( arguments )
 } )

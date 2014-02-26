@@ -1,6 +1,6 @@
 $jin.klass({ '$jin.file.onChange': [ '$jin.event' ] })
 
-$jin.klass.old( '$jin.registry', '$jin.crier', '$jin.file' )
+$jin.klass({ '$jin.file': [ '$jin.registry', '$jin.crier' ] })
 
 $jin.property( '$jin.file.api', function( ){
     return /*$jin.fiberize*/( $node['fs'] )

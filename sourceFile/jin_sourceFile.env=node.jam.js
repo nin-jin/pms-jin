@@ -1,4 +1,4 @@
-$jin.klass.old( '$jin.file', '$jin.sourceFile')
+$jin.klass({ '$jin.sourceFile': [ '$jin.file' ] })
 
 $jin.property( '$jin.sourceFile..sourceList', function( ){
     if( this.isFile() ) return [ this ]

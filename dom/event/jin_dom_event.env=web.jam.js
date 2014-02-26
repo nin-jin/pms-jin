@@ -1,4 +1,4 @@
-$jin.klass.old( '$jin.wrapper', '$jin.event', '$jin.dom.event' )
+$jin.klass({ '$jin.dom.event': [ '$jin.wrapper', '$jin.event' ] })
 
 $jin.property( '$jin.dom.event.bubbles', Boolean )
 $jin.property( '$jin.dom.event.cancelable', Boolean )
