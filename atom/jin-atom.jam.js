@@ -92,6 +92,9 @@ $jin.method({ '$jin.atom..valueOf': function( ){
 }})
 
 $jin.method({ '$jin.atom..pull': function( ){
+	var config = this._config
+	if( !config.pull ) return this._value
+
 	if( this._scheduled ){
 		this._scheduled = false
 		var queue = $jin.atom.scheduled[ this._slice ]
@@ -106,20 +109,21 @@ $jin.method({ '$jin.atom..pull': function( ){
 	this._masters = {}
 	this._slice = 0
 	
-	var config = this._config
-
-	if( ~$jin.atom.slaves.indexOf( this ) ) throw new Error( 'Recursive atom' )
+	if( $jin.atom.slaves.indexOf( this ) >= 0 ) throw new Error( 'Recursive atom' )
 	$jin.atom.slaves.unshift( this )
 	try {
-		this.put( config.pull ? config.pull.call( config.context, this._value ) : this._value )
+		try {
+			var value = config.pull.call( config.context, this._value )
+		} finally {
+			var stack = $jin.atom.slaves
+			while( stack.length ){
+				var top = stack.shift()
+				if( top === this ) break
+			}
+		}
+		this.put( value )
 	} catch( error ){
 		this.fail( error )
-	} finally {
-		var stack = $jin.atom.slaves
-		while( stack.length ){
-			var top = stack.shift()
-			if( top === this ) break
-		}
 	}
 
 	this._pulled = true
@@ -211,12 +215,15 @@ $jin.method({ '$jin.atom..slice': function( ){
 }})
 
 $jin.method({ '$jin.atom..notify': function( ){
-	if( $jin.atom.logger ) $jin.atom.log.push( this._config.name, value )
+	var slaveExclude = $jin.atom.slaves[0]
 	
 	var slaves = this._slaves
 	for( var id in slaves ){
 		var slave = slaves[ id ]
+		
 		if( !slave ) continue
+		if( slave === slaveExclude ) continue
+		
 		slave.update()
 	}
 

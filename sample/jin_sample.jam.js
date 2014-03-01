@@ -14,7 +14,7 @@ $jin.property.hash({ '$jin.sample.pool': { pull: function( ){
 
 $jin.method({ '$jin.sample.exec': function( type ){
 	var pool = $jin.sample.pool( type )
-	var sample = pool.pop()
+	var sample = pool.shift()
 	
 	if( !sample ){
 		var proto = $jin.sample.proto( type )
@@ -27,12 +27,20 @@ $jin.method({ '$jin.sample.exec': function( type ){
 }})
 
 $jin.atom.prop({ '$jin.sample..view': {
-	merge: function( next, prev ){
+	push: function( next, prev ){
 		if( next === prev ) return prev
 		
-		if( prev ) prev.sample( this.proto().id(), void 0 )
+		if( prev ){
+			var protoId = this.proto().id()
+			var prevSample = prev.sample( protoId )
+			if( prevSample === this ) prev.sample( protoId, void 0 )
+		}
 		
-		if( next == null ) $jin.sample.pool( this.proto().id() ).push( this )
+		if( next == null ){
+			var protoId = this.proto().id()
+			var pool = $jin.sample.pool( protoId )
+			pool.push( this )
+		}
 		
 		return next
 	}

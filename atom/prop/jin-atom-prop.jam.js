@@ -21,7 +21,7 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 		
 		var next3 = ( put && ( next2 !== prev ) ) ? put.call( this, next2, prev ) : next2
 		
-        atom.value( next3 )
+        atom.put( next3 )
 		
         return this
     }
