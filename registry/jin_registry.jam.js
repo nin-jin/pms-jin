@@ -1,7 +1,18 @@
+/**
+ * Registry of singletons trait.
+ * http://en.wikipedia.org/wiki/Multiton_pattern
+ * Can be mixed with jin-pool trait.
+ */
+
+/**
+ * Hash map of created instances.
+ */
 $jin.property.hash( '$jin.registry.storage', {} )
 
-$jin.property( '$jin.registry..id', String )
-
+/**
+ * Select instance from registry.
+ * Otherwise creats new one.
+ */
 $jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
 	if( id instanceof this ) return id
 	id = String( id )
@@ -10,23 +21,39 @@ $jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
 	
     if( obj ) return obj
     
-    var newObj = (new this).id( id )
+	var make = this['$jin.pool.exec'] || this['$jin.klass.exec']
+	
+    var newObj = make.call( this, { id: id } )
     var id2 = newObj.id()
     
-    var obj = this.storage( id2 )
-    if( obj ) return obj
-    
-	if( id !== id2 ) this.storage( id, id2 )
+	if( id !== id2 ){
+		var obj = this.storage( id2 )
+		if( obj ) return obj
+		this.storage( id, id2 )
+	}
+	
 	this.storage( id2, newObj )
 	
     return newObj
 } )
 
+/**
+ * Identifier of instance.
+ */
+$jin.property( '$jin.registry..id', String )
+
+/**
+ * Removes from registry on destroy.
+ */
 $jin.method( '$jin.klass..destroy', '$jin.registry..destroy', function( ){
 	this.constructor.storage( this.id(), null )
-	this['$jin.klass..destroy']()
+	var destroy = this['$jin.pool..destroy'] || this['$jin.klass..destroy']
+	destroy.call( this )
 } )
 
+/**
+ * Identifier as primitive representation.
+ */
 $jin.method( '$jin.klass..toString', '$jin.registry..toString', function( ){
     return this.id()
 } )

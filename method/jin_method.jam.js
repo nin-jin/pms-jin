@@ -74,9 +74,13 @@ $jin.method.merge = function $jin_method_merge( left, right, name ){
     } else if( conflictList.length > 1 ){
         var func = $jin.func.make( name )
         func.execute = function( ){
-            var conflictNames = conflictList.map( function( func ){
-                return func.jin_method_path
-            } )
+            var conflictNames = conflictList.reduce( function( names, func ){
+                var name = func.jin_method_path
+				if( names.indexOf( name ) >= 0 ) return names
+				
+				names.push( name )
+				return names
+            }, [] )
             throw new Error( "Conflict in [" + name + "] by [" + conflictNames + "]" )
         }
         func.jin_method_path = name

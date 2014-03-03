@@ -1,4 +1,4 @@
-$jin.klass({ '$jin.view': [ '$jin.registry' ] })
+$jin.klass({ '$jin.view': [ '$jin.registry'/*, '$jin.pool'*/ ] })
 
 $jin.method( '$jin.view..state', function( ){
     return $jin.state.local.item.apply( $jin.state.local, arguments )
