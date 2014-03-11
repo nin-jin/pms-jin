@@ -7,6 +7,11 @@ $jin.method( '$jin.dom..html', function( html ){
     }
 } )
 
+$jin.method({ '$jin.dom..size': function( ){
+	var node = this.nativeNode()
+	return $jin.vector([ node.offsetWidth, node.ofsfetHeight ])
+}})
+
 if( $jin.support.xmlModel() === 'ms' ){
     
     $jin.mixin( '$jin.dom.ms', '$jin.dom' )

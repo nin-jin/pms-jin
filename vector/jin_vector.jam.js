@@ -17,3 +17,15 @@ $jin.method( '$jin.vector..z', function( val ){
 	this.raw()[2] = val
 	return this
 } )
+
+$jin.method( '$jin.vector.merge', function( merger, left, right ){
+	left = $jin.vector( left ).raw()
+	right = $jin.vector( right ).raw()
+	
+	var res = left.map( function( l, index ){
+		var r = right[ index ]
+		return merger( l, r )
+	} )
+	
+	return $jin.vector( res )
+} )

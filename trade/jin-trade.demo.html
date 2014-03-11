@@ -1,0 +1,26 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8" />
+	
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	
+	<link href="-mix/index.stage=dev.css" rel="stylesheet" />
+	
+</head>
+<body>
+	
+	<script src="-mix/index.env=web.stage=dev.js"></script>
+	<script src="-mix/trade.env=web.stage=release.sample.html.js"></script>
+	
+	<script>
+		$jin.trade( 'jin-trade-demo' ).element().parent( document.body )
+	</script>
+	
+</body>

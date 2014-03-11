@@ -60,10 +60,15 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 		var current = node
 		
 		var pull = function jin_sample_pull( prev ){
-			var view = sample.view()
-			if( !view ) return null
-			
-			return view[ rule.key ]()
+			try {
+				var view = sample.view()
+				if( !view ) return null
+				
+				return view[ rule.key ]()
+			} catch( error ){
+				if( error instanceof $jin.atom.wait ) return null
+				throw error
+			}
 		}
 		
 		var fail = function( error ){

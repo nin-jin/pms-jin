@@ -25,6 +25,7 @@ $jin.property({ '$jin.doc..sizeListener': function( ){
 } } )
 
 $jin.atom.prop({ '$jin.doc..size': {
+	resolves: [ '$jin.dom..size' ],
 	pull: function( ){
 		this.sizeListener()
 		var root = document.documentElement
