@@ -1,6 +1,6 @@
 $jin.definer({ '$jin.klass': function( path, mixins ){
-    $jin.mixin( '$jin.klass', path )
-    return $jin.mixin.apply( this, mixins.concat([ path ]) )
+    mixins.unshift( '$jin.klass' )
+    return $jin.mixin( path, mixins )
 }})
 
 $jin.method( '$jin.klass.exec', function( ){

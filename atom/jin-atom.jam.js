@@ -112,20 +112,18 @@ $jin.method({ '$jin.atom..pull': function( ){
 	if( $jin.atom.slaves.indexOf( this ) >= 0 ) throw new Error( 'Recursive atom' )
 	$jin.atom.slaves.unshift( this )
 	try {
-		try {
-			var value = config.pull.call( config.context, this._value )
-		} finally {
-			var stack = $jin.atom.slaves
-			while( stack.length ){
-				var top = stack.shift()
-				if( top === this ) break
-			}
-		}
+		var value = config.pull.call( config.context, this._value )
 		this.put( value )
 	} catch( error ){
 		this.fail( error )
+	} finally {
+		var stack = $jin.atom.slaves
+		while( stack.length ){
+			var top = stack.shift()
+			if( top === this ) break
+		}
 	}
-
+	
 	this._pulled = true
 	
 	for( var masterId in oldMasters ){
@@ -334,7 +332,7 @@ $jin.method({ '$jin.atom..destroy': function( ){
 }})
 
 $jin.method({ '$jin.atom.enableLogs': function( ){
-	$jin.mixin( '$jin.atom.logging', '$jin.atom' )
+	$jin.mixin({ '$jin.atom': [ '$jin.atom.logging' ] })
 }})
 
 $jin.method({ '$jin.atom.logging..notify': function( ){

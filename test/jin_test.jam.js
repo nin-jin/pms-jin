@@ -150,8 +150,8 @@ $jin.method( '$jin.test..callback', function( func ){
 
 $jin.property( '$jin.test..mockHash', Object )
 
-$jin.method( '$jin.test..mock', function( name, value ){
-    var mock = $jin.mock({ name: name, value: value, mocking: true })
-    this.mockHash()[ name ] = mock
+$jin.method( '$jin.test..mock', function( path, value ){
+    var mock = $jin.mock({ path: path, value: value, mocking: true })
+    this.mockHash()[ path ] = mock
     return mock
 } )

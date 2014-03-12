@@ -14,7 +14,7 @@ $jin.method({ '$jin.dom..size': function( ){
 
 if( $jin.support.xmlModel() === 'ms' ){
     
-    $jin.mixin( '$jin.dom.ms', '$jin.dom' )
+    $jin.mixin({ '$jin.dom': [ '$jin.dom.ms' ] })
     
     $jin.method( '$jin.dom..toString', '$jin.dom.ms..toString', function( ){
         return String( this.nativeNode().xml )

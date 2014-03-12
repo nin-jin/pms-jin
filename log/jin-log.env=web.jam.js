@@ -22,8 +22,10 @@ $jin.method({ '$jin.log.error' : function( error ){
 	if( error.$jin_log_isLogged ) return
 	
 	var message = error.stack || error
-	var logger = console.exception || console.error || console.log
-	logger.call( console, message )
+	
+	if( console.exception ) console.exception( error )
+	else if( console.error ) console.error( message )
+	else if( console.log ) console.log( message )
 	
 	error.$jin_log_isLogged = true
 }})

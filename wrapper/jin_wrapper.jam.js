@@ -1,11 +1,5 @@
-$jin.wrapper = function( ){ // arguments: sourceName*, targetName
-    $jin.mixin.apply( this, arguments )
-    
-    var name = arguments[ arguments.length - 1 ]
-    return $jin.mixin( '$jin.wrapper', name )
-}
+$jin.klass({ '$jin.wrapper': [] })
 
-$jin.mixin( '$jin.klass', '$jin.wrapper' )
 $jin.property( '$jin.wrapper..raw', null )
 
 $jin.method( '$jin.klass.exec', '$jin.wrapper.exec', function( obj ){

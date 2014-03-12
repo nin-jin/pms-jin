@@ -2,10 +2,10 @@ $jin.definer({ '$jin.error': function( path, traits ){
 	var error = $jin.trait( path )
 	error.prototype = new Error
 	error.prototype.constructor = error
-	$jin.mixin( '$jin.error', path )	
+	$jin.mixin( path, [ '$jin.error' ] )	
 }})
 
-$jin.mixin( '$jin.wrapper', '$jin.error' )
+$jin.mixin({ '$jin.error': [ '$jin.wrapper' ] })
 
 $jin.method({ '$jin.error.exec': function( message ){
 	return this['$jin.wrapper.exec']( new Error( message ) )

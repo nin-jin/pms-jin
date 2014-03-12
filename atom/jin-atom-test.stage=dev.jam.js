@@ -1,100 +1,185 @@
-$jin.test( function pulling( test ){
-    var x
-    var y = $jin.atom({ pull: function(){ return x = Math.random() } })
-    test.equal( y.get(), x )
-} )
-
-$jin.test( function pulling_oldValue( test ){
-    var y = $jin.atom({ pull: function( old ){ return old || Math.random() } })
-	var x1 = y.get()
-	y.pull()
-	x2 = y.get()
-    test.equal( x1, x2 )
-} )
-
-$jin.test( function stringifing( test ){
-    var x = 1
-    var y = $jin.atom({pull: function(){ return x } })
-    test.equal( y + '2', '12' )
-} )
-
-$jin.test( function numberifing( test ){
-    var x = 1
-    var y = $jin.atom({pull: function(){ return x } })
-    test.equal( y + 1, 2 )
+$jin.test( function getting( test ){
+    var x = $jin.atom({
+		pull: function(){
+			return 123
+		}
+	})
+	
+    test.equal( x.get(), 123 )
 } )
 
 $jin.test( function memorizing( test ){
-    var y = $jin.atom({ pull: function(){ return Math.random() } })
-    test.equal( y.get(), y.get() )
+    var x = $jin.atom({
+		pull: function(){
+			return Math.random()
+		}
+	})
+    
+	var x1 = x.get()
+	var x2 = x.get()
+	
+	test.equal( x1, x2 )
 } )
 
-$jin.test( function updating( test ){
-    var y = $jin.atom({ pull: function(){ return Math.random() } })
-    test.unique( y.get(), y.pull() )
+$jin.test( function resetting( test ){
+    var x = $jin.atom({
+		pull: function(){
+			return Math.random()
+		}
+	})
+    
+	var x1 = x.get()
+    x.value( void 0 )
+    var x2 = x.get()
+    
+	test.unique( x1, x2 )
+} )
+
+$jin.test( function pulling( test ){
+    var x = $jin.atom({
+		pull: function( ){
+			return Math.random()
+		}
+	})
+	
+	var x1 = x.get()
+	var x2 = x.pull()
+	var x3 = x.get()
+    
+	test.unique( x1, x2 )
+    test.equal( x2, x3 )
+} )
+
+$jin.test( function prev_accessing( test ){
+    var x = $jin.atom({
+		pull: function( old ){
+			return old || Math.random()
+		}
+	})
+	
+	var x1 = x.pull()
+	var x2 = x.pull()
+    
+	test.equal( x1, x2 )
+} )
+
+$jin.test( function stringifing( test ){
+    var x = $jin.atom({
+		pull: function(){
+			return 'foo'
+		}
+	})
+    
+	test.equal( x + 'bar', 'foobar' )
+} )
+
+$jin.test( function numberifing( test ){
+    var y = $jin.atom({
+		pull: function(){
+			return 11
+		}
+	})
+    
+	test.equal( y + 31, 42 )
 } )
 
 $jin.test( function pushing( test ){
 	var x
     var y = $jin.atom(
-	{	pull: function(){ return 1 }
-	,	push: function( next, prev ){ x = [ next, prev ] }
+	{	pull: function(){
+			return 12
+		}
+	,	push: function( next, prev ){
+			x = next + '<-' + prev
+		}
 	} )
 	y.get()
-    test.equal( String( x ), '1,' )
+	
+    test.equal( x, '12<-undefined' )
+} )
+
+$jin.test( function merging( test ){
+    var x = $jin.atom(
+	{	pull: function(){
+			return 12
+		}
+	,	merge: function( next, prev ){
+			return next + '<-' + prev
+		}
+	} )
+	var x1 = x.get()
+	
+    test.equal( x1, '12<-undefined' )
 } )
 
 $jin.test( function tracking( test ){
     test.timeout( 100 )
-    var x = $jin.atom({ pull: function(){ return 1 } })
-    var y = $jin.atom({ pull: function(){ return x + 1 } })
-    y1 = y.get()
-    x.value( 2 )
-    $jin.defer(function(){
-        y2 = y.get()
-        test.unique( y1, y2 )
-        test.done( true )
-    })
-} )
-
-$jin.test( function resetting( test ){
-    var x = 1
-    var y = $jin.atom({ pull: function(){ return x + 1 } })
-    var y1 = y.get()
-    x = 2
-    y.value( void 0 )
-    var y2 = y.get()
-    test.unique( y1, y2 )
+    
+	var x = $jin.atom({
+		pull: function(){
+			return 21
+		}
+	})
+    
+	var y = $jin.atom({
+		pull: function(){
+			return x + 30
+		}
+	})
+    
+	var y1 = y.get()
+    x.put( 12 )
+	
+    $jin.defer( function(){
+        var y2 = y.get()
+		
+        test.equal( y2, 42 ).done( true )
+    } )
 } )
 
 $jin.test( function mutating( test ){
-    var atom = $jin.atom({ value: 1 })
-	atom.mutate( function( prev ){
-		return prev + 1
+    var x = $jin.atom({
+		value: 12
+	})
+	
+	x.mutate( function( prev ){
+		return prev + 30
 	} )
-	test.equal( atom.get(), 2 )
+	
+	test.equal( x.get(), 42 )
 } )
 
-$jin.test( function pull_failing( test ){
-    test.timeout( 100 )
-	var error = new Error( 'error' )
-    var x = $jin.atom({ merge: Boolean })
-    var y = $jin.atom({ pull: function(){
-		if( x.get() ) throw error
-		else return 1
-	} })
-    var z = $jin.atom({ pull: function(){ return y + 1 } })
-	z1 = z.get()
-	x.put( true )
-    $jin.defer( function( ){
-		try {
-			z2 = z.get()
-		} catch( err ){
-			test.equal( error, err )
-	        test.done( true )
-		}
-    })
-} )
+//$jin.test( function failing_while_pulling( test ){
+//    test.timeout( 200 )
+//	
+//	var error = new Error( 'test error' )
+//	
+//    var x = $jin.atom({ merge: Boolean })
+//    
+//	var y = $jin.atom({
+//		pull: function(){
+//			if( x.get() ) throw error
+//			else return 12
+//		}
+//	})
+//    
+//	var z = $jin.atom({
+//		pull: function( ){
+//			return y + 30
+//		}
+//	})
+//	
+//	var z1 = z.get()
+//	x.put( true )
+//	
+//    $jin.defer( function( ){
+//		try {
+//			var z2 = z.get()
+//		} catch( err ){
+//			test.equal( error, err ).done( true )
+//		}
+//    })
+//} )
 
 //$jin.test( function reaping( test ){
 //	test.timeout( 100 )

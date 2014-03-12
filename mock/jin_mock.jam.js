@@ -1,17 +1,29 @@
 $jin.klass({ '$jin.mock': [] })
 
-$jin.property( '$jin.mock..name', String )
+$jin.property( '$jin.mock..path', String )
+$jin.property( '$jin.mock..ownerPath', function(){
+	return this.path().replace( /\.[^.]*$/, '' )
+} )
+$jin.property( '$jin.mock..fieldName', function(){
+	return this.path().replace( /^.*\./, '' )
+} )
+
 $jin.property( '$jin.mock..value', null )
-$jin.property( '$jin.mock..backup', null )
+$jin.property( '$jin.mock..backupValue', null )
+$jin.property( '$jin.mock..backupOwner', null )
 
 $jin.property( '$jin.mock..mocking', function( mocking ){
-    var name = this.name()
+    var fieldName = this.fieldName()
     if( mocking ){
-        this.backup( $jin.glob( name ) )
-        $jin.glob( name, this.value() )
+		var owner =  $jin.trait( this.ownerPath() )
+		this.backupOwner( owner )
+        this.backupValue( owner[ fieldName ] )
+        owner[ fieldName ] = this.value()
     } else {
-        $jin.glob( name, this.backup() )
-        this.backup( void 0 )
+		var owner = this.backupOwner()
+        owner[ fieldName ] = this.backupValue()
+        this.backupOwner( null )
+        this.backupValue( null )
     }
     return mocking
 } )

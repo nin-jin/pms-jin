@@ -21,7 +21,7 @@ $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, fun
     var methodName = nameList.pop()
     var ownerPath = nameList.join( '.' )
     var owner = $jin.trait( ownerPath )
-    var slaveList = owner.$jin_mixin_slaveList
+    var slaveList = owner.jin_mixin_slaveList
     
     owner[ funcName ]= func
     

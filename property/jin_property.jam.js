@@ -6,7 +6,9 @@ $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, f
 	
 	if( filter ){
 		var property = function( next ){
+			var prev = this[ fieldName ]
 			if( arguments.length ){
+				if( next === prev ) return this
 				if( next === void 0 ){
 					this[ fieldName ] = next
 				} else {
@@ -14,7 +16,6 @@ $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, f
 				}
 				return this
 			} else {
-				var prev = this[ fieldName ]
 				if( prev === void 0 ){
 					return this[ fieldName ] = filter.call( this )
 				} else {
