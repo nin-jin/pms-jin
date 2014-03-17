@@ -3,17 +3,16 @@ $jin.proxy( { get: function( base, name ){
     if( !$node.fibers.current )
         return base[ name ]
     
-    if( name === 'valueOf' ) return function( ){ return base }
-    if( name === 'inspect' ) return function( ){ return $node.util.inspect( base ) }
+    if( name === 'valueOf' ) return function( ){ return base.valueOf() }
+    if( name === 'inspect' ) return function( ){ return base.inspect() }
     
-    var chunks= /^(.+?)(Async|Defer)?$/.exec( name )
+    var chunks= /^(.+?)(Sync|Async|Defer)$/.exec( name )
     if( !chunks ) return base[ name ]
     
     name = chunks[ 1 ]
     if( typeof base[ name ] !== 'function' ) return base[ name ]
     
     var mod = chunks[ 2 ]
-    if( !mod ) return $jin.async2defer( base[ name ] )
     
     if( mod === 'Sync' ) return $jin.async2sync( base[ name ] )
     if( mod === 'Defer' ) return $jin.async2defer( base[ name ] )

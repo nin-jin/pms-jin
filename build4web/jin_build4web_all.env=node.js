@@ -1,5 +1,5 @@
 $jin.method({ '$jin.build4web.all': function( mod, vary ){
-    mod= $jin.sourceFile( mod )
+    mod= $jin.file( mod )
     
     var res= { dev: {}, release: {} }
     

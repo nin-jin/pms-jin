@@ -1,11 +1,11 @@
 $jin.method({ '$jin.build4web.sample.release': function( mod, vary ){
-    mod = $jin.sourceFile( mod )
+    mod = $jin.file( mod )
     
     vary = vary || {}
     vary.env = 'web'
     vary.stage = 'release'
     
-    var sources = $jin.sourceFile('.').index( vary, mod.deepModuleList() )
+    var sources = $jin.file('.').index( vary, mod.deepModuleList() )
     .filter( function( src ){
         return /\.sample\.html$/.test( src.name() )
     } )

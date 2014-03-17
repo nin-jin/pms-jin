@@ -11,7 +11,7 @@ $jin.defer.queue = []
 $jin.defer.scheduled = false
 
 $jin.defer.schedule = function( ){
-	if( window.addEventListener ) window.postMessage( '$jin.defer', document.location.href )
+	if( typeof postMesasge === 'function' ) postMessage( '$jin.defer', document.location.href )
 	else $jin.schedule( 0, $jin.defer.check )
 	$jin.defer.scheduled = true
 }
@@ -33,7 +33,7 @@ $jin.defer.check = function( event ){
 	$jin.defer.scheduled = false
 }
 
-if( window.addEventListener ) window.addEventListener( 'message', $jin.defer.check, true )
+if( typeof addEventListener === 'function' ) addEventListener( 'message', $jin.defer.check, true )
 
 $jin.defer.callback = function( func ){
 	return function $jin_defer_callback_instance(){

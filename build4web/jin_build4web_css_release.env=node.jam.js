@@ -1,12 +1,12 @@
 $jin.method({ '$jin.build4web.css.release': function( mod, vary ){
-    mod = $jin.sourceFile( mod )
+    mod = $jin.file( mod )
     
     vary= vary || {}
     vary.stage= 'release'
     
     var indexFile = mod.buildFile( 'index', vary, 'css' )
     
-    var index= $jin.sourceFile('.').index( vary, mod.deepModuleList() )
+    var index= $jin.file('.').index( vary, mod.deepModuleList() )
     .filter( function( src ){
         return /\.css$/.test( src.name() )
     } )

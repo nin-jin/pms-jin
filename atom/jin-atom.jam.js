@@ -189,6 +189,8 @@ $jin.method({ '$jin.atom..value': function( next ){
 			$jin.atom.bound( function jin_atom_failBound( ){
 				fail.call( context, error, prev )
 			})
+		} else if( !this._slavesCount ){
+			$jin.log.error( error )
 		}
 	} else {
 		var push = config.push
@@ -309,7 +311,7 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 $jin.method({ '$jin.atom..reap': function( ){
 	if( this._config.push ) return this
 	if( !this._pulled ) return this
-	
+	return this
 	$jin.defer( function jin_atom_defferedReap( ){
 		if( this._slavesCount ) return
 		this.disobeyAll()
@@ -343,11 +345,11 @@ $jin.method({ '$jin.atom.logging..notify': function( ){
 	if( !ctor._deferedLogging ){
 		ctor._deferedLogging = $jin.schedule( 0, function defferedLogging( ){
 			ctor._deferedLogging = null
-			console.groupCollapsed('$jin.atom.log')
+			if( console.groupCollapsed ) console.groupCollapsed('$jin.atom.log')
 			ctor.log().forEach( function jin_atom_defferedLog( row ){
 				$jin.log.apply( $jin, row )
 			} )
-			console.groupEnd('$jin.atom.log')
+			if( console.groupEnd ) console.groupEnd('$jin.atom.log')
 			ctor.log( [] )
 		} )
 	}

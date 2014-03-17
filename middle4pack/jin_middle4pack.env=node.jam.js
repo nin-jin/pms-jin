@@ -1,6 +1,6 @@
 this.$jin.middle4pack=
 function( pack ){
-    pack = $jin.sourceFile( pack )
+    pack = $jin.file( pack )
     
     return $jin.sync2middle( function( req, res ){
         var uri = $jin.uri( req.originalUrl.substring( 1 ) )

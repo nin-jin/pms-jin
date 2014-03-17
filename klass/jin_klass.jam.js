@@ -7,6 +7,15 @@ $jin.method( '$jin.klass.exec', function( ){
 	return new this( arguments )
 } )
 
+$jin.property( '$jin.klass.descendantClasses', function( ){ // TODO: use atoms!
+	var paths = this.jin_mixin_slaveList || []
+	var lists = paths.map( function( path ){
+		var klass = $jin.glob( path )
+		return klass.descendantClasses()
+	} )
+	return [].concat.apply( [ this ], lists )
+} )
+
 $jin.method( '$jin.klass.subClass', function( fields ){
 	var klass = $jin.trait.make()
 	for( var key in this ) klass[ key ] = this[ key ]
