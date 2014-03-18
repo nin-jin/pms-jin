@@ -60,19 +60,15 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 		var current = node
 		
 		var pull = function jin_sample_pull( prev ){
+			var view = sample.view()
+			if( !view ) return null
+			
 			try {
-				var view = sample.view()
-				if( !view ) return null
-				
 				return view[ rule.key ]()
-			} catch( error ){
-				if( error instanceof $jin.atom.wait ) return null
+			}  catch( error ){
+				error.stack = 'Can not get value (' + view.constructor + '..' + rule.key + ')\n' + error.stack
 				throw error
 			}
-		}
-		
-		var fail = function( error ){
-			$jin.log.error( error )
 		}
 		
 		rule.path.forEach( function pathIterator( name ){
@@ -83,7 +79,6 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			var cover = $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/@' + rule.attrName + '=' + rule.key
 			,	pull: pull
-			,	fail: fail
 			,	push: function attrPush( next, prev ){
 					if( next == null ) current.removeAttribute( rule.attrName )
 					else current.setAttribute( rule.attrName, String( next ) )
@@ -103,7 +98,6 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			var cover = $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
 			,	pull: pull
-			,	fail: fail
 			,	push: function fieldPush( next, prev ){
 					if( next === void 0 ) return
 					if( current[ rule.fieldName ] == next ) return
@@ -137,7 +131,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 				if( !view ) return
 				
 				var handler = view[ rule.key ]
-				if( !handler ) throw new Error( 'View handler in not defined (' + rule.key + ')' )
+				if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..' + rule.key + ')' )
 				
 				handler.call( view, $jin.dom.event( event ) )
 			})
@@ -149,7 +143,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 				if( !view ) return
 				
 				var handler = view[ rule.key ]
-				if( !handler ) throw new Error( 'View handler in not defined (' + rule.key + ')' )
+				if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..'  + rule.key + ')' )
 				
 				handler.call( view, event )
 			})
@@ -159,7 +153,6 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			var cover = $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
 			,	pull: pull
-			,	fail: fail
 			, 	merge: function contentPull( nextItems, prevItems ){
 					
 					if( !prevItems ) prevItems = []

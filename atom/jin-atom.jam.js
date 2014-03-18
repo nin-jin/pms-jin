@@ -175,7 +175,7 @@ $jin.method({ '$jin.atom..value': function( next ){
 
 	if( !arguments.length ) return prev
 
-	if( next === prev ) return this
+	if( next === prev && !this._error ) return this
 
 	this._value = next
 	
@@ -190,7 +190,9 @@ $jin.method({ '$jin.atom..value': function( next ){
 				fail.call( context, error, prev )
 			})
 		} else if( !this._slavesCount ){
-			$jin.log.error( error )
+			if(!( error instanceof $jin.atom.wait )){
+				$jin.log.error( error )
+			}
 		}
 	} else {
 		var push = config.push
@@ -311,7 +313,7 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 $jin.method({ '$jin.atom..reap': function( ){
 	if( this._config.push ) return this
 	if( !this._pulled ) return this
-	return this
+	
 	$jin.defer( function jin_atom_defferedReap( ){
 		if( this._slavesCount ) return
 		this.disobeyAll()
