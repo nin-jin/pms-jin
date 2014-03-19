@@ -9,7 +9,6 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 	'.sources': [ $jin.atom.prop, {
 		pull: function( prev ){
 			$jin.log( this.pack().relate(), this.vary() )
-			throw new Error
 			return $jin.file( '.' ).index( this.vary(), this.pack().deepModuleList() )
 		},
 		merge: function( next, prev ){
