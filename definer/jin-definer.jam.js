@@ -1,9 +1,13 @@
 $jin.definer = function( path, definer ){
 	
-	var wrapper = function( defines ){
+	var wrapper = function( defines, arg ){
 		if( arguments.length > 1 ){
+			if( defines == null ) return function( path ){
+				definer( path, arg )
+			}
 			definer.apply( null, arguments )
 		} else {
+			if( typeof defines === 'function' ) defines = new defines
 			for( var path in defines ){
 				definer( path, defines[ path ] )
 			}

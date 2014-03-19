@@ -1,6 +1,9 @@
 $jin.klass({ '$jin.sample': [ '$jin.dom' ] })
 
-$jin.property({ '$jin.sample.strings': String })
+$jin.property({ '$jin.sample.strings': function( next ){
+	if( !arguments.length ) return ''
+	return $jin.sample.strings() + next
+}})
 
 $jin.property({ '$jin.sample.templates': function( ){
 	var strings = $jin.sample.strings()
