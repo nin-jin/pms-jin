@@ -1,0 +1,15 @@
+[jin-docs-view-node-name]{
+	font: 16px/1.2 sans-serif;
+}
+
+[jin-docs-view-node-childs]{
+	padding: 0 0 0 1em;
+}
+
+[jin-docs-view-node-info]{
+	padding: 0 0 0 1em;
+}
+
+[jin-docs-view-node-signatures]{
+	white-space: pre;
+}

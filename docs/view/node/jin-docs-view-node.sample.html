@@ -1,0 +1,24 @@
+<div jin-docs-view-node="" id="{id}">
+	<label jin-docs-view-node-plate="">
+		<input jin-docs-view-node-expander=""
+			type="checkbox"
+			jin-sample-props="
+				checked=isExpanded
+			"
+		/>
+		<span jin-docs-view-node-name="">
+			{name}
+		</span>
+	</label>
+	<div jin-docs-view-node-info="">
+		<div jin-docs-view-node-descr="">
+			{descr}
+		</div>
+		<div jin-docs-view-node-signatures="">
+			{signatures}
+		</div>
+	</div>
+	<div jin-docs-view-node-childs="{isExpanded}">
+		{childs}
+	</div>
+</div>
