@@ -18,8 +18,13 @@ $jin.property( '$jin.file.base..path', function( path ){
     
 $jin.atom.prop({ '$jin.file.base..stat': {
 	pull: function( prev ){
-		var stat = this.nativeAPI().statSync( this.path() )
-		this.watcher()
+		try {
+			var stat = this.nativeAPI().statSync( this.path() )
+			this.watcher()
+		} catch( error ){
+			if( error.code !== 'ENOENT' ) throw error
+			stat = null
+		}
 		return stat
 	}
 }})
@@ -42,8 +47,7 @@ $jin.atom.prop({ '$jin.file.base..exists': {
         }
     },
 	pull: function( ){
-		var next = this.nativeAPI().existsSync( this.path() )
-		if( next ) this.watcher()
+		var next = !!this.stat()
 		return next
     }
 }})

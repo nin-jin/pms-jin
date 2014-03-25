@@ -19,7 +19,7 @@ $jin.method({ '$jin.warn' : function( ){
 $jin.method({ '$jin.log.error' : function( error ){
 	if( typeof console === 'undefined' ) return
 	
-	if( error.$jin_log_isLogged ) return
+	if( error.jin_log_isLogged ) return
 	
 	var message = error.stack || error
 	
@@ -27,5 +27,5 @@ $jin.method({ '$jin.log.error' : function( error ){
 	else if( console.error ) console.error( message )
 	else if( console.log ) console.log( message )
 	
-	error.$jin_log_isLogged = true
+	error.jin_log_isLogged = true
 }})

@@ -1,6 +1,5 @@
 $jin.atom.prop({ '$jin.build..jsCompiled': {
 	pull: function( prev ){
-		$jin.log( this.pack().relate(), this.vary() )
 		
 		var target = this.pack().buildFile( this.pack().name(), this.vary(), 'js' )
 		
@@ -11,7 +10,11 @@ $jin.atom.prop({ '$jin.build..jsCompiled': {
 		chunks.unshift( "with( this ){" )
 		chunks.push( "}" )
 		
-		return [ $jin.file( target ).content( chunks.join( '\n' ) ) ]
+		target.content( chunks.join( '\n' ) )
+		
+		$jin.log( target.relate() )
+		
+		return [ target ]
 	},
 	merge: function( next, prev ){
 		return ( String( next ) == String( prev ) ) ? prev : next

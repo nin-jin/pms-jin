@@ -1,15 +1,32 @@
-$jin.klass({ '$jin.build': [] })
+$jin.klass({ '$jin.build': [ '$jin.registry' ] })
 
 $jin.module( function(){ this[ '$jin.build' ] = {
 	
-	'.pack': [ $jin.property, $jin.file ],
+	'.urn': [ $jin.property, function( ){
+		return $jin.uri.parse( this.id() )
+	}],
 	
-	'.vary': [ $jin.property, null ],
+	'.pack': [ $jin.property, function( ){
+		return $jin.file( this.urn().path() )
+	}],
+	
+	'.vary': [ $jin.property, function( ){
+		return this.urn().query()
+	}],
 	
 	'.sources': [ $jin.atom.prop, {
 		pull: function( prev ){
-			$jin.log( this.pack().relate(), this.vary() )
-			return $jin.file( '.' ).index( this.vary(), this.pack().deepModuleList() )
+			var tree = this.dependTree()
+			var sources = []
+			
+			tree.forEach( function collect( node ){
+				for( var key in node ){
+					if( key ) collect( node[ key ] )
+					else sources = sources.concat( node[ key ] )
+				}
+			})
+			
+			return sources.map( $jin.file )
 		},
 		merge: function( next, prev ){
 			return ( String( next ) == String( prev ) ) ? prev : next
@@ -18,8 +35,6 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 	
 	'.jsSources': [ $jin.atom.prop, {
 		pull: function( prev ){
-			$jin.log( this.pack().relate(), this.vary() )
-			
 			return [].concat.apply( [], this.sources().map( function( src ){
 				return src.jsFiles()
 			} ) )
@@ -31,8 +46,6 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 	
 	'.cssSources': [ $jin.atom.prop, {
 		pull: function( prev ){
-			$jin.log( this.pack().relate(), this.vary() )
-			
 			return [].concat.apply( [], this.sources().map( function( src ){
 				return src.cssFiles()
 			} ) )

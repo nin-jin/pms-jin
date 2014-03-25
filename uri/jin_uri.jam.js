@@ -25,7 +25,7 @@ $jin.property( '$jin.uri..password', String )
 $jin.property( '$jin.uri..host', String )
 $jin.property( '$jin.uri..port', Number )
 $jin.property( '$jin.uri..path', String )
-$jin.property( '$jin.uri..query', Object )
+$jin.property.hash( '$jin.uri..query', {} )
 $jin.property( '$jin.uri..hash', String )
 
 $jin.method( '$jin.klass..json', '$jin.uri..json', function( json ){

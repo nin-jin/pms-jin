@@ -1,6 +1,5 @@
 $jin.atom.prop({ '$jin.build..jsIndexWeb': {
 	pull: function( prev ){
-		$jin.log( this.pack().relate(), this.vary() )
 		
 		var target = this.pack().buildFile( this.pack().name(), this.vary(), 'js' )
 		
@@ -42,7 +41,11 @@ void function( modules ){                                                   \n\
 		
 		lines.push( " null ])" )
 		
-		return [ $jin.file( target ).content( lines.join( '\n' ) ) ].concat( this.jsSources() )
+		target.content( lines.join( '\n' ) )
+		
+		$jin.log( target.relate() )
+		
+		return [ target ].concat( this.jsSources() )
 	},
 	merge: function( next, prev ){
 		return ( String( next ) == String( prev ) ) ? prev : next

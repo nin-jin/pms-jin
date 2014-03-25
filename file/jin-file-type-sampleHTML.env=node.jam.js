@@ -34,10 +34,13 @@ $jin.atom.prop({ '$jin.file.type.sampleHTML..dependList': {
 
 $jin.atom.prop({ '$jin.file.type.sampleHTML..jsFiles': {
 	resolves: [ '$jin.file.base..jsFiles' ],
-	pull: function( ){
+	pull: function( prev ){
 		var target = this.parent().buildFile( this.name(), {}, 'js' )
 		var content = '$jin.sample.strings( ' + JSON.stringify( String( this.content() ) ) + ' )'
 		target.content( content )
+		
+		if( prev ) $jin.log( target.relate() )
+		
 		return [ target ]
 	}
 }})

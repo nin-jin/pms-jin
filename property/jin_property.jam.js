@@ -52,7 +52,14 @@ $jin.definer({ '$jin.property.hash': function( path, config ){
 			var value2 = put ? put.call( key, value ) : value
 			if( value2 === void 0 ) delete storage[ key ]
 			else storage[ key ] = value2
+			return this
 		} else if( arguments.length ) {
+			if( typeof key === 'object' ){
+				for( var k in key ){
+					propHash.call( this, k, key[ k ] )
+				}
+				return this
+			}
 			var value2 = storage[ key ]
 			if( pull && value2 === void 0 ) value2 = storage[ key ] = pull.call( this, key )
 			return value2
