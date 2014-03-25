@@ -24,7 +24,7 @@ $jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
 	var make = this['$jin.pool.exec'] || this['$jin.klass.exec']
 	
     var newObj = make.call( this, { id: id } )
-    var id2 = newObj.id()
+    var id2 = String( newObj.id() )
     
 	if( id !== id2 ){
 		var obj = this.storage( id2 )
