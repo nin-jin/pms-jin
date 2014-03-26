@@ -13,7 +13,7 @@ $jin.atom.prop({ '$jin.build..dependTree': {
 		var indexSrcs = []
 		var touchedMods = []
 		
-		var moduleList = this.pack().deepModuleList()
+		var moduleList = this.modules()
 		
 		var tree = moduleList.map( function proceedDep( mod ){
 			var subTree = []

@@ -174,6 +174,12 @@ $jin.method({ '$jin.file.base..notify': function( ){
 
 $jin.atom.prop({ '$jin.file.base..watcher': {
 	pull: function( prev ){
+		return this.parent().nativeWatcher()
+	}
+}})
+
+$jin.atom.prop({ '$jin.file.base..nativeWatcher': {
+	pull: function( prev ){
 		var handler = $jin.sync2async( function jin_file_handle_change( eventName, fileName ){
 			if( eventName === 'rename' ) return
 			if( eventName !== 'change' ) $jin.log.error( new Error( 'Unknown event name (' + eventName + ')' ) )

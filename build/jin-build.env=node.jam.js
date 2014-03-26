@@ -14,6 +14,12 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 		return this.urn().query()
 	}],
 	
+	'.modules': [ $jin.atom.prop, {
+		pull: function( ){
+			return this.pack().deepModuleList()
+		}
+	}],
+	
 	'.sources': [ $jin.atom.prop, {
 		pull: function( prev ){
 			var tree = this.dependTree()

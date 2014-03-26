@@ -36,7 +36,7 @@ $jin.defer.check = function( event ){
 if( typeof addEventListener === 'function' ) addEventListener( 'message', $jin.defer.check, true )
 
 $jin.defer.callback = function( func ){
-	return function $jin_defer_callback_instance(){
+	var wrapper = function $jin_defer_callback_instance(){
 		$jin.defer.scheduled = true
 		try {
 			return func.apply( this, arguments )
@@ -44,4 +44,6 @@ $jin.defer.callback = function( func ){
 			$jin.defer.check()
 		}
 	}
+	if( $jin.sync2async ) wrapper = $jin.sync2async( wrapper )
+	return wrapper
 }
