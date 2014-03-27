@@ -42,15 +42,12 @@ $jin.method({ '$jin.atom.schedule': function( ){
 }})
 
 $jin.method({ '$jin.atom.bound': function( handler ){
-	$jin.atom.slaves.unshift( null )
+	var slaves = $jin.atom.slaves
+	$jin.atom.slaves = []
 	try {
 		handler()
 	} finally {
-		var stack = $jin.atom.slaves
-		while( stack.length ){
-			var top = stack.shift()
-			if( top === null ) break
-		}
+		$jin.atom.slaves = slaves
 	}
 	return this
 }})
