@@ -152,5 +152,9 @@ $jin.property( '$jin.dom.event..data', function( data ){
 } )
 
 $jin.method( '$jin.dom.event..offset', function( ){
-    return $jin.vector([ this.nativeEvent().offsetX, this.nativeEvent().offsetX ])
+    return $jin.vector([ this.nativeEvent().offsetX, this.nativeEvent().offsetY ])
+} )
+
+$jin.method( '$jin.dom.event..pos', function( ){
+    return $jin.vector([ this.nativeEvent().pageX, this.nativeEvent().pageY ])
 } )
