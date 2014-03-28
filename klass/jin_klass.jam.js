@@ -3,8 +3,17 @@ $jin.definer({ '$jin.klass': function( path, mixins ){
     return $jin.mixin( path, mixins )
 }})
 
+$jin.property( '$jin.klass.klass', function( ){
+	var klass = function Klass( ){ }
+	klass.prototype = this.prototype
+	return klass
+})
+
 $jin.method( '$jin.klass.exec', function( ){
-	return new this( arguments )
+	var klass = this.klass()
+	var obj = new klass
+	obj.init.apply( obj, arguments )
+	return obj
 } )
 
 $jin.property( '$jin.klass.descendantClasses', function( ){ // TODO: use atoms!

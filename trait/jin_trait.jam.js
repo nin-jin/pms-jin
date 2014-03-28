@@ -10,12 +10,8 @@ this.$jin.trait = function( name ){
 
 this.$jin.trait.make = function( name ){
     
-    var trait = function( args ){
-        if( this instanceof trait ){
-            return this.init.apply( this, args || [] )
-        } else {
-            return trait.exec.apply( trait, arguments )
-        }
+    var trait = function( ){
+		return trait.exec.apply( trait, arguments )
     }
 
     trait.displayName = name

@@ -23,7 +23,7 @@ $jin.method({ '$jin.sample.exec': function( type ){
 		var proto = $jin.sample.proto( type )
 		proto.rules()
 		var node = proto.nativeNode().cloneNode( true )
-		sample = this[ '$jin.dom.exec' ]( node ).proto( proto )
+		sample = this[ '$jin.wrapper.exec' ]( node ).proto( proto )
 	}
 	
 	return sample

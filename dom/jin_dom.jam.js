@@ -1,20 +1,20 @@
 $jin.klass({ '$jin.dom': [ '$jin.wrapper' ] })
 
-$jin.method( '$jin.wrapper.exec', '$jin.dom.exec', function( node ){
-    if( node instanceof this ) return node
-    
-    //var name = String( this )
-    //var obj = node[ name ]
-    //if( obj && ( obj instanceof this ) ) return obj
-    
-    var obj = new this([ node ])
-    
-    //try {
-    //    obj.nativeNode()[ name ] = this
-    //} catch( e ){}
-    
-    return obj
-} )
+//$jin.method( '$jin.wrapper.exec', '$jin.wrapper.exec', function( node ){
+//    if( node instanceof this ) return node
+//    
+//    //var name = String( this )
+//    //var obj = node[ name ]
+//    //if( obj && ( obj instanceof this ) ) return obj
+//    
+//    var obj = new this([ node ])
+//    
+//    //try {
+//    //    obj.nativeNode()[ name ] = this
+//    //} catch( e ){}
+//    
+//    return obj
+//} )
 
 $jin.method( '$jin.dom.env', function( ){
     return $jin.env()

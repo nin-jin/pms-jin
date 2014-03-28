@@ -6,7 +6,7 @@ $jin.method({ '$jin.doc.exec': function( node ){
 	var doc = node[ '$jin.doc' ]
 	if( doc ) return doc
 	
-	return node[ '$jin.doc' ] = this['$jin.dom.exec']( node )
+	return node[ '$jin.doc' ] = this['$jin.wrapper.exec']( node )
 }})
 
 $jin.method({ '$jin.doc..findById': function( id ){
