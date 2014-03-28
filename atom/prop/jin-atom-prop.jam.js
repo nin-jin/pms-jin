@@ -1,16 +1,16 @@
 $jin.definer({ '$jin.atom.prop': function( path, config ){
     
 	var pull = config.pull
-	if( pull ) pull.jin_method_path = path + '.pull'
+	if( pull ) pull.displayName = path + '.pull'
 
 	var put = config.put
-	if( put ) put.jin_method_path = path + '.put'
+	if( put ) put.displayName = path + '.put'
 
 	var push = config.push
-	if( push ) push.jin_method_path = path + '.push'
+	if( push ) push.displayName = path + '.push'
 
 	var merge = config.merge
-	if( merge ) merge.jin_method_path = path + '.merge'
+	if( merge ) merge.displayName = path + '.merge'
 
     var prop = function jin_atom_prop_accessor( next ){
         var atom = propAtom.call( this )

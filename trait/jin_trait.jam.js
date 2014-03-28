@@ -18,7 +18,7 @@ this.$jin.trait.make = function( name ){
         }
     }
 
-    trait.jin_method_path = name
+    trait.displayName = name
     
     return trait
 }

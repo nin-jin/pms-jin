@@ -1,7 +1,7 @@
 $jin.klass({ '$jin.file.type.sampleHTML': [ '$jin.file.type.html' ] })
 
 $jin.method({ '$jin.file.type.sampleHTML.ext': function( ){
-	resolves: '$jin.file.type.html.ext'
+	'$jin.file.type.html.ext'
 	return '.sample.html'
 }})
 

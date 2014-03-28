@@ -1,12 +1,12 @@
 $jin.klass({ '$jin.file.type.js': [ '$jin.file.type.text' ] })
 
 $jin.method({ '$jin.file.type.js.ext': function( ){
-	resolves: '$jin.file.type.text.ext'
+	'$jin.file.type.text.ext'
 	return '.js'
 }})
 
 $jin.method({ '$jin.file.type.js.mime': function( ){
-	resolves: '$jin.file.type.text.mime'
+	'$jin.file.type.text.mime'
 	return 'text/javascript'
 }})
 

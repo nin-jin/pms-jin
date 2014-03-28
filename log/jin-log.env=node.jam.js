@@ -74,7 +74,7 @@ $jin.method({ '$jin.log.funcNameAt' : function( level ){
 	var caller = arguments.callee
 	for( var i = 0; i <= level; ++i ) caller = caller.caller
 	
-	var name = caller.jin_method_path
+	var name = caller.displayName
 	if( name ) return name
 	
 	var stackCurrent = ( new Error ).stack.split( '\n' ).slice( 2 + level )[ 0 ]

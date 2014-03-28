@@ -25,7 +25,7 @@ $jin.method( '$jin.klass.subClass', function( fields ){
 } )
 
 $jin.method( '$jin.klass.id', function( ){
-    return this.jin_method_path || this.name
+    return this.displayName || this.name
 } )
 
 $jin.method( '$jin.klass.toString', function( ){

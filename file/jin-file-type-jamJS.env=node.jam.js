@@ -1,7 +1,7 @@
 $jin.klass({ '$jin.file.type.jamJS': [ '$jin.file.type.js' ] })
 
 $jin.method({ '$jin.file.type.jamJS.ext': function( ){
-	resolves: '$jin.file.type.js.ext'
+	'$jin.file.type.js.ext'
 	return '.jam.js'
 }})
 

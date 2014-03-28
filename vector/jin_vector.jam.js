@@ -29,3 +29,7 @@ $jin.method( '$jin.vector.merge', function( merger, left, right ){
 	
 	return $jin.vector( res )
 } )
+
+$jin.method( '$jin.vector..summ', function( right ){
+	return $jin.vector.merge( function( a, b ){ return a + b }, this, right )
+} )

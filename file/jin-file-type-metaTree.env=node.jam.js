@@ -1,7 +1,7 @@
 $jin.klass({ '$jin.file.type.metaTree': [ '$jin.file.type.tree' ] })
 
 $jin.method({ '$jin.file.type.metaTree.ext': function( ){
-	resolves: '$jin.file.type.tree.ext'
+	'$jin.file.type.tree.ext'
 	return '.meta.tree'
 }})
 

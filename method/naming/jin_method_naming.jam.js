@@ -12,9 +12,9 @@ this.$jin.method.naming = function $jin_method_naming( name, owner ){
         $jin.method.naming( name + '.' + key, value )
     }
     
-    if( typeof owner === 'function' && !owner.jin_method_path ){
+    if( typeof owner === 'function' && !owner.displayName ){
         $jin.method.naming( name + '.', owner.prototype )
-        owner.jin_method_path = name
+        owner.displayName = name
         owner.jin_method_resolves = [ '$' + 'jin.klass..constructor' ]
     }    
 }

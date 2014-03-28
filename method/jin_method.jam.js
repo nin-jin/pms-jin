@@ -13,9 +13,9 @@ $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, fun
 		})
 	}
 	
-    var funcName = func.jin_method_path
-    if( !funcName ) funcName = func.jin_method_path = name
-    //throw new Error( 'jin_method_path is not defined in [' + func + ']' )
+    var funcName = func.displayName
+    if( !funcName ) funcName = func.displayName = name
+    //throw new Error( 'displayName is not defined in [' + func + ']' )
     
     var nameList = name.split( '.' )
     var methodName = nameList.pop()
@@ -40,7 +40,7 @@ $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, fun
         
         if( func === existFunc ) return existFunc
         
-        if( !existFunc.jin_method_path ) break checkConflict
+        if( !existFunc.displayName ) break checkConflict
         
         func = $jin.method.merge( existFunc, func, name )
     }
@@ -64,7 +64,7 @@ $jin.method.merge = function $jin_method_merge( left, right, name ){
     var resolveList = leftResolves.concat( rightResolves )
     
     conflictList = conflictList.filter( function( conflict ){
-        return !~resolveList.indexOf( conflict.jin_method_path )
+        return !~resolveList.indexOf( conflict.displayName )
     })
     
     if( conflictList.length === 0 ){
@@ -75,7 +75,7 @@ $jin.method.merge = function $jin_method_merge( left, right, name ){
         var func = $jin.func.make( name )
         func.execute = function( ){
             var conflictNames = conflictList.reduce( function( names, func ){
-                var name = func.jin_method_path
+                var name = func.displayName
 				if( names.indexOf( name ) >= 0 ) return names
 				
 				names.push( name )
@@ -83,7 +83,7 @@ $jin.method.merge = function $jin_method_merge( left, right, name ){
             }, [] )
             throw new Error( "Conflict in [" + name + "] by [" + conflictNames + "]" )
         }
-        func.jin_method_path = name
+        func.displayName = name
         func.jin_method_conflicts = conflictList
     }
     

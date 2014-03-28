@@ -22,13 +22,13 @@ $jin.definer({ '$jin.mixin.object': function( targetPath, sourcePathList ){
         for( var key in source ){
             var func = source[ key ]
 			if( typeof func === 'function' ){
-				if( !func.jin_method_path ) func.jin_method_path = sourcePath + '.' + key
+				if( !func.displayName ) func.displayName = sourcePath + '.' + key
 			} else {
                 if(!( key in target )) target[ key ] = void 0
                 continue
             }
             
-            var methodName = func.jin_method_path.replace( /^([$\w]*\.)+/, '' )
+            var methodName = func.displayName.replace( /^([$\w]*\.)+/, '' )
 			$jin.method( targetPath + '.' + methodName, func )
         }
 		

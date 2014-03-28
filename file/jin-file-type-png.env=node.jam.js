@@ -1,12 +1,12 @@
 $jin.klass({ '$jin.file.type.png': [ '$jin.file.base' ] })
 
 $jin.method({ '$jin.file.type.png.ext': function( ){
-	resolves: '$jin.file.base.ext'
+	'$jin.file.base.ext'
 	return '.png'
 }})
 
 $jin.method({ '$jin.file.type.png.mime': function( ){
-	resolves: '$jin.file.base.mime'
+	'$jin.file.base.mime'
 	return 'image/png'
 }})
 
