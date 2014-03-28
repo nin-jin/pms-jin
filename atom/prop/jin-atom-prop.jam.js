@@ -91,6 +91,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	$jin.method( path + '_has', function( item ){
 		if( config.merge ) item = config.merge.call( this, [ item ] )[ 0 ]
 		var items = this[propName]()
+		if( !items ) return items
         
         return items.indexOf( item ) >= 0 
     } )

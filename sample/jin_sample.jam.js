@@ -102,11 +102,9 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
 			,	pull: pull
 			,	push: function fieldPush( next, prev ){
-					if( next === void 0 ) return
-					if( current[ rule.fieldName ] == next ) return
-					try {
-						current[ rule.fieldName ] = next
-					} catch( error ){}
+					if( next == null ) return
+					//if( current[ rule.fieldName ] == next ) return
+					current[ rule.fieldName ] = next
 				}
 			})
 			if( /^(value|checked)$/i.test( rule.fieldName ) && /^(select|input|textarea)$/i.test( current.nodeName ) ){
