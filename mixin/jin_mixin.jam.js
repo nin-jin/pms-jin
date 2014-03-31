@@ -21,6 +21,7 @@ $jin.definer({ '$jin.mixin.object': function( targetPath, sourcePathList ){
         
         for( var key in source ){
             var func = source[ key ]
+			if( key.charAt(0) === '_' ) continue
 			if( typeof func === 'function' ){
 				if( !func.displayName ) func.displayName = sourcePath + '.' + key
 			} else {

@@ -66,12 +66,12 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			var view = sample.view()
 			if( !view ) return null
 			
-			try {
+			//try {
 				return view[ rule.key ]()
-			}  catch( error ){
-				error.stack = 'Can not get value (' + view.constructor + '..' + rule.key + ')\n' + error.stack
-				throw error
-			}
+			//}  catch( error ){
+				//error.stack = 'Can not get value (' + view.constructor + '..' + rule.key + ')\n' + error.stack
+				//throw error
+			//}
 		}
 		
 		rule.path.forEach( function pathIterator( name ){
@@ -79,7 +79,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 		} )
 		
 		if( rule.attrName ){
-			var cover = $jin.atom(
+			var cover = new $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/@' + rule.attrName + '=' + rule.key
 			,	pull: pull
 			,	push: function attrPush( next, prev ){
@@ -98,7 +98,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 				sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
 			}
 		} else if( rule.fieldName ){
-			var cover = $jin.atom(
+			var cover = new $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
 			,	pull: pull
 			,	push: function fieldPush( next, prev ){
@@ -151,7 +151,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 			sample.entangle( listener )
 			return
 		} else {
-			var cover = $jin.atom(
+			var cover = new $jin.atom(
 			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
 			,	pull: pull
 			, 	merge: function contentPull( nextItems, prevItems ){
@@ -174,7 +174,7 @@ $jin.property({ '$jin.sample..proto': function( proto ){
 					
 					nextItems = nextItems.map( function jin_sample_normalizeNext( item ){
 						if( typeof item !== 'object' ) return String( item )
-						if( item['$jin.view..element'] ) return item.element()
+						if( item.element ) return item.element()
 						return item
 					} )
 					

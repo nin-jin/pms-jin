@@ -1,10 +1,11 @@
 $jin.definer({ '$jin.klass': function( path, mixins ){
     mixins.unshift( '$jin.klass' )
-    return $jin.mixin( path, mixins )
+    var klass = $jin.mixin( path, mixins )
+	return klass
 }})
 
-$jin.property( '$jin.klass.klass', function( ){
-	var klass = function Klass( ){ }
+$jin.konst( '$jin.klass.klass', function( ){
+	var klass = function Instance( ){ }
 	klass.prototype = this.prototype
 	return klass
 })

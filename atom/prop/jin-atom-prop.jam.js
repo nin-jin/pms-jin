@@ -33,7 +33,7 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
         
         if( atom ) return atom
         
-        return this[ fieldName ] = $jin.atom(
+        return this[ fieldName ] = new $jin.atom(
 		{	name: path /*+ ':' + this.id()*/
 		,	context: this
 		,	pull: pull
@@ -131,7 +131,7 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
         var atom = atomHash[ key ]
         if( atom ) return atom
         
-        return atomHash[ key ] = $jin.atom(
+        return atomHash[ key ] = new $jin.atom(
 		{	name: path/* + ':' + this.id()*/
 		,	context: context
 		,	pull: pull && function( prev ){

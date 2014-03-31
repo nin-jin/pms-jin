@@ -10,7 +10,7 @@ this.$jin.trait = function( name ){
 
 this.$jin.trait.make = function( name ){
     
-    var trait = function( ){
+    var trait = function jin_trait_instance( ){
 		return trait.exec.apply( trait, arguments )
     }
 

@@ -2,7 +2,7 @@ $jin.error({ '$jin.atom.wait': [] })
 
 $jin.klass({ '$jin.atom': [] })
 
-$jin.atom.slaves = []
+$jin.atom.current = null
 $jin.atom.scheduled = []
 $jin.atom._deferred = null
 
@@ -12,19 +12,20 @@ $jin.glob( '$jin.atom.._error', void 0 )
 $jin.glob( '$jin.atom.._slice', 0 )
 $jin.glob( '$jin.atom.._pulled', false )
 $jin.glob( '$jin.atom.._slavesCount', 0 )
-$jin.glob( '$jin.atom.._scheduled', false )
+$jin.glob( '$jin.atom.._isScheduled', false )
 
 $jin.method({ '$jin.atom.induce': function( ){
-	var scheduled = $jin.atom.scheduled
+	var scheduled = this.scheduled
 
 	scheduled: for( var i = 0; i < scheduled.length; ++i ){
 		var queue = scheduled[i]
 		if( !queue ) continue
 		scheduled[i] = null
 		
-		for( var atomId in queue ){
-			var atom = queue[ atomId ]
+		for( var j = 0; j < queue.length; ++j ){
+			var atom = queue[ j ]
 			if( !atom ) continue
+			if( !atom._isScheduled ) continue
 			
 			atom.pull()
 			
@@ -32,38 +33,37 @@ $jin.method({ '$jin.atom.induce': function( ){
 		}
 	}
 
-	$jin.atom._deferred = null
+	this._deferred = null
 }})
 
 $jin.method({ '$jin.atom.schedule': function( ){
 	if( this._deferred ) return
 
-	this._deferred = $jin.defer( this.induce )
+	this._deferred = $jin.defer( this.induce.bind( this ) )
 }})
 
 $jin.method({ '$jin.atom.bound': function( handler ){
-	var slaves = $jin.atom.slaves
-	$jin.atom.slaves = []
-	try {
-		handler()
-	} finally {
-		$jin.atom.slaves = slaves
-	}
+	var slave = this.current
+	this.current = null
+	handler()
+	this.current = slave
 	return this
 }})
 
 $jin.method({ '$jin.atom..init': function jin_atom__init( config ){
-	this['$jin.klass..init']
+	'$jin.klass..init'
 	this._id = $jin.makeId( '$jin.atom' )
 	this._config = config
 	this._value = config.value
 	this._error = config.error
 	this._slaves = {}
 	this._masters = {}
-	this._slice = 0
-	this._pulled = false
-	this._slavesCount = 0
-	this._scheduled = false
+}})
+
+$jin.method({ '$jin.atom..destroy': function( ){
+	this.disleadAll()
+	this.disobeyAll()
+	return this['$jin.klass..destroy']()
 }})
 
 $jin.method({ '$jin.atom..id': function( ){
@@ -71,10 +71,11 @@ $jin.method({ '$jin.atom..id': function( ){
 }})
 
 $jin.method({ '$jin.atom..get': function( ){
-	if( this._config.pull && ( this._scheduled || ( this._value === void 0 ) ) ) this.pull()
+	if( this._config.pull && ( this._isScheduled || ( this._value === void 0 ) ) ) this.pull()
 
-	var slave = $jin.atom.slaves[0]
+	var slave = this.constructor.current
 	if( slave ){
+		if( slave === this ) throw new Error( 'Circular dependency of atoms!' )
 		slave.obey( this )
 		this.lead( slave )
 	}
@@ -92,13 +93,7 @@ $jin.method({ '$jin.atom..pull': function( ){
 	var config = this._config
 	if( !config.pull ) return this._value
 
-	if( this._scheduled ){
-		this._scheduled = false
-		var queue = $jin.atom.scheduled[ this._slice ]
-		if( queue ){
-			queue[ this._id ] = null
-		}
-	}
+	this._isScheduled = false
 	
 	this._error = void 0
 	
@@ -106,20 +101,16 @@ $jin.method({ '$jin.atom..pull': function( ){
 	this._masters = {}
 	this._slice = 0
 	
-	if( $jin.atom.slaves.indexOf( this ) >= 0 ) throw new Error( 'Recursive atom' )
-	$jin.atom.slaves.unshift( this )
+	var prevCurrent = this.constructor.current
+	this.constructor.current = this
 	try {
 		var value = config.pull.call( config.context, this._value )
+		this.constructor.current = null
 		this.put( value )
 	} catch( error ){
 		this.fail( error )
-	} finally {
-		var stack = $jin.atom.slaves
-		while( stack.length ){
-			var top = stack.shift()
-			if( top === this ) break
-		}
 	}
+	this.constructor.current = prevCurrent
 	
 	this._pulled = true
 	
@@ -132,19 +123,22 @@ $jin.method({ '$jin.atom..pull': function( ){
 }})
 
 $jin.method({ '$jin.atom..put': function( next ){
+	var slave = this.constructor.current
+	this.constructor.current = null
+	
 	var config = this._config
 	var merge = config.merge
 	if( merge ){
 		var context = config.context
 		var prev = this._value
-		$jin.atom.bound( function jin_atom_mergeBound( ){
-			next = merge.call( context, next, prev )
-		})
+		next = merge.call( context, next, prev )
 	}
 	
 	this.value( next )
 	this._error = void 0
 	this._pulled = false
+	
+	this.constructor.current = slave
 	
 	return this
 }})
@@ -160,7 +154,7 @@ $jin.method({ '$jin.atom..mutate': function( mutator ){
 	var prev = this._value
 	var atom = this
 	
-	$jin.atom.bound( function mutate( ){
+	this.constructor.bound( function mutate( ){
 		atom.put( mutator.call( context, prev ) )
 	})
 	
@@ -183,20 +177,16 @@ $jin.method({ '$jin.atom..value': function( next ){
 	if( error ){
 		var fail = config.fail
 		if( fail ){
-			$jin.atom.bound( function jin_atom_failBound( ){
-				fail.call( context, error, prev )
-			})
+			fail.call( context, error, prev )
 		} else if( !this._slavesCount ){
-			if(!( error instanceof $jin.atom.wait )){
+			if(!( error instanceof this.constructor.wait )){
 				$jin.log.error( error )
 			}
 		}
 	} else {
 		var push = config.push
 		if( push ){
-			$jin.atom.bound( function jin_atom_pushBound( ){
-				push.call( context, next, prev )
-			})
+			push.call( context, next, prev )
 		}
 	}
 
@@ -214,7 +204,7 @@ $jin.method({ '$jin.atom..slice': function( ){
 }})
 
 $jin.method({ '$jin.atom..notify': function( ){
-	var slaveExclude = $jin.atom.slaves[0]
+	var slaveExclude = this.constructor.current
 	
 	var slaves = this._slaves
 	for( var id in slaves ){
@@ -223,28 +213,29 @@ $jin.method({ '$jin.atom..notify': function( ){
 		if( !slave ) continue
 		if( slave === slaveExclude ) continue
 		
-		slave.update()
+		slave.update( this )
 	}
 
 	return this
 }})
 
 $jin.method({ '$jin.atom..update': function( ){
+	if( this._isScheduled ) return
+	
 	var slice = this._slice
 
-	var queue = $jin.atom.scheduled[ slice ]
-	if( !queue ) queue = $jin.atom.scheduled[ slice ] = {}
+	var queue = this.constructor.scheduled[ slice ]
+	if( !queue ) queue = this.constructor.scheduled[ slice ] = []
 
-	queue[ this._id ] = this
-	this._scheduled = true
+	queue.push( this )
+	this._isScheduled = true
 
-	$jin.atom.schedule()
+	this.constructor.schedule()
 
 	return this
 }})
 
 $jin.method({ '$jin.atom..lead': function( slave ){
-	if( slave === this ) throw new Error( 'Self leading atom' )
 	var id = slave.id()
 	
 	var slaves = this._slaves
@@ -257,7 +248,6 @@ $jin.method({ '$jin.atom..lead': function( slave ){
 }})
 
 $jin.method({ '$jin.atom..obey': function( master ){
-	if( master === this ) throw new Error( 'Self obey atom' )
 	var id = master.id()
 	
 	this._masters[ id ] = master
@@ -320,16 +310,6 @@ $jin.method({ '$jin.atom..reap': function( ){
 	}.bind( this ))
 	
 	return this
-}})
-
-$jin.method({ '$jin.atom..destroy': function( ){
-	this.disleadAll()
-	this.disobeyAll()
-	if( this._scheduled ){
-		var queue = $jin.atom.scheduled[ this._slice ]
-		queue[ this._id ] = null
-	}
-	return this['$jin.klass..destroy']()
 }})
 
 $jin.method({ '$jin.atom.enableLogs': function( ){
