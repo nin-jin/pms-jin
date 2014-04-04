@@ -264,7 +264,7 @@ $jin.method( '$jin.file.base..require', function( ){
     $jin.log.warn( 'Module (' + this.path() + ') not found. Search (' + this.name() + ') in repository...' )
     
     $jin.async2sync( $node.npm.load ).call( $node.npm, {} )
-    var meta = $jin.async2sync( $node.npm.commands.view ).call( $node.npm.commands, [ this.name(), 'repository' ] )
+    var meta = $jin.async2sync( $node.npm.commands.view ).call( $node.npm.commands, [ 'pms-' + this.name(), 'repository' ] )
     for( var version in meta ){
         var repository = meta[ version ].repository
         break
