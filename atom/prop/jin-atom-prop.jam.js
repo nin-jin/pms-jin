@@ -55,6 +55,19 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 }})
 
 $jin.definer({ '$jin.atom.prop.list': function( path, config ){
+	if( !config.merge ) config.merge = function( next, prev ){
+		if( !prev || !next ) return next
+		
+		if( next.length !== prev.length ) return next
+		
+		for( var i = 0; i < next.length; ++i ){
+			if( next[ i ] === prev[ i ] ) continue
+			return next
+		}
+		
+		return prev
+	}
+	
 	$jin.atom.prop( path, config )
 	
 	var propName = path.replace( /([$\w]*\.)+/, '' )
