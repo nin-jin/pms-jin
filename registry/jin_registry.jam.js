@@ -14,6 +14,8 @@ $jin.property.hash( '$jin.registry.storage', {} )
  * Otherwise creats new one.
  */
 $jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
+	if( !arguments.length ) return this['$jin.klass.exec']()
+	
 	if( id instanceof this ) return id
 	id = String( id )
 	
