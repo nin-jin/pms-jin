@@ -1,15 +1,15 @@
-$jin.klass({ '$jin.sample.proto': [ '$jin.registry' ] })
+$jin.klass({ '$jin.sample2.proto': [ '$jin.registry' ] })
 
-$jin.property({ '$jin.sample.proto..nativeNode': function( ){
+$jin.property({ '$jin.sample2.proto..nativeNode': function( ){
 	var selector = '[' + this.id() + ']'
 	
-	var node = $jin.sample.templates().cssFind( selector )
+	var node = $jin.sample2.templates().cssFind( selector )
 	if( !node ) throw new Error( 'Sample not found (' + selector + ')' )
 	
 	return node.raw()
 }})
 
-$jin.property({ '$jin.sample.proto..rules': function( ){
+$jin.property({ '$jin.sample2.proto..rules': function( ){
 	var node = this.nativeNode()
 	
 	var path = []
@@ -62,7 +62,6 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 					
 					rules.push({ key: key, path: path.concat( subPath ), fieldName: fieldName })
 				} )
-				node.removeAttribute( 'jin-sample-props' )
 			}
 			
 			var events = node.getAttribute( 'jin-sample-events' )
@@ -86,7 +85,6 @@ $jin.property({ '$jin.sample.proto..rules': function( ){
 						rules.push({ key: key, path: path.slice(), event: event })
 					}
 				} )
-				node.removeAttribute( 'jin-sample-events' )
 			}
 			
 		}

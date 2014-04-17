@@ -39,7 +39,7 @@ $jin.method({ '$jin.dom.range..clear': function( ){
 }})
 
 $jin.method({ '$jin.dom.range..html': function( html ){
-	if( !html ) return $jin.dom( this.nativeRange().cloneContents() ).toString()
+	if( !arguments.length ) return $jin.dom( this.nativeRange().cloneContents() ).toString()
 	
 	var node = $jin.dom( html )
 	this.replace( node )
@@ -48,7 +48,7 @@ $jin.method({ '$jin.dom.range..html': function( html ){
 }})
 
 $jin.method({ '$jin.dom.range..text': function( text ){
-	if( !text ) return $jin.dom.html2text( this.html() )
+	if( !arguments.length ) return $jin.dom.html2text( this.html() )
 	
 	this.html( $jin.dom.escape( text ) )
 	
