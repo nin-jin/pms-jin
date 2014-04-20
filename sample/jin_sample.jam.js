@@ -1,47 +1,364 @@
 $jin.klass({ '$jin.sample': [ '$jin.dom' ] })
 
-$jin.property({ '$jin.sample.strings': function( next ){
-	if( !arguments.length ) return ''
-	return $jin.sample.strings() + next
+$jin.atom.prop({ '$jin.sample.strings': {
+	value: '',
+	put: function( next, prev ){
+		return $jin.sample.strings() + next
+	}
 }})
 
-$jin.property({ '$jin.sample.templates': function( ){
-	var strings = $jin.sample.strings()
-	if( !strings ) throw new Error( 'Please, set up $jin.sample.strings' )
-	return $jin.dom( '<div xmlns="http://www.w3.org/1999/xhtml">' + $jin.sample.strings() + '</div>' )
+$jin.atom.prop({ '$jin.sample.templates': {
+	pull: function( ){
+		var strings = this.strings()
+		if( !strings ) throw new Error( 'Please, set up $jin.sample.strings' )
+		return $jin.dom( '<div xmlns="http://www.w3.org/1999/xhtml">' + $jin.sample.strings() + '</div>' )
+	}
 }})
+
+$jin.atom.prop.hash({ '$jin.sample.dom': {
+	pull: function( name ){
+		var selector = '[' + name + ']'
+		
+		var dom = $jin.sample.templates().cssFind( selector )
+		if( !dom ) throw new Error( 'Sample not found (' + selector + ')' )
+		
+		return dom.nativeNode()
+	}
+}})
+
+$jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
+	var node = this.dom( name )
+	
+	var path = []
+	var rules = []
+	
+	function collect( node ){
+		
+		if( node.childNodes ){
+			for( var i = 0; i < node.childNodes.length; ++i ){
+				var child = node.childNodes[i]
+				
+				if( child.nodeName === '#text' ){
+					var found = /\{(\w+)\}/g.exec( child.nodeValue )
+					if( !found ) continue
+					
+					var key = found[1]
+					rules.push({
+						key: key,
+						path: path.slice(),
+						coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '=' + key,
+						attach: function( rule, sample, current ){
+							var cover = new $jin.atom(
+							{	name: rule.coverName
+							,	pull: function jin_sample_pull( ){
+									var view = sample.view()
+									if( !view ) return null
+									
+									return view[ rule.key ]()
+								}
+							, 	merge: function contentPull( nextItems, prevItems ){
+									if( typeof nextItems !== 'object' && typeof prevItems !== 'object' ){
+										current.innerText = String( nextItems )
+										return null
+									}
+									
+									if( !prevItems ) prevItems = []
+									
+									if( nextItems == null ){
+										nextItems = [ '' ]
+									} else if( typeof nextItems === 'object' ){
+										nextItems = [].concat( nextItems )
+									} else {
+										nextItems = [ String( nextItems ) ]
+									}
+									
+									nextItems = nextItems.filter( function jin_sample_filterNulls( item ){
+										return( item != null )
+									} )
+									
+									if( !nextItems.length ) nextItems.push( '' )
+									
+									nextItems = nextItems.map( function jin_sample_normalizeNext( item ){
+										if( typeof item !== 'object' ) return String( item )
+										if( item.element ) return item.element()
+										return item
+									} )
+									
+									var textNodes = []
+									var elements = []
+									
+									var nodes = current.childNodes
+									for( var i = 0; i < nodes.length; ++i ){
+										var node = nodes[i]
+										if( node.nodeName === '#text' ) textNodes.push( node )
+										else elements.push( node )
+									}
+									
+									var nextNodes = nextItems.map( function jin_sample_generateNodes( item ){
+										if( typeof item === 'string' ){
+											var node = textNodes.shift()
+											if( !node ) node = document.createTextNode( item )
+											else if( node.nodeValue !== item ) node.nodeValue = item
+											return node
+										} else {
+											var node = item[ '$jin.dom..nativeNode' ] ? item.nativeNode() : item
+											var index = elements.indexOf( node )
+											if( index >= 0 ) elements[ index ]  = null
+											return node
+										}
+									} )
+									
+									var removeNode = function jin_sample_removeNode( node ){
+										if( !node ) return
+										current.removeChild( node )
+									}
+									
+									elements.forEach( removeNode )
+									textNodes.forEach( removeNode )
+									
+									prevItems.map( function jin_sample_freePrevs( item ){
+										if( typeof item === 'string' ) return
+										if( !item['$jin.sample..view'] ) return
+										if( nextItems.indexOf( item ) >= 0 ) return
+										item.view( null )
+									} )
+									
+									for( var i = nextNodes.length; i > 0; --i ){
+										var next = nextNodes[ i ]
+										var node = nextNodes[ i - 1 ]
+										if( next ){
+											if( node.nextNode !== next ) current.insertBefore( node, next )
+										} else {
+											if( node.parentNode !== current ) current.appendChild( node )
+										}
+									}
+									
+									return nextItems
+								}
+							} )
+							sample.entangle( cover )
+							$jin.atom.bound( function( ){
+								cover.pull()
+							} )
+						}
+					})
+					
+					while( node.firstChild ) node.removeChild( node.firstChild )
+					break;
+				} else {
+					path.push( 'childNodes', i )
+						collect( child )
+					path.pop(); path.pop()
+				}
+			}
+		}
+		
+		var attrs = node.attributes
+		if( attrs ){
+			for( var i = 0; i < attrs.length; ++i ){
+				var attr = attrs[ i ]
+				
+				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
+				if( !found ) continue
+				
+				var key = found[1]
+				var attrName = attr.nodeName
+				
+				var rule = {
+					key: key,
+					attrName: attrName,
+					coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '/@' + attrName + '=' + key,
+					path: path.slice(),
+					attach: function( rule, sample, node ){
+						var cover = new $jin.atom(
+						{	name: rule.coverName
+						,	pull: function jin_sample_pull( ){
+								var view = sample.view()
+								if( !view ) return null
+								
+								var next = view[ rule.key ]()
+								return next ? String( next ) : next
+							}
+						,	push: function attrPush( next, prev ){
+								if( next == null ) node.removeAttribute( rule.attrName )
+								else node.setAttribute( rule.attrName, next )
+							}
+						})
+						sample.entangle( cover )
+						$jin.atom.bound( function( ){
+							cover.pull()
+						} )
+					}
+				}
+				rules.push( rule )
+			}
+			
+			var props = node.getAttribute( 'jin-sample-props' )
+			if( props ){
+				props.split( /[;\s&]+/g )
+				.forEach( function( chunk ){
+					if( !chunk ) return
+					
+					var subPath = chunk.split( /[-_:=.]/g )
+					var key = subPath.pop()
+					var fieldName = subPath.pop()
+					
+					rules.push({
+						key: key,
+						path: path.concat( subPath ),
+						coverName: '$jin.sample:' + name + '/' + path.join( '/' ) +  ( subPath.length ? '.' + subPath.join( '.' ) : '' ) + '.' + fieldName + '=' + key,
+						fieldName: fieldName,
+						attach: function( rule, sample, current ){
+							if( [ 'value', 'checked' ].indexOf( rule.fieldName ) !== -1 && [ 'select', 'input', 'textarea' ].indexOf( node.nodeName ) !== -1 ){
+								var handler = function( event ){
+									var view = sample.view()
+									if( !view ) return
+									view[ rule.key ]( current[ rule.fieldName ] )
+								}
+								sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
+								sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
+								sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
+							}
+							if( rule.fieldName === 'scrollTop' ){
+								var handler = function( event ){
+									var view = sample.view()
+									if( !view ) return
+									
+									view[ rule.key ]( current.scrollTop )
+								}
+								sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
+							} else if( rule.fieldName === 'scrollLeft' ){
+								var handler = function( event ){
+									var view = sample.view()
+									if( !view ) return
+									
+									view[ rule.key ]( current.scrollLeft )
+								}
+								sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
+							}
+							var cover = new $jin.atom(
+							{	name: rule.coverName
+							,	pull: function jin_sample_pull( ){
+									var view = sample.view()
+									if( !view ) return null
+									
+									return view[ rule.key ]()
+								}
+							,	push: function fieldPush( next, prev ){
+									if( next == null ) return
+									//if( current[ rule.fieldName ] == next ) return
+									current[ rule.fieldName ] = next
+								}
+							})
+							sample.entangle( cover )
+							$jin.atom.bound( function( ){
+								cover.pull()
+							} )
+						}
+					})
+				} )
+				node.removeAttribute( 'jin-sample-props' )
+			}
+			
+			var events = node.getAttribute( 'jin-sample-events' )
+			if( events ){
+				events.split( /[;\s&]+/g )
+				.forEach( function( chunk ){
+					if( !chunk ) return
+					
+					var eventName = chunk.split( /[-_:=.]/g )
+					var key = eventName.pop()
+					eventName = eventName.join( '.' )
+					
+					var shortFound = /^(on)(\w+)$/.exec( eventName )
+					if( shortFound ){
+						var type = shortFound[1]
+						var name = shortFound[2]
+						rules.push({
+							key: key,
+							path: path.slice(),
+							eventName: name,
+							attach: function( rule, sample, current ){
+								var listener = $jin.dom( current ).listen( rule.eventName, function eventHandler( event ){
+									var view = sample.view()
+									if( !view ) return
+									
+									var handler = view[ rule.key ]
+									if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..' + rule.key + ')' )
+									
+									handler.call( view, $jin.dom.event( event ) )
+								})
+								sample.entangle( listener )
+							}
+						})
+					} else {
+						var event = $jin.glob( eventName )
+						if( !event ) throw new Error( 'Unknown event [' + eventName + ']' )
+						rules.push({
+							key: key,
+							path: path.slice(),
+							event: event,
+							attach: function( rule, sample, current ){
+								var listener = rule.event.listen( current, function eventHandler( event ){
+									var view = sample.view()
+									if( !view ) return
+									
+									var handler = view[ rule.key ]
+									if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..'  + rule.key + ')' )
+									
+									handler.call( view, event )
+								})
+								sample.entangle( listener )
+							}
+						})
+					}
+				} )
+				node.removeAttribute( 'jin-sample-events' )
+			}
+			
+		}
+	}
+	
+	collect( node )
+	
+	return rules
+}}})
 
 $jin.property.hash({ '$jin.sample.pool': { pull: function( ){
 	return []
 }}})
 
 $jin.method({ '$jin.sample.exec': function( type ){
-	var pool = $jin.sample.pool( type )
+	'$jin.wrapper.exec'
+	
+	var pool = this.pool( type )
 	var sample = pool.shift()
 	
-	if( !sample ){
-		var proto = $jin.sample.proto( type )
-		proto.rules()
-		var node = proto.nativeNode().cloneNode( true )
-		sample = this[ '$jin.wrapper.exec' ]( node ).proto( proto )
-	}
+	if( !sample ) sample = this[ '$jin.klass.exec' ]({ type: type })
 	
 	return sample
 }})
+
+
+$jin.method({ '$jin.sample..init': function( config ){
+	'$jin.dom..init'
+    return this['$jin.klass..init']( config )
+}})
+
+$jin.property({ '$jin.sample..type': String })
 
 $jin.atom.prop({ '$jin.sample..view': {
 	push: function( next, prev ){
 		if( next === prev ) return prev
 		
 		if( prev ){
-			var protoId = this.proto().id()
-			var prevSample = prev.sample( protoId )
-			if( prevSample === this ) prev.sample( protoId, void 0 )
+			var type = this.type()
+			var prevSample = prev.sample( type )
+			if( prevSample === this ) prev.sample( type, void 0 )
 		}
 		
 		if( next == null ){
-			var protoId = this.proto().id()
-			var pool = $jin.sample.pool( protoId )
+			var pool = $jin.sample.pool( this.type() )
 			pool.push( this )
 		}
 		
@@ -49,199 +366,27 @@ $jin.atom.prop({ '$jin.sample..view': {
 	}
 }})
 
-$jin.property({ '$jin.sample..covers': null })
+//$jin.property({ '$jin.sample..covers': null })
 
-$jin.property({ '$jin.sample..proto': function( proto ){
-	
-	var node = this.nativeNode()
-	var rules = proto.rules()
-	var sample = this
-	var covers = []
-	var protoId = proto.id()
-	
-	rules.forEach( function ruleIterator( rule ){
-		var current = node
+$jin.atom.prop({ '$jin.sample..nativeNode': {
+	resolves: [ '$jin.dom..nativeNode' ],
+	pull: function( ){
 		
-		var pull = function jin_sample_pull( prev ){
-			var view = sample.view()
-			if( !view ) return null
+		var type = this.type()
+		var node = this.constructor.dom( type ).cloneNode( true )
+		var rules = this.constructor.rules( type )
+		var sample = this
+		
+		rules.forEach( function ruleIterator( rule ){
+			var current = node
 			
-			//try {
-				return view[ rule.key ]()
-			//}  catch( error ){
-				//error.stack = 'Can not get value (' + view.constructor + '..' + rule.key + ')\n' + error.stack
-				//throw error
-			//}
-		}
-		
-		rule.path.forEach( function pathIterator( name ){
-			current = current[ name ]
+			rule.path.forEach( function pathIterator( name ){
+				current = current[ name ]
+			} )
+			
+			rule.attach( rule, sample, current )
 		} )
 		
-		if( rule.attrName ){
-			var cover = new $jin.atom(
-			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/@' + rule.attrName + '=' + rule.key
-			,	pull: pull
-			,	push: function attrPush( next, prev ){
-					if( next == null ) current.removeAttribute( rule.attrName )
-					else current.setAttribute( rule.attrName, String( next ) )
-				}
-			})
-			if( /^(value|checked)$/i.test( rule.attrName ) && /^(select|input|textarea)$/i.test( current.nodeName ) ){
-				var handler = function( event ){
-					var view = sample.view()
-					if( !view ) return
-					view[ rule.key ]( current[ rule.attrName ] )
-				}
-				sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
-				sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
-				sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
-			}
-		} else if( rule.fieldName ){
-			var cover = new $jin.atom(
-			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '/' + rule.fieldName + '=' + rule.key
-			,	pull: pull
-			,	push: function fieldPush( next, prev ){
-					if( next == null ) return
-					//if( current[ rule.fieldName ] == next ) return
-					current[ rule.fieldName ] = next
-				}
-			})
-			if( /^(value|checked)$/i.test( rule.fieldName ) && /^(select|input|textarea)$/i.test( current.nodeName ) ){
-				var handler = function( event ){
-					var view = sample.view()
-					if( !view ) return
-					view[ rule.key ]( current[ rule.fieldName ] )
-				}
-				sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
-				sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
-				sample.entangle( $jin.dom( current ).listen( 'click', handler ) )
-			}
-			if( rule.fieldName === 'scrollTop' ){
-				var handler = function( event ){
-					var view = sample.view()
-					if( !view ) return
-					
-					view[ rule.key ]( current.scrollTop )
-				}
-				sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
-			}
-		} else if( rule.eventName ){
-			var listener = $jin.dom( current ).listen( rule.eventName, function eventHandler( event ){
-				var view = sample.view()
-				if( !view ) return
-				
-				var handler = view[ rule.key ]
-				if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..' + rule.key + ')' )
-				
-				handler.call( view, $jin.dom.event( event ) )
-			})
-			sample.entangle( listener )
-			return
-		} else if( rule.event ){
-			var listener = rule.event.listen( current, function eventHandler( event ){
-				var view = sample.view()
-				if( !view ) return
-				
-				var handler = view[ rule.key ]
-				if( !handler ) throw new Error( 'View handler is not defined (' + view.constructor + '..'  + rule.key + ')' )
-				
-				handler.call( view, event )
-			})
-			sample.entangle( listener )
-			return
-		} else {
-			var cover = new $jin.atom(
-			{	name: '$jin.sample:' + protoId + '/' + rule.path.join( '/' ) + '=' + rule.key
-			,	pull: pull
-			, 	merge: function contentPull( nextItems, prevItems ){
-					
-					if( !prevItems ) prevItems = []
-					
-					if( nextItems == null ){
-						nextItems = [ '' ]
-					} else if( typeof nextItems === 'object' ){
-						nextItems = [].concat( nextItems )
-					} else {
-						nextItems = [ String( nextItems ) ]
-					}
-					
-					nextItems = nextItems.filter( function jin_sample_filterNulls( item ){
-						return( item != null )
-					} )
-					
-					if( !nextItems.length ) nextItems.push( '' )
-					
-					nextItems = nextItems.map( function jin_sample_normalizeNext( item ){
-						if( typeof item !== 'object' ) return String( item )
-						if( item.element ) return item.element()
-						return item
-					} )
-					
-					var textNodes = []
-					var elements = []
-					
-					var nodes = current.childNodes
-					for( var i = 0; i < nodes.length; ++i ){
-						var node = nodes[i]
-						if( node.nodeName === '#text' ) textNodes.push( node )
-						else elements.push( node )
-					}
-					
-					var nextNodes = nextItems.map( function jin_sample_generateNodes( item ){
-						if( typeof item === 'string' ){
-							var node = textNodes.shift()
-							if( !node ) node = document.createTextNode( item )
-							else if( node.nodeValue !== item ) node.nodeValue = item
-							return node
-						} else {
-							var node = item[ '$jin.dom..nativeNode' ] ? item.nativeNode() : item
-							var index = elements.indexOf( node )
-							if( index >= 0 ) elements[ index ]  = null
-							return node
-						}
-					} )
-					
-					var removeNode = function jin_sample_removeNode( node ){
-						if( !node ) return
-						current.removeChild( node )
-					}
-					
-					elements.forEach( removeNode )
-					textNodes.forEach( removeNode )
-					
-					prevItems.map( function jin_sample_freePrevs( item ){
-						if( typeof item === 'string' ) return
-						if( !item['$jin.sample..view'] ) return
-						if( nextItems.indexOf( item ) >= 0 ) return
-						item.view( null )
-					} )
-					
-					for( var i = nextNodes.length; i > 0; --i ){
-						var next = nextNodes[ i ]
-						var node = nextNodes[ i - 1 ]
-						if( next ){
-							if( node.nextNode !== next ) current.insertBefore( node, next )
-						} else {
-							if( node.parentNode !== current ) current.appendChild( node )
-						}
-					}
-					
-					return nextItems
-				}
-			} )
-		}
-		
-		sample.entangle( cover )
-		
-		covers.push( cover )
-		
-		$jin.atom.bound( function( ){
-			cover.pull()
-		})
-	} )
-	
-	this.covers( covers )
-	
-	return proto
+		return node
+	}
 }})

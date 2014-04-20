@@ -71,7 +71,8 @@ $jin.method({ '$jin.atom..id': function( ){
 }})
 
 $jin.method({ '$jin.atom..get': function( ){
-	if( this._config.pull && ( this._isScheduled || ( this._value === void 0 ) ) ) this.pull()
+	var value = this._value
+	if( this._config.pull && ( this._isScheduled || ( value === void 0 ) ) ) value = this.pull()
 
 	var slave = this.constructor.current
 	if( slave ){
@@ -82,7 +83,7 @@ $jin.method({ '$jin.atom..get': function( ){
 	
 	if( this._error ) throw this._error
 	
-	return this._value
+	return value
 }})
 
 $jin.method({ '$jin.atom..valueOf': function( ){
@@ -283,7 +284,10 @@ $jin.method({ '$jin.atom..disleadAll': function( ){
 	this._slaves = {}
 	this._slavesCount = 0
 	for( var id in slaves ){
-		slaves[ id ].disobey( this )
+		var slave = slaves[ id ]
+		if( !slave ) continue
+		
+		slave.disobey( this )
 	}
 	this.reap()
 }})
@@ -292,7 +296,10 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 	var masters = this._masters
 	this._masters = {}
 	for( var id in masters ){
-		masters[ id ].dislead( this )
+		var master = masters[ id ]
+		if( !master ) continue
+		
+		master.dislead( this )
 	}
 	this._slice = 0
 }})
