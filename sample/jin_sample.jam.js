@@ -57,10 +57,6 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 									return view[ rule.key ]()
 								}
 							, 	merge: function contentPull( nextItems, prevItems ){
-									if( typeof nextItems !== 'object' && typeof prevItems !== 'object' ){
-										current.innerText = String( nextItems )
-										return null
-									}
 									
 									if( !prevItems ) prevItems = []
 									
