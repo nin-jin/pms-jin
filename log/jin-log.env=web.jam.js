@@ -29,3 +29,8 @@ $jin.method({ '$jin.log.error' : function( error ){
 	
 	error.jin_log_isLogged = true
 }})
+
+$jin.method({ '$jin.log.error.ignore' : function( error ){
+	error.jin_log_isLogged = true
+	return error
+}})

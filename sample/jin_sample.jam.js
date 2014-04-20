@@ -97,7 +97,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 											else if( node.nodeValue !== item ) node.nodeValue = item
 											return node
 										} else {
-											var node = item[ '$jin.dom..nativeNode' ] ? item.nativeNode() : item
+											var node = item.nativeNode ? item.nativeNode() : item
 											var index = elements.indexOf( node )
 											if( index >= 0 ) elements[ index ]  = null
 											return node
@@ -151,11 +151,13 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 		
 		var attrs = node.attributes
 		if( attrs ){
+			var attrList = []
 			for( var i = 0; i < attrs.length; ++i ){
-				var attr = attrs[ i ]
-				
+				attrList.push( attrs[ i ] )
+			}
+			attrList.forEach( function( attr ){
 				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
-				if( !found ) continue
+				if( !found ) return
 				
 				var key = found[1]
 				var attrName = attr.nodeName
@@ -187,7 +189,9 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					}
 				}
 				rules.push( rule )
-			}
+				
+				node.removeAttribute( attrName )
+			})
 			
 			var props = node.getAttribute( 'jin-sample-props' )
 			if( props ){

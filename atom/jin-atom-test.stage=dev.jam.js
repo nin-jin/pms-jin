@@ -149,53 +149,113 @@ $jin.test( function mutating( test ){
 	test.equal( x.get(), 42 )
 } )
 
-//$jin.test( function failing_while_pulling( test ){
-//    test.timeout( 200 )
-//	
-//	var error = new Error( 'test error' )
-//	
-//    var x = $jin.atom({ merge: Boolean })
-//    
-//	var y = $jin.atom({
-//		pull: function(){
-//			if( x.get() ) throw error
-//			else return 12
-//		}
-//	})
-//    
-//	var z = $jin.atom({
-//		pull: function( ){
-//			return y + 30
-//		}
-//	})
-//	
-//	var z1 = z.get()
-//	x.put( true )
-//	
-//    $jin.defer( function( ){
-//		try {
-//			var z2 = z.get()
-//		} catch( err ){
-//			test.equal( error, err ).done( true )
-//		}
-//    })
-//} )
+$jin.test( function failing_while_pulling( test ){
+    test.timeout( 200 )
+	
+	var error = $jin.log.error.ignore( new Error( 'test error' ) )
+	
+    var x = $jin.atom({ merge: Boolean })
+    
+	var y = $jin.atom({
+		pull: function(){
+			if( x.get() ) throw error
+			else return 12
+		}
+	})
+    
+	var z = $jin.atom({
+		pull: function( ){
+			return y + 30
+		}
+	})
+	
+	var z1 = z.get()
+	x.put( true )
+	
+    $jin.defer( function( ){
+		try {
+			var z2 = z.get()
+		} catch( err ){
+			test.equal( error, err ).done( true )
+		}
+    })
+} )
 
-//$jin.test( function reaping( test ){
-//	test.timeout( 100 )
-//    var x = 1
-//    var y = $jin.atom({ pull: function( ){
-//		return x + 1
-//	} })
-//    var z = $jin.atom({ pull: function( ){
-//		return y + 1
-//	} })
-//    z.get()
-//    x = 2
-//    z.disobeyAll()
-//	$jin.schedule( 10, function(){
-//		test.equal( y.get(), 3 )
-//		test.done( true )
-//	} )
-//} )
+$jin.test( function reaping( test ){
+	test.timeout( 100 )
+    var x = 1
+    var y = $jin.atom({ pull: function( ){
+		return x + 1
+	} })
+    var z = $jin.atom({ pull: function( ){
+		return y + 1
+	} })
+    z.get()
+    x = 2
+    z.disobeyAll()
+	$jin.schedule( 10, function(){
+		test.equal( y.get(), 3 )
+		test.done( true )
+	} )
+} )
 
+$jin.test( function promise_instant_resolve( test ){
+	test.timeout( 0 )
+    
+	var x = $jin.atom({ value: 1 })
+	
+	x.then( function( value ){
+		test.equal( value, 1 ).done( true )
+	} )
+} )
+
+$jin.test( function promise_instant_fail( test ){
+	test.timeout( 1 )
+    
+	var error = new Error( 'test error' )
+	var x = $jin.atom({ error: error })
+	
+	x['catch']( function( error2 ){
+		test.equal( error, error2 ).done( true )
+	} )
+} )
+
+$jin.test( function promise_instant_then_fail( test ){
+	test.timeout( 1 )
+    
+	var error = new Error( 'test error' )
+	var x = $jin.atom({ error: error })
+	
+	x.then( function(){}, function( error2 ){
+		test.equal( error, error2 ).done( true )
+	} )
+} )
+
+$jin.test( function promise_defer_resolve( test ){
+	test.timeout( 100 )
+    
+	var x = $jin.atom({})
+	
+	x.then( function( value ){
+		test.equal( value, 1 ).done( true )
+	} )
+	
+	$jin.schedule( 0, function(){
+		x.put( 1 )
+	})
+} )
+
+$jin.test( function promise_defer_fail( test ){
+	test.timeout( 100 )
+    
+	var error = new Error( 'test error' )
+	var x = $jin.atom({})
+	
+	x['catch']( function( error2 ){
+		test.equal( error, error2 ).done( true )
+	} )
+	
+	$jin.schedule( 0, function(){
+		x.fail( error )
+	})
+} )
