@@ -54,13 +54,19 @@ $jin.atom.prop({ '$jin.file.base..exists': {
 
 $jin.atom.prop({ '$jin.file.base..isDir': {
 	pull: function( ){
-		return this.stat().isDirectory()
+		var stat = this.stat()
+		if( !stat ) return false
+		
+		return stat.isDirectory()
 	}
 }})
 
 $jin.atom.prop({ '$jin.file.base..isFile': {
 	pull: function( ){
-		return this.stat().isFile()
+		var stat = this.stat()
+		if( !stat ) return false
+		
+		return stat.isFile()
 	}
 }})
 
