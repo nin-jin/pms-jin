@@ -14,7 +14,7 @@ this.$jin.method.naming = function $jin_method_naming( name, owner ){
     
     if( typeof owner === 'function' && !owner.displayName ){
         $jin.method.naming( name + '.', owner.prototype )
-        owner.displayName = name
+        if( !owner.displayName ) owner.displayName = name
         owner.jin_method_resolves = [ '$' + 'jin.klass..constructor' ]
     }    
 }

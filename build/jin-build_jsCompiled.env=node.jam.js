@@ -1,7 +1,7 @@
 $jin.atom.prop({ '$jin.build..jsCompiled': {
 	pull: function( prev ){
 		
-		var target = this.pack().buildFile( this.pack().name(), this.vary(), 'js' )
+		var target = this.pack().buildFile( 'index', this.vary(), 'js' )
 		
 		var chunks = this.jsSources().map( function( src ){
 			return ';// ' + src.relate( target.parent() ) + '\n' + src.content()

@@ -14,13 +14,13 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 		return this.urn().query()
 	}],
 	
-	'.modules': [ $jin.atom.prop, {
+	'.modules': [ $jin.atom.prop.list, {
 		pull: function( ){
 			return this.pack().deepModuleList()
 		}
 	}],
 	
-	'.sources': [ $jin.atom.prop, {
+	'.sources': [ $jin.atom.prop.list, {
 		pull: function( prev ){
 			var tree = this.dependTree()
 			var sources = []
@@ -33,31 +33,22 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 			})
 			
 			return sources.map( $jin.file )
-		},
-		merge: function( next, prev ){
-			return ( String( next ) == String( prev ) ) ? prev : next
 		}
 	}],
 	
-	'.jsSources': [ $jin.atom.prop, {
+	'.jsSources': [ $jin.atom.prop.list, {
 		pull: function( prev ){
 			return [].concat.apply( [], this.sources().map( function( src ){
 				return src.jsFiles()
 			} ) )
-		},
-		merge: function( next, prev ){
-			return ( String( next ) == String( prev ) ) ? prev : next
 		}
 	}],
 	
-	'.cssSources': [ $jin.atom.prop, {
+	'.cssSources': [ $jin.atom.prop.list, {
 		pull: function( prev ){
 			return [].concat.apply( [], this.sources().map( function( src ){
 				return src.cssFiles()
 			} ) )
-		},
-		merge: function( next, prev ){
-			return ( String( next ) == String( prev ) ) ? prev : next
 		}
 	}]
 	

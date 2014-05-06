@@ -3,6 +3,7 @@ $jin.method( '$jin.vary2string', function( prefix, vary, postfix ){
     
     var chunks= []
     for( var key in vary ){
+		if( vary[ key ] == null ) continue
         chunks.push( key + '=' + vary[ key ] )
     }
     chunks.sort()

@@ -1,6 +1,6 @@
 $jin.klass({ '$jin.file.base': [ '$jin.registry' ] })
 
-$jin.property( '$jin.file.base..nativeAPI', function( ){
+$jin.property( '$jin.file.base.nativeAPI', function( ){
     return /*$jin.fiberize*/( $node['fs'] )
 } )
 
@@ -19,7 +19,7 @@ $jin.property( '$jin.file.base..path', function( path ){
 $jin.atom.prop({ '$jin.file.base..stat': {
 	pull: function( prev ){
 		try {
-			var stat = this.nativeAPI().statSync( this.path() )
+			var stat = this.constructor.nativeAPI().statSync( this.path() )
 			this.watcher()
 		} catch( error ){
 			if( error.code !== 'ENOENT' ) throw error
@@ -31,7 +31,10 @@ $jin.atom.prop({ '$jin.file.base..stat': {
 
 $jin.atom.prop({ '$jin.file.base..version': {
 	pull: function( ){
-		return this.stat().mtime.getTime().toString( 36 ).toUpperCase()
+		var stat = this.stat()
+		if( !stat ) return ''
+		
+		return stat.mtime.getTime().toString( 36 ).toUpperCase()
 	}
 }})
 
@@ -41,10 +44,12 @@ $jin.atom.prop({ '$jin.file.base..exists': {
 		
         if( exists ){
             this.parent().exists( true )
-            this.api().mkdirSync( this.path() )
+            this.constructor.nativeAPI().mkdirSync( this.path() )
         } else {
-            this.nativeAPI().unlinkSync( this.path() )
+            this.constructor.nativeAPI().unlinkSync( this.path() )
         }
+		
+		return exists
     },
 	pull: function( ){
 		var next = !!this.stat()
@@ -55,7 +60,7 @@ $jin.atom.prop({ '$jin.file.base..exists': {
 $jin.atom.prop({ '$jin.file.base..isDir': {
 	pull: function( ){
 		var stat = this.stat()
-		if( !stat ) return false
+		if( !stat ) return stat
 		
 		return stat.isDirectory()
 	}
@@ -80,34 +85,36 @@ $jin.property( '$jin.file.base..ext', function( ){
 
 $jin.atom.prop({ '$jin.file.base..content': {
 	pull: function( content ){
-    	var content = this.nativeAPI().readFileSync( this.path() )
-		this.watcher()
+		try {
+			var content = this.constructor.nativeAPI().readFileSync( this.path() )
+			this.watcher()
+		} catch( error ){
+			error.message += ' (' + this.path() + ')'
+			throw error
+		}
 		return content
 	},
     put: function( next ){
-		try {
-			this.nativeAPI().mkdirSync( this.parent().path() )
-		} catch( error ){
-			if( error.code !== 'EEXIST' ) throw error
-		}
+		this.parent().exists( true )
 		
-		this.nativeAPI().writeFileSync( this.path(), next )
+		this.constructor.nativeAPI().writeFileSync( this.path(), next )
+		this.stat( void 0 )
 		
 		return next
 	}
 }})
 
 $jin.method( '$jin.file.base..append', function( string ){
-    this.nativeAPI().appendFile( this.path(), string )
+    this.constructor.nativeAPI().appendFile( this.path(), string )
     return this
 } )
 
 $jin.method( '$jin.file.base..streamReader', function( options ){
-    return this.nativeAPI().createReadStream( this.path(), options )
+    return this.constructor.nativeAPI().createReadStream( this.path(), options )
 } )
 
 $jin.method( '$jin.file.base..streamWriter', function( options ){
-    return this.nativeAPI().createWriteStream( this.path(), options )
+    return this.constructor.nativeAPI().createWriteStream( this.path(), options )
 } )
 
 $jin.method( '$jin.file.base..resolve', function( path ){
@@ -126,7 +133,7 @@ $jin.method( '$jin.file.base..child', function( name ){
 $jin.atom.prop({ '$jin.file.base..childList': {
 	pull: function( ){
 		
-		var names= this.nativeAPI().readdirSync( this.path() )
+		var names= this.constructor.nativeAPI().readdirSync( this.path() )
 		var dir = this
 		
 		//return $jin.lazyProxy( function( ){
@@ -174,7 +181,7 @@ $jin.property({ '$jin.file.base..update': function( ){
 
 $jin.method({ '$jin.file.base..notify': function( ){
 	this.update( void 0 )
-	$jin.log( this.relate() )
+	//$jin.log( this.relate() )
 	this.watcher_atom().notify()
 }})
 
@@ -196,7 +203,7 @@ $jin.atom.prop({ '$jin.file.base..nativeWatcher': {
 			this.child( fileName ).update()
 		}.bind( this ) )
 		
-		var watcher = this.nativeAPI().watch
+		var watcher = this.constructor.nativeAPI().watch
 		(   this.path()
 		,   { persistent: false }
 		,   handler

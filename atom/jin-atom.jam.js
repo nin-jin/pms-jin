@@ -45,9 +45,9 @@ $jin.method({ '$jin.atom.schedule': function( ){
 $jin.method({ '$jin.atom.bound': function( handler ){
 	var slave = this.current
 	this.current = null
-	handler()
+	var res = handler()
 	this.current = slave
-	return this
+	return res
 }})
 
 $jin.method({ '$jin.atom..init': function jin_atom__init( config ){

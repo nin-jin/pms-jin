@@ -10,40 +10,25 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 	}
 	
 	var self = this
-	var listener = {
-		id: $jin.value( $jin.makeId( $jin.func.name( done ) ) ),
-		update: function( ){
-			self.dislead( listener )
-			
-			var error = self.error()
-			if( error !== void 0 ) return fail && fail( error )
-			
-			var value = self.value()
-			if( value !== void 0 ) return done( value )
-		}
-	}
-	this.lead( listener )
+	var promise = $jin.atom({
+		pull: function( ){
+			return self.get()
+		},
+		push: function( next ){
+			if( next === void  0 ) return
+			promise.disobeyAll()
+		},
+		merge: function( next ){
+			if( next === void  0 ) return
+			return done( next )
+		},
+		fail: fail
+	})
+	promise.pull()
 	
-	return this
+	return promise
 }})
 
 $jin.method({ '$jin.atom..catch': function( fail ){
-	if( this._error ){
-		fail( this._error )
-		return this
-	}
-	
-	var self = this
-	var listener = {
-		id: $jin.value( $jin.makeId( $jin.func.name( fail ) ) ),
-		update: function( ){
-			self.dislead( listener )
-			
-			var error = self.error()
-			if( error !== void 0 ) return fail( error )
-		}
-	}
-	this.lead( listener )
-	
-	return this
+	return this.then( function( val ){ return val }, fail )
 }})

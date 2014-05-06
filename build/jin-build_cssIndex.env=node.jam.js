@@ -1,4 +1,4 @@
-$jin.atom.prop({ '$jin.build..cssIndex': {
+$jin.atom.prop.list({ '$jin.build..cssIndex': {
 	pull: function( prev ){
 		var pack = this.pack()
 		var vary = this.vary()
@@ -41,8 +41,5 @@ $jin.atom.prop({ '$jin.build..cssIndex': {
 		$jin.log( target.relate() )
 		
 		return targets
-	},
-	merge: function( next, prev ){
-		return ( String( next ) == String( prev ) ) ? prev : next
 	}
 }})
