@@ -1,4 +1,5 @@
 $jin.method({ '$jin.atom..then': function( done, fail ){
+	
 	if( this._error ){
 		if( fail ) fail( this._error )
 		return this
@@ -20,7 +21,7 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 		},
 		merge: function( next ){
 			if( next === void  0 ) return
-			return done( next )
+			return done ? done( next ) : next
 		},
 		fail: fail
 	})
@@ -30,5 +31,5 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 }})
 
 $jin.method({ '$jin.atom..catch': function( fail ){
-	return this.then( function( val ){ return val }, fail )
+	return this.then( null, fail )
 }})
