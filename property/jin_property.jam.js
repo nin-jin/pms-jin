@@ -1,3 +1,9 @@
+/**
+ * @name $jin.property
+ * @method property
+ * @static
+ * @member $jin
+ */
 $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, filter
     var resolveList = [].slice.call( arguments )
     var filter = resolveList.pop()
@@ -39,6 +45,12 @@ $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, f
     return $jin.method( name, property )
 }})
 
+/**
+ * @name $jin.property.hash
+ * @method hash
+ * @static
+ * @member $jin.property
+ */
 $jin.definer({ '$jin.property.hash': function( path, config ){
 	var fieldName = '_' + path
 	var pull = config.pull || config.sync

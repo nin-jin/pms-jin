@@ -1,3 +1,9 @@
+/**
+ * @name $jin.file
+ * @method file
+ * @static
+ * @member $jin
+ */
 $jin.method({ '$jin.file': function( path ){
 	if( typeof path !== 'string' ) return path
 	

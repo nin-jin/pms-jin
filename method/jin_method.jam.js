@@ -1,3 +1,9 @@
+/**
+ * @name $jin.method
+ * @method method
+ * @static
+ * @member $jin
+ */
 $jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, func
     var resolveList = [].slice.call( arguments )
     var func = resolveList.pop()

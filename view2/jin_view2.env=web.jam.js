@@ -1,29 +1,79 @@
+/**
+ * @name $jin.view2
+ * @class $jin.view2
+ * @returns $jin.view2
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.view2': [] })
 
-$jin.property( '$jin.view2.sampleProtoId', function( ){
+/**
+ * @name $jin.view2.sampleProtoId
+ * @method sampleProtoId
+ * @static
+ * @member $jin.view2
+ */
+$jin.property({ '$jin.view2.sampleProtoId': function( ){
 	return String( this ).replace( /\$/, '' ).replace( /\./g, '-' ).toLowerCase()
-} )
+}})
 
-$jin.method( '$jin.view2..state', function( ){
+/**
+ * @name $jin.view2#state
+ * @method state
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..state': function( ){
     return $jin.state.local.item.apply( $jin.state.local, arguments )
-} )
+}})
 
-$jin.property( '$jin.view2..id', String )
+/**
+ * @name $jin.view2#id
+ * @method id
+ * @member $jin.view2
+ */
+$jin.property({ '$jin.view2..id': String })
+
+/**
+ * @name $jin.view2#parent
+ * @method parent
+ * @member $jin.view2
+ */
 $jin.property({ '$jin.view2..parent': null })
 
-$jin.method( '$jin.view2..element', function( key ){
+/**
+ * @name $jin.view2#element
+ * @method element
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..element': function( key ){
 	var protoId = this.constructor.sampleProtoId()
 	if( key ) protoId += '-' + key
 	return this.sample( protoId )
-} )
+}})
 
-$jin.property.hash( '$jin.view2..sample', { pull: function( type ){
-    return $jin.sample( type ).view( this )
-} } )
+/**
+ * @name $jin.view2#sample
+ * @method sample
+ * @member $jin.view2
+ */
+$jin.property.hash({ '$jin.view2..sample': {
+    pull: function( type ){
+        return $jin.sample( type ).view( this )
+    }
+}})
 
-$jin.property.hash( '$jin.view2..childs', { } )
+/**
+ * @name $jin.view2#childs
+ * @method childs
+ * @member $jin.view2
+ */
+$jin.property.hash({ '$jin.view2..childs': { } })
 
-$jin.method( '$jin.view2..child', function( name, factory ){
+/**
+ * @name $jin.view2#child
+ * @method child
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..child': function( name, factory ){
 	var child = this.childs( name )
 	if( child ) return child
 	
@@ -31,16 +81,31 @@ $jin.method( '$jin.view2..child', function( name, factory ){
 	this.childs( name, child )
 	
 	return child
-} )
+}})
 
-$jin.method( '$jin.view2..nativeNode', function( ){
+/**
+ * @name $jin.view2#nativeNode
+ * @method nativeNode
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..nativeNode': function( ){
     return this.element('').nativeNode()
-} )
+}})
 
-$jin.method( '$jin.view2..clone', function( ){
+/**
+ * @name $jin.view2#clone
+ * @method clone
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..clone': function( ){
     return this.constructor()
-} )
+}})
 
-$jin.method( '$jin.view2..toString', function( ){
+/**
+ * @name $jin.view2#toString
+ * @method toString
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..toString': function( ){
     return this.constructor + '=' + this.id()
-} )
+}})

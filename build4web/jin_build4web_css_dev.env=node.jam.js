@@ -1,3 +1,9 @@
+/**
+ * @name $jin.build4web.css.dev
+ * @method dev
+ * @static
+ * @member $jin.build4web.css
+ */
 $jin.method({ '$jin.build4web.css.dev': function( mod, vary ){
     mod = $jin.file( mod )
     

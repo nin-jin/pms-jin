@@ -1,3 +1,8 @@
+/**
+ * @name $jin.build#jsIndexWeb
+ * @method jsIndexWeb
+ * @member $jin.build
+ */
 $jin.atom.prop.list({ '$jin.build..jsIndexWeb': {
 	pull: function( prev ){
 		

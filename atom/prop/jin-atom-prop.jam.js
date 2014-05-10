@@ -1,3 +1,9 @@
+/**
+ * @name $jin.atom.prop
+ * @method prop
+ * @static
+ * @member $jin.atom
+ */
 $jin.definer({ '$jin.atom.prop': function( path, config ){
     
 	var pull = config.pull
@@ -54,6 +60,12 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
     return prop
 }})
 
+/**
+ * @name $jin.atom.prop.list
+ * @method list
+ * @static
+ * @member $jin.atom.prop
+ */
 $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	if( !config.merge ) config.merge = function( next, prev ){
 		if( !prev || !next ) return next
@@ -111,6 +123,12 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	
 }})
 
+/**
+ * @name $jin.atom.prop.hash
+ * @method hash
+ * @static
+ * @member $jin.atom.prop
+ */
 $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
     
 	var pull = config.pull

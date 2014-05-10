@@ -1,6 +1,18 @@
+/**
+ * @name $jin.eventProof
+ * @class $jin.eventProof
+ * @returns $jin.eventProof
+ * @mixins $jin.klass
+ * @mixins $jin.event
+ */
 $jin.klass({ '$jin.eventProof': [ '$jin.event' ] })
 
-$jin.method( '$jin.event..scream', '$jin_eventProof..scream', function( crier ){
+/**
+ * @name $jin_eventProof#scream
+ * @method scream
+ * @member $jin_eventProof
+ */
+$jin.method({ '$jin_eventProof..scream': function( crier ){
     this['$jin.event..scream']( crier )
     
     if( !this.catched() ){
@@ -8,4 +20,4 @@ $jin.method( '$jin.event..scream', '$jin_eventProof..scream', function( crier ){
     }
     
     return this
-} )
+}})

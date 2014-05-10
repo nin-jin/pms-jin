@@ -1,5 +1,19 @@
+/**
+ * @name $jin.onElemDrop
+ * @class $jin.onElemDrop
+ * @returns $jin.onElemDrop
+ * @mixins $jin.klass
+ * @mixins $jin.dom.event
+ */
 $jin.klass({ '$jin.onElemDrop': [ '$jin.dom.event' ] })
 
-$jin.method( '$jin.event.type', '$jin.onElemDrop.type', function( ){
+/**
+ * @name $jin.onElemDrop.type
+ * @method type
+ * @static
+ * @member $jin.onElemDrop
+ */
+$jin.method({ '$jin.onElemDrop.type': function( ){
+    '$jin.event.type'
     return 'DOMNodeRemoved'
-} )
+}})

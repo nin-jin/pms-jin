@@ -1,12 +1,32 @@
+/**
+ * @name $jin.press.onGoDown
+ * @class $jin.press.onGoDown
+ * @returns $jin.press.onGoDown
+ * @mixins $jin.klass
+ * @mixins $jin.dom.event
+ */
 $jin.klass({ '$jin.press.onGoDown': [ '$jin.dom.event' ] })
 
-$jin.method( '$jin.event.type', '$jin.press.onGoDown.type', function( ){
+/**
+ * @name $jin.press.onGoDown.type
+ * @method type
+ * @static
+ * @member $jin.press.onGoDown
+ */
+$jin.method({ '$jin.press.onGoDown.type': function( ){
+    '$jin.event.type'
     return 'keydown'
-} )
+}})
 
-$jin.method( '$jin.dom.event.listen', '$jin.press.onGoDown.listen', function( crier, handler ){
+/**
+ * @name $jin.press.onGoDown.listen
+ * @method listen
+ * @static
+ * @member $jin.press.onGoDown
+ */
+$jin.method({ '$jin.press.onGoDown.listen': function( crier, handler ){
 	return this[ '$jin.dom.event.listen' ]( crier, function press_wrapper( event ){
 		if( event.keyCode() != 40 ) return
 		handler( event )
 	} )
-} ) 
+}})

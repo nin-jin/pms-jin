@@ -1,10 +1,31 @@
+/**
+ * @name $jin.dnd.onStart
+ * @class $jin.dnd.onStart
+ * @returns $jin.dnd.onStart
+ * @mixins $jin.klass
+ * @mixins $jin.dnd.event
+ */
 $jin.klass({ '$jin.dnd.onStart': [ '$jin.dnd.event' ] })
 
-$jin.method( '$jin.event.type', '$jin.dnd.onStart.type', function( ){
+/**
+ * @name $jin.dnd.onStart.type
+ * @method type
+ * @static
+ * @member $jin.dnd.onStart
+ */
+$jin.method({ '$jin.dnd.onStart.type': function( ){
+    '$jin.event.type'
     return 'dragstart'
-} )
+}})
 
-$jin.method( '$jin.dom.event.listen', '$jin.dnd.onStart.listen', function( crier, handler ){
+/**
+ * @name $jin.dnd.onStart.listen
+ * @method listen
+ * @static
+ * @member $jin.dnd.onStart
+ */
+$jin.method({ '$jin.dnd.onStart.listen': function( crier, handler ){
+    '$jin.dom.event.listen'
 	var crier = $jin.dom( crier )
 	
 	crier.nativeNode().draggable = true
@@ -34,4 +55,4 @@ $jin.method( '$jin.dom.event.listen', '$jin.dnd.onStart.listen', function( crier
 		onEnd.destroy()
 		crier.nativeNode().draggable = false
 	}}
-} )
+}})

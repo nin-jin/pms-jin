@@ -1,3 +1,9 @@
+/**
+ * @name $jin.module
+ * @method module
+ * @static
+ * @member $jin
+ */
 $jin.definer({ '$jin.module': function( prefix, map ){
 	if( typeof map === 'function' ) map = new map
 	

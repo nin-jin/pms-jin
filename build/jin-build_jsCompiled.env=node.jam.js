@@ -1,3 +1,8 @@
+/**
+ * @name $jin.build#jsCompiled
+ * @method jsCompiled
+ * @member $jin.build
+ */
 $jin.atom.prop({ '$jin.build..jsCompiled': {
 	pull: function( prev ){
 		

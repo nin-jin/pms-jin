@@ -1,3 +1,10 @@
+/**
+ * @name $jin.build
+ * @class $jin.build
+ * @returns $jin.build
+ * @mixins $jin.klass
+ * @mixins $jin.registry
+ */
 $jin.klass({ '$jin.build': [ '$jin.registry' ] })
 
 $jin.module( function(){ this[ '$jin.build' ] = {

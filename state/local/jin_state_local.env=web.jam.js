@@ -1,3 +1,9 @@
+/**
+ * @name $jin.state.local
+ * @class $jin.state.local
+ * @returns $jin.state.local
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.state.local': [] })
 
 $jin.atom.prop( '$jin.state.local.storage',

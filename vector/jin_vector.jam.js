@@ -1,24 +1,52 @@
+/**
+ * @name $jin.vector
+ * @class $jin.vector
+ * @returns $jin.vector
+ * @mixins $jin.klass
+ * @mixins $jin.wrapper
+ */
 $jin.klass({ '$jin.vector': [ '$jin.wrapper' ] })
 
-$jin.method( '$jin.vector..x', function( val ){
+/**
+ * @name $jin.vector#x
+ * @method x
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..x': function( val ){
 	if( !arguments.length ) return this.raw()[0]
 	this.raw()[0] = val
 	return this
-} )
+}})
 
-$jin.method( '$jin.vector..y', function( val ){
+/**
+ * @name $jin.vector#y
+ * @method y
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..y': function( val ){
 	if( !arguments.length ) return this.raw()[1]
 	this.raw()[1] = val
 	return this
-} )
+}})
 
-$jin.method( '$jin.vector..z', function( val ){
+/**
+ * @name $jin.vector#z
+ * @method z
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..z': function( val ){
 	if( !arguments.length ) return this.raw()[2]
 	this.raw()[2] = val
 	return this
-} )
+}})
 
-$jin.method( '$jin.vector.merge', function( merger, left, right ){
+/**
+ * @name $jin.vector.merge
+ * @method merge
+ * @static
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector.merge': function( merger, left, right ){
 	left = $jin.vector( left ).raw()
 	right = $jin.vector( right ).raw()
 	
@@ -28,8 +56,13 @@ $jin.method( '$jin.vector.merge', function( merger, left, right ){
 	} )
 	
 	return $jin.vector( res )
-} )
+}})
 
-$jin.method( '$jin.vector..summ', function( right ){
+/**
+ * @name $jin.vector#summ
+ * @method summ
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..summ': function( right ){
 	return $jin.vector.merge( function( a, b ){ return a + b }, this, right )
-} )
+}})

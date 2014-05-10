@@ -1,10 +1,28 @@
+/**
+ * @name $jin.file.type.sampleHTML
+ * @class $jin.file.type.sampleHTML
+ * @returns $jin.file.type.sampleHTML
+ * @mixins $jin.klass
+ * @mixins $jin.file.type.html
+ */
 $jin.klass({ '$jin.file.type.sampleHTML': [ '$jin.file.type.html' ] })
 
+/**
+ * @name $jin.file.type.sampleHTML.ext
+ * @method ext
+ * @static
+ * @member $jin.file.type.sampleHTML
+ */
 $jin.method({ '$jin.file.type.sampleHTML.ext': function( ){
 	'$jin.file.type.html.ext'
 	return '.sample.html'
 }})
 
+/**
+ * @name $jin.file.type.sampleHTML#dependList
+ * @method dependList
+ * @member $jin.file.type.sampleHTML
+ */
 $jin.atom.prop.list({ '$jin.file.type.sampleHTML..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
@@ -32,6 +50,11 @@ $jin.atom.prop.list({ '$jin.file.type.sampleHTML..dependList': {
 	}
 }})
 
+/**
+ * @name $jin.file.type.sampleHTML#jsFiles
+ * @method jsFiles
+ * @member $jin.file.type.sampleHTML
+ */
 $jin.atom.prop.list({ '$jin.file.type.sampleHTML..jsFiles': {
 	resolves: [ '$jin.file.base..jsFiles' ],
 	pull: function( prev ){

@@ -1,3 +1,8 @@
+/**
+ * @name $jin.build#jsIndexNode
+ * @method jsIndexNode
+ * @member $jin.build
+ */
 $jin.atom.prop.list({ '$jin.build..jsIndexNode': {
 	pull: function( prev ){
 		

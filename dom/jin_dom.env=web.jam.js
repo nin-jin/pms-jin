@@ -1,12 +1,22 @@
-$jin.method( '$jin.dom..html', function( html ){
+/**
+ * @name $jin.dom#html
+ * @method html
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..html': function( html ){
     if( arguments.length ){
         this.nativeNode().innerHTML = html
         return this
     } else {
         return this.nativeNode().innerHTML
     }
-} )
+}})
 
+/**
+ * @name $jin.dom#size
+ * @method size
+ * @member $jin.dom
+ */
 $jin.method({ '$jin.dom..size': function( ){
 	var node = this.nativeNode()
 	return $jin.vector([ node.offsetWidth, node.ofsfetHeight ])
@@ -16,24 +26,48 @@ if( $jin.support.xmlModel() === 'ms' ){
     
     $jin.mixin({ '$jin.dom': [ '$jin.dom.ms' ] })
     
-    $jin.method( '$jin.dom..toString', '$jin.dom.ms..toString', function( ){
+    /**
+     * @name $jin.dom.ms#toString
+     * @method toString
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..toString': function( ){
+        '$jin.dom..toString'
         return String( this.nativeNode().xml )
-    } )
+    }})
 
-    // works incorrectly =( use render instead
-    $jin.method( '$jin.dom..transform', '$jin.dom.ms..transform', function( stylesheet ){
+    /**
+     * works incorrectly =( use render instead
+     * @name $jin.dom.ms#transform
+     * @method transform
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..transform': function( stylesheet ){
+        '$jin.dom..transform'
         var result= this.nativeNode().transformNode( $jin.dom( stylesheet ).nativeNode() )
         return $jin.dom.parse( result )
-    } )
+    }})
 
-    $jin.method( '$jin.dom..render', '$jin.dom.ms..render', function( from, to ){
+    /**
+     * @name $jin.dom.ms#render
+     * @method render
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..render': function( from, to ){
+        '$jin.dom..render'
         from = $jin.dom( from ).nativeNode()
         to = $jin.dom( to ).nativeNode()
         
         to.innerHTML= from.transformNode( this.nativeDoc() )
-    } )
+    }})
     
-    $jin.method( '$jin.dom..text', '$jin.dom.ms..text', function( value ){
+    /**
+     * @name $jin.dom.ms#text
+     * @method text
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..text': function( value ){
+        '$jin.dom..text'
         var node = this.nativeNode()
         if( arguments.length ){
             node.innerText = value
@@ -41,22 +75,34 @@ if( $jin.support.xmlModel() === 'ms' ){
         } else {
             return node.innerText
         }
-    } )
+    }})
     
-    $jin.method( '$jin.dom..select', '$jin.dom.ms..select', function( xpath ){
+    /**
+     * @name $jin.dom.ms#select
+     * @method select
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..select': function( xpath ){
+        '$jin.dom..select'
         var list= []
         
         var found= this.nativeNode().selectNodes( xpath )
         for( var i= 0; i < found.length; ++i ) list.push( $jin.dom( found[ i ] ) )
         
         return list
-    } )
+    }})
 
 }
 
 if( $jin.support.eventModel() === 'ms' ){
 
-    $jin.method( '$jin.dom..listen', '$jin.dom.ms..listen', function( eventName, handler ){
+    /**
+     * @name $jin.dom.ms#listen
+     * @method listen
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..listen': function( eventName, handler ){
+        '$jin.dom..listen'
         eventName = this.normalizeEventName( eventName )
         this.nativeNode().attachEvent( eventName, function( ){
             var event = $jin.dom.event( window.event )
@@ -64,23 +110,40 @@ if( $jin.support.eventModel() === 'ms' ){
             return handler( event )
         } )
         return this
-    } )
+    }})
     
-    $jin.method( '$jin.dom..forget', '$jin.dom.ms..forget', function( eventName, handler ){
+    /**
+     * @name $jin.dom.ms#forget
+     * @method forget
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..forget': function( eventName, handler ){
+        '$jin.dom..forget'
         eventName = this.normalizeEventName( eventName )
         this.nativeNode().detachEvent( eventName, handler )
         return this
-    } )
+    }})
     
-    $jin.method( '$jin.dom..scream', '$jin.dom.ms..scream', function( event ){
+    /**
+     * @name $jin.dom.ms#scream
+     * @method scream
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..scream': function( event ){
+        '$jin.dom..scream'
         event = $jin.dom.event( event )
         var eventName = this.normalizeEventName( event.type() )
         this.nativeNode().fireEvent( eventName, event.nativeEvent() )
         return this
-    } )
+    }})
 
-    $jin.method( '$jin.dom.ms..normalizeEventName', function( eventName ){
+    /**
+     * @name $jin.dom.ms#normalizeEventName
+     * @method normalizeEventName
+     * @member $jin.dom.ms
+     */
+    $jin.method({ '$jin.dom.ms..normalizeEventName': function( eventName ){
         return /^[a-zA-Z]+$/.test( eventName ) ? 'on' + eventName : 'onbeforeeditfocus'
-    } )
+    }})
     
 }

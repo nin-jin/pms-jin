@@ -1,3 +1,9 @@
+/**
+ * @name $jin.build4node.dev
+ * @method dev
+ * @static
+ * @member $jin.build4node
+ */
 $jin.method({ '$jin.build4node.dev': function( mod, vary ){
     mod = $jin.file( mod )
     

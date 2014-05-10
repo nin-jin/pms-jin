@@ -1,5 +1,19 @@
+/**
+ * @name $jin.dnd.onDrop
+ * @class $jin.dnd.onDrop
+ * @returns $jin.dnd.onDrop
+ * @mixins $jin.klass
+ * @mixins $jin.dnd.event
+ */
 $jin.klass({ '$jin.dnd.onDrop': [ '$jin.dnd.event' ] })
 
-$jin.method( '$jin.event.type', '$jin.dnd.onDrop.type', function( ){
+/**
+ * @name $jin.dnd.onDrop.type
+ * @method type
+ * @static
+ * @member $jin.dnd.onDrop
+ */
+$jin.method({ '$jin.dnd.onDrop.type': function( ){
+    '$jin.event.type'
     return 'drop'
-} )
+}})

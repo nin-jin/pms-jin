@@ -4,7 +4,13 @@ $jin.test( function defining( test ){
 	
 	var mock = test.mock( '$jin.root', $jin.value( root ) )
 	
-	$jin.method({ 'foo.bar': func })
+	/**
+ * @name foo.bar
+ * @method bar
+ * @static
+ * @member foo
+ */
+$jin.method({ 'foo.bar': func })
 	
 	test.equal( root.foo.bar, func )
 })
@@ -16,8 +22,20 @@ $jin.test( function conflicting( test ){
 	
 	var mock = test.mock( '$jin.root', $jin.value( root ) )
 	
-	$jin.method({ 'foo.bar': func1 })
-	$jin.method({ 'foo.bar': func2 })
+	/**
+ * @name foo.bar
+ * @method bar
+ * @static
+ * @member foo
+ */
+$jin.method({ 'foo.bar': func1 })
+	/**
+ * @name foo.bar
+ * @method bar
+ * @static
+ * @member foo
+ */
+$jin.method({ 'foo.bar': func2 })
 	
 	try {
 		root.foo.bar()
@@ -36,11 +54,35 @@ $jin.test( function manual_resolving( test ){
 	
 	var mock = test.mock( '$jin.root', $jin.value( root ) )
 	
-	$jin.method({ '$f.bar1': func1 })
-	$jin.method({ '$f.bar2': func2 })
+	/**
+ * @name $f.bar1
+ * @method bar1
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar1': func1 })
+	/**
+ * @name $f.bar2
+ * @method bar2
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar2': func2 })
 	
-	$jin.method({ '$f.bar': func1 })
-	$jin.method({ '$f.bar': func2 })
+	/**
+ * @name $f.bar
+ * @method bar
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar': func1 })
+	/**
+ * @name $f.bar
+ * @method bar
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar': func2 })
 	
 	root.$f.bar()
 })
@@ -52,11 +94,35 @@ $jin.test( function auto_resolving( test ){
 	
 	var mock = test.mock( '$jin.root', $jin.value( root ) )
 	
-	$jin.method({ '$f.bar1': func1 })
-	$jin.method({ '$f.bar2': func2 })
+	/**
+ * @name $f.bar1
+ * @method bar1
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar1': func1 })
+	/**
+ * @name $f.bar2
+ * @method bar2
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar2': func2 })
 	
-	$jin.method({ '$f.bar': func1 })
-	$jin.method({ '$f.bar': func2 })
+	/**
+ * @name $f.bar
+ * @method bar
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar': func1 })
+	/**
+ * @name $f.bar
+ * @method bar
+ * @static
+ * @member $f
+ */
+$jin.method({ '$f.bar': func2 })
 	
 	root.$f.bar()
 })

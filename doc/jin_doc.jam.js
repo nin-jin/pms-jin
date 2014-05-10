@@ -1,5 +1,18 @@
+/**
+ * @name $jin.doc
+ * @class $jin.doc
+ * @returns $jin.doc
+ * @mixins $jin.klass
+ * @mixins $jin.dom
+ */
 $jin.klass({ '$jin.doc': [ '$jin.dom' ] })
 
+/**
+ * @name $jin.doc.exec
+ * @method exec
+ * @static
+ * @member $jin.doc
+ */
 $jin.method({ '$jin.doc.exec': function( node ){
 	if( !arguments.length ) node = window.document
 	
@@ -9,21 +22,41 @@ $jin.method({ '$jin.doc.exec': function( node ){
 	return node[ '$jin.doc' ] = this['$jin.wrapper.exec']( node )
 }})
 
+/**
+ * @name $jin.doc#findById
+ * @method findById
+ * @member $jin.doc
+ */
 $jin.method({ '$jin.doc..findById': function( id ){
 	return $jin.dom( this.nativeNode().getElementById( id ) )
 }})
 
+/**
+ * @name $jin.doc#selection
+ * @method selection
+ * @member $jin.doc
+ */
 $jin.method({ '$jin.doc..selection': function( ){
 	var doc = this.nativeNode()
 	return $jin.dom.selection( doc.selection || doc.defaultView.getSelection() )
 }})
 
+/**
+ * @name $jin.doc#sizeListener
+ * @method sizeListener
+ * @member $jin.doc
+ */
 $jin.property({ '$jin.doc..sizeListener': function( ){
 	return this.entangle( $jin.dom.event.onResize.listen( window, function( ){
 		this.size( void 0 )
 	}.bind( this ) ) )
 } } )
 
+/**
+ * @name $jin.doc#size
+ * @method size
+ * @member $jin.doc
+ */
 $jin.atom.prop({ '$jin.doc..size': {
 	resolves: [ '$jin.dom..size' ],
 	pull: function( ){

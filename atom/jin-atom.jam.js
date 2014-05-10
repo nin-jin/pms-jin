@@ -1,5 +1,11 @@
 $jin.error({ '$jin.atom.wait': [] })
 
+/**
+ * @name $jin.atom
+ * @class $jin.atom
+ * @returns $jin.atom
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.atom': [] })
 
 $jin.atom.current = null
@@ -14,6 +20,12 @@ $jin.glob( '$jin.atom.._pulled', false )
 $jin.glob( '$jin.atom.._slavesCount', 0 )
 $jin.glob( '$jin.atom.._isScheduled', false )
 
+/**
+ * @name $jin.atom.induce
+ * @method induce
+ * @static
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom.induce': function( ){
 	var scheduled = this.scheduled
 
@@ -36,12 +48,24 @@ $jin.method({ '$jin.atom.induce': function( ){
 	this._deferred = null
 }})
 
+/**
+ * @name $jin.atom.schedule
+ * @method schedule
+ * @static
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom.schedule': function( ){
 	if( this._deferred ) return
 
 	this._deferred = $jin.defer( this.induce.bind( this ) )
 }})
 
+/**
+ * @name $jin.atom.bound
+ * @method bound
+ * @static
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom.bound': function( handler ){
 	var slave = this.current
 	this.current = null
@@ -50,6 +74,11 @@ $jin.method({ '$jin.atom.bound': function( handler ){
 	return res
 }})
 
+/**
+ * @name $jin.atom#init
+ * @method init
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..init': function jin_atom__init( config ){
 	'$jin.klass..init'
 	this._id = $jin.makeId( '$jin.atom' )
@@ -60,16 +89,31 @@ $jin.method({ '$jin.atom..init': function jin_atom__init( config ){
 	this._masters = {}
 }})
 
+/**
+ * @name $jin.atom#destroy
+ * @method destroy
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..destroy': function( ){
 	this.disleadAll()
 	this.disobeyAll()
 	return this['$jin.klass..destroy']()
 }})
 
+/**
+ * @name $jin.atom#id
+ * @method id
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..id': function( ){
 	return this._id
 }})
 
+/**
+ * @name $jin.atom#get
+ * @method get
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..get': function( ){
 	var value = this._value
 	if( this._config.pull && ( this._isScheduled || ( value === void 0 ) ) ) value = this.pull()
@@ -86,10 +130,20 @@ $jin.method({ '$jin.atom..get': function( ){
 	return value
 }})
 
+/**
+ * @name $jin.atom#valueOf
+ * @method valueOf
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..valueOf': function( ){
 	return this.get()
 }})
 
+/**
+ * @name $jin.atom#pull
+ * @method pull
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..pull': function( ){
 	var config = this._config
 	if( !config.pull ) return this._value
@@ -123,6 +177,11 @@ $jin.method({ '$jin.atom..pull': function( ){
 	return this._value
 }})
 
+/**
+ * @name $jin.atom#put
+ * @method put
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..put': function( next ){
 	var slave = this.constructor.current
 	this.constructor.current = null
@@ -144,12 +203,22 @@ $jin.method({ '$jin.atom..put': function( next ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#fail
+ * @method fail
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..fail': function( error ){
 	this._error = error
 	this.value( null )
 	return this
 }})
 
+/**
+ * @name $jin.atom#mutate
+ * @method mutate
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..mutate': function( mutator ){
 	var context = this._config.context
 	var prev = this._value
@@ -162,11 +231,21 @@ $jin.method({ '$jin.atom..mutate': function( mutator ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#error
+ * @method error
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..error': function( next ){
 	if( arguments.length ) throw new Error( 'Property (error) is read only, use (fail) method' )
 	return this._error
 }})
 
+/**
+ * @name $jin.atom#value
+ * @method value
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..value': function( next ){
 	var prev = this._value
 
@@ -201,14 +280,29 @@ $jin.method({ '$jin.atom..value': function( next ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#defined
+ * @method defined
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..defined': function( ){
 	return ( this._value !== void 0 )
 }})
 
+/**
+ * @name $jin.atom#slice
+ * @method slice
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..slice': function( ){
 	return this._slice
 }})
 
+/**
+ * @name $jin.atom#notify
+ * @method notify
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..notify': function( ){
 	var slaveExclude = this.constructor.current
 	
@@ -225,6 +319,11 @@ $jin.method({ '$jin.atom..notify': function( ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#update
+ * @method update
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..update': function( ){
 	if( this._isScheduled ) return
 	
@@ -241,6 +340,11 @@ $jin.method({ '$jin.atom..update': function( ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#lead
+ * @method lead
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..lead': function( slave ){
 	var id = slave.id()
 	
@@ -253,6 +357,11 @@ $jin.method({ '$jin.atom..lead': function( slave ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#obey
+ * @method obey
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..obey': function( master ){
 	var id = master.id()
 	
@@ -264,6 +373,11 @@ $jin.method({ '$jin.atom..obey': function( master ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#dislead
+ * @method dislead
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..dislead': function( slave ){
 	var id = slave.id()
 	
@@ -276,6 +390,11 @@ $jin.method({ '$jin.atom..dislead': function( slave ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#disobey
+ * @method disobey
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..disobey': function( master ){
 	var id = master.id()
 
@@ -284,6 +403,11 @@ $jin.method({ '$jin.atom..disobey': function( master ){
 	return this
 }})
 
+/**
+ * @name $jin.atom#disleadAll
+ * @method disleadAll
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..disleadAll': function( ){
 	var slaves = this._slaves
 	this._slaves = {}
@@ -297,6 +421,11 @@ $jin.method({ '$jin.atom..disleadAll': function( ){
 	this.reap()
 }})
 
+/**
+ * @name $jin.atom#disobeyAll
+ * @method disobeyAll
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..disobeyAll': function( ){
 	var masters = this._masters
 	this._masters = {}
@@ -309,6 +438,11 @@ $jin.method({ '$jin.atom..disobeyAll': function( ){
 	this._slice = 0
 }})
 
+/**
+ * @name $jin.atom#reap
+ * @method reap
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..reap': function( ){
 	if( this._config.push ) return this
 	if( !this._pulled ) return this

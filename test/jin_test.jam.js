@@ -1,11 +1,50 @@
+/**
+ * @name $jin.test
+ * @class $jin.test
+ * @returns $jin.test
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.test': [] })
 
-$jin.property( '$jin.test.completeList', Array )
-$jin.property( '$jin.test.pendingList', Array )
-$jin.property( '$jin.test.running', Array )
-$jin.property( '$jin.test.timer', null )
+/**
+ * @name $jin.test.completeList
+ * @method completeList
+ * @static
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test.completeList': Array })
 
-$jin.method( '$jin.test.next', function( next ){
+/**
+ * @name $jin.test.pendingList
+ * @method pendingList
+ * @static
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test.pendingList': Array })
+
+/**
+ * @name $jin.test.running
+ * @method running
+ * @static
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test.running': Array })
+
+/**
+ * @name $jin.test.timer
+ * @method timer
+ * @static
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test.timer': null })
+
+/**
+ * @name $jin.test.next
+ * @method next
+ * @static
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test.next': function( next ){
 	if( arguments.length ) this.pendingList().push( next )
 	
 	clearTimeout( this.timer() )
@@ -13,25 +52,75 @@ $jin.method( '$jin.test.next', function( next ){
 	    var next = this.pendingList()[0]
 		if( next ) next.run()
 	}.bind( this ), 0 ) )
-} )
+}})
 
-$jin.property( '$jin.test..code', null )
+/**
+ * @name $jin.test#code
+ * @method code
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..code': null })
 
-$jin.property( '$jin.test..passed', Boolean )
-$jin.property( '$jin.test..timeout', Number )
-$jin.property( '$jin.test..timer', null )
+/**
+ * @name $jin.test#passed
+ * @method passed
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..passed': Boolean })
 
-$jin.property( '$jin.test..asserts', Array )
-$jin.property( '$jin.test..results', Array )
-$jin.property( '$jin.test..errors', Array )
+/**
+ * @name $jin.test#timeout
+ * @method timeout
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..timeout': Number })
 
-$jin.method( '$jin.klass..init', '$jin.test..init', function( code ){
+/**
+ * @name $jin.test#timer
+ * @method timer
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..timer': null })
+
+/**
+ * @name $jin.test#asserts
+ * @method asserts
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..asserts': Array })
+
+/**
+ * @name $jin.test#results
+ * @method results
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..results': Array })
+
+/**
+ * @name $jin.test#errors
+ * @method errors
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..errors': Array })
+
+/**
+ * @name $jin.test#init
+ * @method init
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..init': function( code ){
+    '$jin.klass..init'
     this.code( code )
 	this.constructor.next( this )
     return this
-} )
+}})
 
-$jin.method( '$jin.klass..destroy', '$jin.test..destroy', function( destroy ){
+/**
+ * @name $jin.test#destroy
+ * @method destroy
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..destroy': function( destroy ){
     var completeList = this.constructor.completeList()
     var pendingList = this.constructor.pendingList()
     
@@ -39,9 +128,14 @@ $jin.method( '$jin.klass..destroy', '$jin.test..destroy', function( destroy ){
     pendingList.splice( pendingList.indexOf( this ), 1 )
     
     return this['$jin.klass..destroy']()
-} )
+}})
 
-$jin.method( '$jin.test..run', function( ){
+/**
+ * @name $jin.test#run
+ * @method run
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..run': function( ){
     var test = this
     
     var complete = false
@@ -68,9 +162,14 @@ $jin.method( '$jin.test..run', function( ){
     } else {
         this.done( true )
     }
-} )
+}})
 
-$jin.property( '$jin.test..done', function( done ){
+/**
+ * @name $jin.test#done
+ * @method done
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..done': function( done ){
     if( !arguments.length ) return false
     
     this.timer( clearTimeout( this.timer() ) )
@@ -88,25 +187,45 @@ $jin.property( '$jin.test..done', function( done ){
 	this.constructor.next()
 
     return this
-} )
+}})
     
-$jin.method( '$jin.test..fail', function(){
+/**
+ * @name $jin.test#fail
+ * @method fail
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..fail': function(){
     throw new Error( 'Failed' )
-} )
+}})
 
-$jin.method( '$jin.test..ok', function( value ){
+/**
+ * @name $jin.test#ok
+ * @method ok
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..ok': function( value ){
     if( value ) return this
     
     throw new Error( 'Not true (' + value + ')' )
-} )
+}})
 
-$jin.method( '$jin.test..not', function( value ){
+/**
+ * @name $jin.test#not
+ * @method not
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..not': function( value ){
     if( !value ) return this
     
     throw new Error( 'Not false (' + value + ')' )
-} )
+}})
 
-$jin.method( '$jin.test..equal', function( ){
+/**
+ * @name $jin.test#equal
+ * @method equal
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..equal': function( ){
     var valueList = [].slice.call( arguments )
     
     for( var i= 1; i < valueList.length; ++i ){
@@ -117,9 +236,14 @@ $jin.method( '$jin.test..equal', function( ){
     }
     
     return this
-} )
+}})
 
-$jin.method( '$jin.test..unique', function( ){
+/**
+ * @name $jin.test#unique
+ * @method unique
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..unique': function( ){
     var valueList = [].slice.call( arguments )
     
     for( var i= 1; i < valueList.length; ++i ){
@@ -130,9 +254,14 @@ $jin.method( '$jin.test..unique', function( ){
     }
     
     return this
-} )
+}})
 
-$jin.method( '$jin.test..callback', function( func ){
+/**
+ * @name $jin.test#callback
+ * @method callback
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..callback': function( func ){
     var test = this
     return $jin.thread( function( ){
         var mockHash = test.mockHash()
@@ -146,12 +275,22 @@ $jin.method( '$jin.test..callback', function( func ){
             for( var name in mockHash ) mockHash[ name ].mocking( false )
         }
     } )
-} )
+}})
 
-$jin.property( '$jin.test..mockHash', Object )
+/**
+ * @name $jin.test#mockHash
+ * @method mockHash
+ * @member $jin.test
+ */
+$jin.property({ '$jin.test..mockHash': Object })
 
-$jin.method( '$jin.test..mock', function( path, value ){
+/**
+ * @name $jin.test#mock
+ * @method mock
+ * @member $jin.test
+ */
+$jin.method({ '$jin.test..mock': function( path, value ){
     var mock = $jin.mock({ path: path, value: value, mocking: true })
     this.mockHash()[ path ] = mock
     return mock
-} )
+}})

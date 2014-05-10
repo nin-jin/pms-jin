@@ -1,5 +1,18 @@
+/**
+ * @name $jin.sample
+ * @class $jin.sample
+ * @returns $jin.sample
+ * @mixins $jin.klass
+ * @mixins $jin.dom
+ */
 $jin.klass({ '$jin.sample': [ '$jin.dom' ] })
 
+/**
+ * @name $jin.sample.strings
+ * @method strings
+ * @static
+ * @member $jin.sample
+ */
 $jin.atom.prop({ '$jin.sample.strings': {
 	value: '',
 	put: function( next, prev ){
@@ -7,6 +20,12 @@ $jin.atom.prop({ '$jin.sample.strings': {
 	}
 }})
 
+/**
+ * @name $jin.sample.templates
+ * @method templates
+ * @static
+ * @member $jin.sample
+ */
 $jin.atom.prop({ '$jin.sample.templates': {
 	pull: function( ){
 		var strings = this.strings()
@@ -15,6 +34,12 @@ $jin.atom.prop({ '$jin.sample.templates': {
 	}
 }})
 
+/**
+ * @name $jin.sample.dom
+ * @method dom
+ * @static
+ * @member $jin.sample
+ */
 $jin.atom.prop.hash({ '$jin.sample.dom': {
 	pull: function( name ){
 		var selector = '[' + name + ']'
@@ -26,6 +51,12 @@ $jin.atom.prop.hash({ '$jin.sample.dom': {
 	}
 }})
 
+/**
+ * @name $jin.sample.rules
+ * @method rules
+ * @static
+ * @member $jin.sample
+ */
 $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 	var node = this.dom( name )
 	
@@ -324,10 +355,22 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 	return rules
 }}})
 
+/**
+ * @name $jin.sample.pool
+ * @method pool
+ * @static
+ * @member $jin.sample
+ */
 $jin.property.hash({ '$jin.sample.pool': { pull: function( ){
 	return []
 }}})
 
+/**
+ * @name $jin.sample.exec
+ * @method exec
+ * @static
+ * @member $jin.sample
+ */
 $jin.method({ '$jin.sample.exec': function( type ){
 	'$jin.wrapper.exec'
 	
@@ -340,13 +383,28 @@ $jin.method({ '$jin.sample.exec': function( type ){
 }})
 
 
+/**
+ * @name $jin.sample#init
+ * @method init
+ * @member $jin.sample
+ */
 $jin.method({ '$jin.sample..init': function( config ){
 	'$jin.dom..init'
     return this['$jin.klass..init']( config )
 }})
 
+/**
+ * @name $jin.sample#type
+ * @method type
+ * @member $jin.sample
+ */
 $jin.property({ '$jin.sample..type': String })
 
+/**
+ * @name $jin.sample#view
+ * @method view
+ * @member $jin.sample
+ */
 $jin.atom.prop({ '$jin.sample..view': {
 	push: function( next, prev ){
 		if( next === prev ) return prev
@@ -366,8 +424,11 @@ $jin.atom.prop({ '$jin.sample..view': {
 	}
 }})
 
-//$jin.property({ '$jin.sample..covers': null })
-
+/**
+ * @name $jin.sample#nativeNode
+ * @method nativeNode
+ * @member $jin.sample
+ */
 $jin.atom.prop({ '$jin.sample..nativeNode': {
 	resolves: [ '$jin.dom..nativeNode' ],
 	pull: function( ){

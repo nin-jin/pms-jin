@@ -1,10 +1,28 @@
+/**
+ * @name $jin.model.klass
+ * @class $jin.model.klass
+ * @returns $jin.model.klass
+ * @mixins $jin.klass
+ * @mixins $jin.registry
+ */
 $jin.klass({ '$jin.model.klass': [ '$jin.registry' ] })
 
-$jin.method( '$jin.model.klass..state', function( ){
+/**
+ * @name $jin.model.klass#state
+ * @method state
+ * @member $jin.model.klass
+ */
+$jin.method({ '$jin.model.klass..state': function( ){
     return $jin.state.local.item.apply( $jin.state.local, arguments )
-} )
+}})
 
-$jin.method( '$jin.model.prop', function( config ){
+/**
+ * @name $jin.model.prop
+ * @method prop
+ * @static
+ * @member $jin.model
+ */
+$jin.method({ '$jin.model.prop': function( config ){
     var parse = config.parse || function( val ){ return val }
     var serial = config.parse || String
     
@@ -23,9 +41,15 @@ $jin.method( '$jin.model.prop', function( config ){
     } )
     
     return prop
-} )
+}})
 
-$jin.method( '$jin.model.list', function( config ){
+/**
+ * @name $jin.model.list
+ * @method list
+ * @static
+ * @member $jin.model
+ */
+$jin.definer({ '$jin.model.list': function( config ){
     
     var propName = config.name.match( /[a-z0-9]+$/i )[0]
     
@@ -72,4 +96,4 @@ $jin.method( '$jin.model.list', function( config ){
 		return this
     })
     
-} )
+}})

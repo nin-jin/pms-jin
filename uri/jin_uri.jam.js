@@ -1,34 +1,116 @@
+/**
+ * @name $jin.uri
+ * @class $jin.uri
+ * @returns $jin.uri
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.uri': [] })
 
-$jin.property( '$jin.uri.chunkSep', function( sep ){
+/**
+ * @name $jin.uri.chunkSep
+ * @method chunkSep
+ * @static
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri.chunkSep': function( sep ){
     return '&'
-})
+}})
 
-$jin.property( '$jin.uri.valueSep', function( sep ){
+/**
+ * @name $jin.uri.valueSep
+ * @method valueSep
+ * @static
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri.valueSep': function( sep ){
     return '='
-})
+}})
 
-$jin.method( '$jin.uri.escape', function( str ){
+/**
+ * @name $jin.uri.escape
+ * @method escape
+ * @static
+ * @member $jin.uri
+ */
+$jin.method({ '$jin.uri.escape': function( str ){
     return String( str )
     .replace
     (   /[^- a-zA-Z\/?:@!$'()*+,._~\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF\u10000-\u1FFFD\u20000-\u2FFFD\u30000-\u3FFFD\u40000-\x{4FFFD\u50000-\u5FFFD\u60000-\u6FFFD\u70000-\u7FFFD\u80000-\u8FFFD\u90000-\u9FFFD\uA0000-\uAFFFD\uB0000-\uBFFFD\uC0000-\uCFFFD\uD0000-\uDFFFD\uE1000-\uEFFFD\uE000-\uF8FF\uF0000-\uFFFFD\u100000-\u10FFFD}]+/
     ,   encodeURIComponent
     )
     .replace( / /g, '+' )
-} )
+}})
 
 
-$jin.property( '$jin.uri..scheme', String )
-$jin.property( '$jin.uri..slashes', Boolean )
-$jin.property( '$jin.uri..login', String )
-$jin.property( '$jin.uri..password', String )
-$jin.property( '$jin.uri..host', String )
-$jin.property( '$jin.uri..port', Number )
-$jin.property( '$jin.uri..path', String )
-$jin.property.hash( '$jin.uri..query', {} )
-$jin.property( '$jin.uri..hash', String )
+/**
+ * @name $jin.uri#scheme
+ * @method scheme
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..scheme': String })
 
-$jin.method( '$jin.klass..json', '$jin.uri..json', function( json ){
+/**
+ * @name $jin.uri#slashes
+ * @method slashes
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..slashes': Boolean })
+
+/**
+ * @name $jin.uri#login
+ * @method login
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..login': String })
+
+/**
+ * @name $jin.uri#password
+ * @method password
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..password': String })
+
+/**
+ * @name $jin.uri#host
+ * @method host
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..host': String })
+
+/**
+ * @name $jin.uri#port
+ * @method port
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..port': Number })
+
+/**
+ * @name $jin.uri#path
+ * @method path
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..path': String })
+
+/**
+ * @name $jin.uri#query
+ * @method query
+ * @member $jin.uri
+ */
+$jin.property.hash({ '$jin.uri..query': {} })
+
+/**
+ * @name $jin.uri#hash
+ * @method hash
+ * @member $jin.uri
+ */
+$jin.property({ '$jin.uri..hash': String })
+
+/**
+ * @name $jin.uri#json
+ * @method json
+ * @member $jin.uri
+ */
+$jin.method({ '$jin.uri..json': function( json ){
     if( arguments.length ) return this['$jin.klass..json']( json )
     
     json = {}
@@ -47,9 +129,14 @@ $jin.method( '$jin.klass..json', '$jin.uri..json', function( json ){
     json.hash = this.hash()
     
     return json
-} )
+}})
 
-$jin.method( '$jin.uri..resolve', function( str ){
+/**
+ * @name $jin.uri#resolve
+ * @method resolve
+ * @member $jin.uri
+ */
+$jin.method({ '$jin.uri..resolve': function( str ){
     var uri = $jin.uri.parse( String( str ) )
     
     if( !uri.scheme() ) uri.scheme( this.scheme() )
@@ -69,9 +156,14 @@ $jin.method( '$jin.uri..resolve', function( str ){
     else return uri
     
     return uri
-} )
+}})
 
-$jin.method( '$jin.uri..toString', function( ){
+/**
+ * @name $jin.uri#toString
+ * @method toString
+ * @member $jin.uri
+ */
+$jin.method({ '$jin.uri..toString': function( ){
     var Uri = this.constructor
     
     var link = ''
@@ -101,9 +193,15 @@ $jin.method( '$jin.uri..toString', function( ){
     if( this.hash() ) link = '#' + this.hash()
     
     return link
-} )
+}})
 
-$jin.method( '$jin.uri.parse', function( string ){
+/**
+ * @name $jin.uri.parse
+ * @method parse
+ * @static
+ * @member $jin.uri
+ */
+$jin.method({ '$jin.uri.parse': function( string ){
     var Uri = this
     
     var config = {}
@@ -148,4 +246,4 @@ $jin.method( '$jin.uri.parse', function( string ){
     } )
     
     return this( config )
-} )
+}})

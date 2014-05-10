@@ -1,9 +1,21 @@
+/**
+ * @name $jin.docs.registry
+ * @method registry
+ * @static
+ * @member $jin.docs
+ */
 $jin.property.hash({ '$jin.docs.registry': {
 	pull: function( ){
 		return []
 	}
 } })
 
+/**
+ * @name $jin.docs.collect
+ * @method collect
+ * @static
+ * @member $jin.docs
+ */
 $jin.method({ '$jin.docs.collect': function( source ){
 	if( !source ) return $jin.definer.sources.map( $jin.docs.collect )
 	
@@ -59,6 +71,12 @@ $jin.method({ '$jin.docs.collect': function( source ){
 	
 }})
 
+/**
+ * @name $jin.docs.show
+ * @method show
+ * @static
+ * @member $jin.docs
+ */
 $jin.method({ '$jin.docs.show': function( ){
 	$jin.docs.view.root( 'docs' ).element().parent( document.body )
 }})

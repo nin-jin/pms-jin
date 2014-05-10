@@ -1,4 +1,10 @@
-$jin.method( '$jin.vary2string', function( prefix, vary, postfix ){
+/**
+ * @name $jin.vary2string
+ * @method vary2string
+ * @static
+ * @member $jin
+ */
+$jin.method({ '$jin.vary2string': function( prefix, vary, postfix ){
     if( !vary ) vary= {}
     
     var chunks= []
@@ -12,4 +18,4 @@ $jin.method( '$jin.vary2string', function( prefix, vary, postfix ){
     if( postfix ) chunks.push( postfix )
     
     return chunks.join( '.' )
-} )
+}})

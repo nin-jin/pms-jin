@@ -1,6 +1,18 @@
+/**
+ * @name $jin.tree
+ * @class $jin.tree
+ * @returns $jin.tree
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.tree': [] })
     
-$jin.method( '$jin.tree.parse', function( str, name ){
+/**
+ * @name $jin.tree.parse
+ * @method parse
+ * @static
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree.parse': function( str, name ){
     content= []
     
     var stack= [ content ]
@@ -36,19 +48,41 @@ $jin.method( '$jin.tree.parse', function( str, name ){
     }
     
     return this( content, name )
-} )
+}})
 
-$jin.property( '$jin.tree..content', null )
-$jin.property( '$jin.tree..name', String )
+/**
+ * @name $jin.tree#content
+ * @method content
+ * @member $jin.tree
+ */
+$jin.property({ '$jin.tree..content': null })
 
-$jin.method( '$jin.klass..init', '$jin.tree..init', function( content, name ){
+/**
+ * @name $jin.tree#name
+ * @method name
+ * @member $jin.tree
+ */
+$jin.property({ '$jin.tree..name': String })
+
+/**
+ * @name $jin.tree#init
+ * @method init
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..init': function( content, name ){
+    '$jin.klass..init'
     if( content instanceof this.constructor ) content = content.content()
     
     this.name( name )
     this.content( content )
-} )
+}})
 
-$jin.method( '$jin.tree..lines', function( ){
+/**
+ * @name $jin.tree#lines
+ * @method lines
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..lines': function( ){
     
     var lines= [ ]
     this.content().forEach( function( value ){
@@ -73,13 +107,23 @@ $jin.method( '$jin.tree..lines', function( ){
     }
     
     return this.constructor.apply( this.constructor, [ lines ] )
-} )
+}})
 
-$jin.method( '$jin.tree..select', function( path ){
+/**
+ * @name $jin.tree#select
+ * @method select
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..select': function( path ){
     return this.constructor.makePath( path )( this )
-} )
+}})
 
-$jin.method( '$jin.tree..filter', function( path, value ){
+/**
+ * @name $jin.tree#filter
+ * @method filter
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..filter': function( path, value ){
     var select= this.constructor.makePath( path )
     var content= this.content().filter( function( item ){
         if(!( item instanceof $jin.tree )) return false
@@ -96,9 +140,14 @@ $jin.method( '$jin.tree..filter', function( path, value ){
     })
     
     return $jin.tree( content )
-} )
+}})
 
-$jin.method( '$jin.tree..values', function( values ){
+/**
+ * @name $jin.tree#values
+ * @method values
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..values': function( values ){
     if( arguments.length ){
         var args= [ 0, this.content().length ].concat( values )
         args.splice.apply( this.content(), args )
@@ -113,29 +162,54 @@ $jin.method( '$jin.tree..values', function( values ){
     } )
     
     return values
-} )
+}})
 
-$jin.method( '$jin.tree..toString', function( ){
+/**
+ * @name $jin.tree#toString
+ * @method toString
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..toString': function( ){
     return this.values().join( '\n' )
-} )
+}})
 
-$jin.method( '$jin.tree..inspect', function( ){
+/**
+ * @name $jin.tree#inspect
+ * @method inspect
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..inspect': function( ){
     return String( this.lines() )
-} )
+}})
 
-$jin.method( '$jin.tree..clone', function( ){
+/**
+ * @name $jin.tree#clone
+ * @method clone
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..clone': function( ){
     return $jin.tree( this.content().slice( 0 ), this.name() )
-} )
+}})
 
-$jin.method( '$jin.tree..cloneAll', function( ){
+/**
+ * @name $jin.tree#cloneAll
+ * @method cloneAll
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..cloneAll': function( ){
     var content= this.content().map( function( item ){
         if( item instanceof $jin.tree ) return item.cloneAll()
         return item
     } )
     return $jin.tree( content, this.name() )
-} )
+}})
 
-$jin.method( '$jin.tree..toXML', function( root ){
+/**
+ * @name $jin.tree#toXML
+ * @method toXML
+ * @member $jin.tree
+ */
+$jin.method({ '$jin.tree..toXML': function( root ){
     if( !root ) root = $jin.dom.parse( '<tree/>' ).makeFragment()
     
     if( !this.name() ){
@@ -182,7 +256,7 @@ $jin.method( '$jin.tree..toXML', function( root ){
         })
     }
     return root
-} )
+}})
 
 $jin.tree.makePath = $jin.path( new function( ){
     

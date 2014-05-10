@@ -1,12 +1,30 @@
+/**
+ * @name $jin.file.base
+ * @class $jin.file.base
+ * @returns $jin.file.base
+ * @mixins $jin.klass
+ * @mixins $jin.registry
+ */
 $jin.klass({ '$jin.file.base': [ '$jin.registry' ] })
 
-$jin.property( '$jin.file.base.nativeAPI', function( ){
+/**
+ * @name $jin.file.base.nativeAPI
+ * @method nativeAPI
+ * @static
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base.nativeAPI': function( ){
     return /*$jin.fiberize*/( $node['fs'] )
-} )
+}})
 
 $jin.alias( '$jin.registry..id', '$jin.file.base..id', 'path' )
 
-$jin.property( '$jin.file.base..path', function( path ){
+/**
+ * @name $jin.file.base#path
+ * @method path
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base..path': function( path ){
 	if( path ) path = String( path )
 	else path = ''
 	
@@ -14,8 +32,13 @@ $jin.property( '$jin.file.base..path', function( path ){
 	
 	//this['$jin.registry..id']( path )
     return path
-} )
+}})
     
+/**
+ * @name $jin.file.base#stat
+ * @method stat
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..stat': {
 	pull: function( prev ){
 		try {
@@ -29,6 +52,11 @@ $jin.atom.prop({ '$jin.file.base..stat': {
 	}
 }})
 
+/**
+ * @name $jin.file.base#version
+ * @method version
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..version': {
 	pull: function( ){
 		var stat = this.stat()
@@ -38,6 +66,11 @@ $jin.atom.prop({ '$jin.file.base..version': {
 	}
 }})
 
+/**
+ * @name $jin.file.base#exists
+ * @method exists
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..exists': {
 	put: function( exists ){
 		if( exists == this.exists() ) return exists
@@ -57,6 +90,11 @@ $jin.atom.prop({ '$jin.file.base..exists': {
     }
 }})
 
+/**
+ * @name $jin.file.base#isDir
+ * @method isDir
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..isDir': {
 	pull: function( ){
 		var stat = this.stat()
@@ -66,6 +104,11 @@ $jin.atom.prop({ '$jin.file.base..isDir': {
 	}
 }})
 
+/**
+ * @name $jin.file.base#isFile
+ * @method isFile
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..isFile': {
 	pull: function( ){
 		var stat = this.stat()
@@ -75,14 +118,29 @@ $jin.atom.prop({ '$jin.file.base..isFile': {
 	}
 }})
 
-$jin.property( '$jin.file.base..name', function( ){
+/**
+ * @name $jin.file.base#name
+ * @method name
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base..name': function( ){
     return $node.path.basename( this.path() )
-} )
+}})
 
-$jin.property( '$jin.file.base..ext', function( ){
+/**
+ * @name $jin.file.base#ext
+ * @method ext
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base..ext': function( ){
     return $node.path.extname( this.path() )
-} )
+}})
 
+/**
+ * @name $jin.file.base#content
+ * @method content
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..content': {
 	pull: function( content ){
 		try {
@@ -104,32 +162,67 @@ $jin.atom.prop({ '$jin.file.base..content': {
 	}
 }})
 
-$jin.method( '$jin.file.base..append', function( string ){
+/**
+ * @name $jin.file.base#append
+ * @method append
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..append': function( string ){
     this.constructor.nativeAPI().appendFile( this.path(), string )
     return this
-} )
+}})
 
-$jin.method( '$jin.file.base..streamReader', function( options ){
+/**
+ * @name $jin.file.base#streamReader
+ * @method streamReader
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..streamReader': function( options ){
     return this.constructor.nativeAPI().createReadStream( this.path(), options )
-} )
+}})
 
-$jin.method( '$jin.file.base..streamWriter', function( options ){
+/**
+ * @name $jin.file.base#streamWriter
+ * @method streamWriter
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..streamWriter': function( options ){
     return this.constructor.nativeAPI().createWriteStream( this.path(), options )
-} )
+}})
 
-$jin.method( '$jin.file.base..resolve', function( path ){
+/**
+ * @name $jin.file.base#resolve
+ * @method resolve
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..resolve': function( path ){
     path = $node.path.join( this.path(), path )
     return $jin.file( path )
-} )
+}})
 
-$jin.property( '$jin.file.base..parent', function( ){
+/**
+ * @name $jin.file.base#parent
+ * @method parent
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base..parent': function( ){
     return this.resolve( '..' )
-} )
+}})
 
-$jin.method( '$jin.file.base..child', function( name ){
+/**
+ * @name $jin.file.base#child
+ * @method child
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..child': function( name ){
     return this.resolve( name )
-} )
+}})
 
+/**
+ * @name $jin.file.base#childList
+ * @method childList
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..childList': {
 	pull: function( ){
 		
@@ -149,7 +242,12 @@ $jin.atom.prop({ '$jin.file.base..childList': {
 	}
 }})
 
-$jin.method( '$jin.file.base..find', function( include, exclude ){
+/**
+ * @name $jin.file.base#find
+ * @method find
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..find': function( include, exclude ){
     if( !include ) include = { test: function( ){ return true } }
     if( !exclude ) exclude = { test: function( ){ return false } }
     var found = []
@@ -160,37 +258,72 @@ $jin.method( '$jin.file.base..find', function( include, exclude ){
         found = found.concat( child.find( include, exclude ) )
     } )
     return found
-} )
+}})
 
-$jin.property( '$jin.file.base..load', function( ){
+/**
+ * @name $jin.file.base#load
+ * @method load
+ * @member $jin.file.base
+ */
+$jin.property({ '$jin.file.base..load': function( ){
     return require( this.path() )
-} )
+}})
 
-$jin.method( '$jin.file.base..relate', function( base ){
+/**
+ * @name $jin.file.base#relate
+ * @method relate
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..relate': function( base ){
     base = $jin.file( base || '.' )
     return $node.path.relative( base.path(), this.path() ).replace( /\\/g, '/' )
-} )
+}})
 
-$jin.method( '$jin.file.base..uri', function( base ){
+/**
+ * @name $jin.file.base#uri
+ * @method uri
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..uri': function( base ){
     return $jin.uri({ path: this.relate( base ), query: { '': this.version() } })
-} )
+}})
 
+/**
+ * @name $jin.file.base#update
+ * @method update
+ * @member $jin.file.base
+ */
 $jin.property({ '$jin.file.base..update': function( ){
     return $jin.schedule( 100, this.notify.bind( this ) )
 }})
 
+/**
+ * @name $jin.file.base#notify
+ * @method notify
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base..notify': function( ){
 	this.update( void 0 )
 	//$jin.log( this.relate() )
 	this.watcher_atom().notify()
 }})
 
+/**
+ * @name $jin.file.base#watcher
+ * @method watcher
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..watcher': {
 	pull: function( prev ){
 		return this.parent().nativeWatcher()
 	}
 }})
 
+/**
+ * @name $jin.file.base#nativeWatcher
+ * @method nativeWatcher
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..nativeWatcher': {
 	pull: function( prev ){
 		var handler = $jin.sync2async( function jin_file_handle_change( eventName, fileName ){
@@ -221,26 +354,61 @@ $jin.atom.prop({ '$jin.file.base..nativeWatcher': {
 	}
 }})
 
+/**
+ * @name $jin.file.base.ext
+ * @method ext
+ * @static
+ * @member $jin.file.base
+ */
 $jin.property({ '$jin.file.base.ext': function( ){
 	return ''
 }})
 
+/**
+ * @name $jin.file.base.mime
+ * @method mime
+ * @static
+ * @member $jin.file.base
+ */
 $jin.property({ '$jin.file.base.mime': function( ){
 	return 'application/octet-stream'
 }})
 
+/**
+ * @name $jin.file.base.matcher
+ * @method matcher
+ * @static
+ * @member $jin.file.base
+ */
 $jin.property({ '$jin.file.base.matcher': function( ){
 	return RegExp( this.ext().replace( /\\./g, '\\.', 'i' ) + '$' )
 }})
 
+/**
+ * @name $jin.file.base.match
+ * @method match
+ * @static
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base.match': function( path ){
 	return this.matcher().test( path )
 }})
 
+/**
+ * @name $jin.file.base.priority
+ * @method priority
+ * @static
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base.priority': function( path ){
 	return this.matcher().source.length
 }})
 
+/**
+ * @name $jin.file.base#sourceList
+ * @method sourceList
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..sourceList': {
 	pull: function( ){
 		if( this.isFile() ) return [ this ]
@@ -252,6 +420,11 @@ $jin.atom.prop({ '$jin.file.base..sourceList': {
 	}
 }})
 
+/**
+ * @name $jin.file.base#moduleList
+ * @method moduleList
+ * @member $jin.file.base
+ */
 $jin.atom.prop({ '$jin.file.base..moduleList': {
 	pull: function( ){
 		return ( this.isDir() ? this.childList() : [ ] )
@@ -261,7 +434,12 @@ $jin.atom.prop({ '$jin.file.base..moduleList': {
 	}
 }})
 
-$jin.method( '$jin.file.base..deepModuleList', function( ){
+/**
+ * @name $jin.file.base#deepModuleList
+ * @method deepModuleList
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..deepModuleList': function( ){
     var moduleList = [ this ]
     
     this.moduleList().forEach( function( mod ){
@@ -269,9 +447,14 @@ $jin.method( '$jin.file.base..deepModuleList', function( ){
     })
     
     return moduleList
-} )
+}})
 
-$jin.method( '$jin.file.base..require', function( ){
+/**
+ * @name $jin.file.base#require
+ * @method require
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..require': function( ){
     if( this.exists() ) return this
     
     $jin.log.warn( 'Module (' + this.path() + ') not found. Search (' + this.name() + ') in repository...' )
@@ -294,18 +477,33 @@ $jin.method( '$jin.file.base..require', function( ){
     $jin.execute( 'git', [ 'clone', repo, this.path() ] )
     
     return this
-} )
+}})
 
-$jin.method( '$jin.file.base..buildFile', function( prefix, vary, postfix ){
+/**
+ * @name $jin.file.base#buildFile
+ * @method buildFile
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..buildFile': function( prefix, vary, postfix ){
     var name = $jin.vary2string( prefix, vary, postfix )
     return this.child( '-mix' ).child( name )
-} )
+}})
 
+/**
+ * @name $jin.file.base#dependList
+ * @method dependList
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base..dependList': function( ){
 	return [ ]
 }})
 
-$jin.method( '$jin.file.base..dependTree', function( vary, moduleList ){
+/**
+ * @name $jin.file.base#dependTree
+ * @method dependTree
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..dependTree': function( vary, moduleList ){
     var root = this
     
     if( !vary ) vary= {}
@@ -391,9 +589,14 @@ $jin.method( '$jin.file.base..dependTree', function( vary, moduleList ){
     } )
     
     return tree
-} )
+}})
 
-$jin.method( '$jin.file.base..index', function( vary, moduleList ){
+/**
+ * @name $jin.file.base#index
+ * @method index
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..index': function( vary, moduleList ){
     var tree = this.dependTree( vary, moduleList )
     var index = []
     
@@ -405,12 +608,22 @@ $jin.method( '$jin.file.base..index', function( vary, moduleList ){
     })
     
     return index.map( $jin.file )
-} )
+}})
 
+/**
+ * @name $jin.file.base#jsFiles
+ * @method jsFiles
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base..jsFiles': function( ){
 	return []
 }})
 
+/**
+ * @name $jin.file.base#cssFiles
+ * @method cssFiles
+ * @member $jin.file.base
+ */
 $jin.method({ '$jin.file.base..cssFiles': function( ){
 	return []
 }})

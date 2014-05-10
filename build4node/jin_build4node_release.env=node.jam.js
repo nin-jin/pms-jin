@@ -1,3 +1,9 @@
+/**
+ * @name $jin.build4node.release
+ * @method release
+ * @static
+ * @member $jin.build4node
+ */
 $jin.method({ '$jin.build4node.release': function( mod, vary ){
     mod = $jin.file( mod )
     

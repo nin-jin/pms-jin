@@ -1,7 +1,18 @@
+/**
+ * @name $jin.atom.enableLogs
+ * @method enableLogs
+ * @static
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom.enableLogs': function( ){
 	$jin.mixin({ '$jin.atom': [ '$jin.atom.logging' ] })
 }})
 
+/**
+ * @name $jin.atom.logging#notify
+ * @method notify
+ * @member $jin.atom.logging
+ */
 $jin.method({ '$jin.atom.logging..notify': function( ){
 	var ctor = this.constructor
 
@@ -22,6 +33,12 @@ $jin.method({ '$jin.atom.logging..notify': function( ){
 	return this[ '$jin.atom..notify' ]()
 }})
 
+/**
+ * @name $jin.atom.logging.log
+ * @method log
+ * @static
+ * @member $jin.atom.logging
+ */
 $jin.property({ '$jin.atom.logging.log': function( ){
 	return []
 }})

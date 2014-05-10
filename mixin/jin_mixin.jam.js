@@ -1,3 +1,9 @@
+/**
+ * @name $jin.mixin
+ * @method mixin
+ * @static
+ * @member $jin
+ */
 $jin.definer({ '$jin.mixin': function( targetPath, sourcePathList ){
     var trait = $jin.mixin.object( targetPath, sourcePathList )
     
@@ -10,6 +16,12 @@ $jin.definer({ '$jin.mixin': function( targetPath, sourcePathList ){
     return trait
 }})
 
+/**
+ * @name $jin.mixin.object
+ * @method object
+ * @static
+ * @member $jin.mixin
+ */
 $jin.definer({ '$jin.mixin.object': function( targetPath, sourcePathList ){
     var target = $jin.trait( targetPath )
     

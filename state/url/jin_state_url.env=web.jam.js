@@ -1,3 +1,9 @@
+/**
+ * @name $jin.state.url
+ * @class $jin.state.url
+ * @returns $jin.state.url
+ * @mixins $jin.klass
+ */
 $jin.klass({ '$jin.state.url': [] })
 
 $jin.atom.prop( '$jin.state.url.href',

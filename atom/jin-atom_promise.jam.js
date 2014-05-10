@@ -1,3 +1,8 @@
+/**
+ * @name $jin.atom#then
+ * @method then
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..then': function( done, fail ){
 	
 	if( this._error ){
@@ -30,6 +35,11 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 	return promise
 }})
 
+/**
+ * @name $jin.atom#catch
+ * @method catch
+ * @member $jin.atom
+ */
 $jin.method({ '$jin.atom..catch': function( fail ){
 	return this.then( null, fail )
 }})

@@ -1,3 +1,8 @@
+/**
+ * @name $jin.log
+ * @method log
+ * @static
+ */
 $jin.method({ '$jin.log' : function( ){
 	var args = [].slice.call( arguments )
 	
@@ -9,6 +14,11 @@ $jin.method({ '$jin.log' : function( ){
 	return $jin.log
 }})
 
+/**
+ * @name $jin.log.info
+ * @method info
+ * @static
+ */
 $jin.method({ '$jin.log.info' : function( ){
 	var args = [].slice.call( arguments )
 	var message = args.shift()
@@ -22,6 +32,11 @@ $jin.method({ '$jin.log.info' : function( ){
 	return this
 }})
 
+/**
+ * @name $jin.log.warn
+ * @method warn
+ * @static
+ */
 $jin.method({ '$jin.log.warn' : function( ){
 	var args = [].slice.call( arguments )
 	var message = args.shift()
@@ -35,6 +50,11 @@ $jin.method({ '$jin.log.warn' : function( ){
 	return this
 }})
 
+/**
+ * @name $jin.log.error
+ * @method error
+ * @static
+ */
 $jin.method({ '$jin.log.error' : function( ){
 	for( var i = 0; i < arguments.length; ++i ){
 		var error = arguments[ i ]
@@ -55,11 +75,21 @@ $jin.method({ '$jin.log.error' : function( ){
 	return this
 }})
 
+/**
+ * @name $jin.log.error.ignore
+ * @method ignore
+ * @static
+ */
 $jin.method({ '$jin.log.error.ignore' : function( error ){
 	error.jin_log_isLogged = true
 	return error
 }})
 
+/**
+ * @name $jin.log.inspects
+ * @method inspects
+ * @static
+ */
 $jin.method({ '$jin.log.inspects' : function( values ){
 	var out = []
 	for( var i = 0; i < values.length; ++i ){
@@ -68,6 +98,11 @@ $jin.method({ '$jin.log.inspects' : function( values ){
 	return out
 }})
 
+/**
+ * @name $jin.log.prefix
+ * @method prefix
+ * @static
+ */
 $jin.method({ '$jin.log.prefix' : function( level ){
 	var out = []
 	out.push( $node.colors.grey( ( new Date ).toTimeString().replace( / .*/, '' ) )  )
@@ -75,6 +110,11 @@ $jin.method({ '$jin.log.prefix' : function( level ){
 	return out
 }})
 
+/**
+ * @name $jin.log.funcNameAt
+ * @method funcNameAt
+ * @static
+ */
 $jin.method({ '$jin.log.funcNameAt' : function( level ){
 	var caller = arguments.callee
 	for( var i = 0; i <= level; ++i ) caller = caller.caller

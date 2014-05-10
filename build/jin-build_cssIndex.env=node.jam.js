@@ -1,3 +1,8 @@
+/**
+ * @name $jin.build#cssIndex
+ * @method cssIndex
+ * @member $jin.build
+ */
 $jin.atom.prop.list({ '$jin.build..cssIndex': {
 	pull: function( prev ){
 		var pack = this.pack()

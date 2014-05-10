@@ -1,3 +1,9 @@
+/**
+ * @name $jin.server
+ * @method server
+ * @static
+ * @member $jin
+ */
 $jin.property({ '$jin.server': function( ){
 	var files = $node.express.static
 	(   $node.path.resolve()
@@ -27,4 +33,10 @@ $jin.property({ '$jin.server': function( ){
     $jin.log.info( 'Server started at 80 port' )
 } })
 
+/**
+ * @name $jin.server.resources
+ * @method resources
+ * @static
+ * @member $jin.server
+ */
 $jin.property.hash({ '$jin.server.resources': {} })

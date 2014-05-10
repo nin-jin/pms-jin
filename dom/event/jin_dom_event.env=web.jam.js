@@ -1,14 +1,46 @@
+/**
+ * @name $jin.dom.event
+ * @class $jin.dom.event
+ * @returns $jin.dom.event
+ * @mixins $jin.klass
+ * @mixins $jin.wrapper
+ * @mixins $jin.event
+ */
 $jin.klass({ '$jin.dom.event': [ '$jin.wrapper', '$jin.event' ] })
 
-$jin.property( '$jin.dom.event.bubbles', Boolean )
-$jin.property( '$jin.dom.event.cancelable', Boolean )
+/**
+ * @name $jin.dom.event.bubbles
+ * @method bubbles
+ * @static
+ * @member $jin.dom.event
+ */
+$jin.property({ '$jin.dom.event.bubbles': Boolean })
 
-$jin.method( '$jin.event.listen', '$jin.dom.event.listen', function( crier, handler ){
+/**
+ * @name $jin.dom.event.cancelable
+ * @method cancelable
+ * @static
+ * @member $jin.dom.event
+ */
+$jin.property({ '$jin.dom.event.cancelable': Boolean })
+
+/**
+ * @name $jin.dom.event.listen
+ * @method listen
+ * @static
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event.listen': function( crier, handler ){
 	crier = $jin.dom( crier )
     return this[ '$jin.event.listen' ]( crier, handler )
-} )
+}})
 
-$jin.method( '$jin.dom.event..nativeEvent', function( ){
+/**
+ * @name $jin.dom.event#nativeEvent
+ * @method nativeEvent
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..nativeEvent': function( ){
     var raw = this.raw()
     if( raw ) return raw
     
@@ -30,13 +62,25 @@ $jin.method( '$jin.dom.event..nativeEvent', function( ){
     this.raw( raw )
     
     return raw
-} )
+}})
 
-$jin.method( '$jin.event..target', '$jin.dom.event..target', function( ){
+/**
+ * @name $jin.dom.event#target
+ * @method target
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..target': function( ){
+    '$jin.event..target'
     return $jin.dom( this.nativeEvent().target || this.nativeEvent().srcElement )
-} )
+}})
 
-$jin.method( '$jin.event..type', '$jin.dom.event..type', function( type ){
+/**
+ * @name $jin.dom.event#type
+ * @method type
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..type': function( type ){
+    '$jin.event..type'
     var nativeEvent = this.nativeEvent()
     type = String( type )
     
@@ -48,9 +92,14 @@ $jin.method( '$jin.event..type', '$jin.dom.event..type', function( type ){
     nativeEvent.$jin_dom_event_type= nativeEvent.type= type
     
     return this
-} )
+}})
 
-$jin.method( '$jin.dom.event..bubbles', function( bubbles ){
+/**
+ * @name $jin.dom.event#bubbles
+ * @method bubbles
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..bubbles': function( bubbles ){
     var nativeEvent = this.nativeEvent()
     
     if( !arguments.length ){
@@ -60,9 +109,14 @@ $jin.method( '$jin.dom.event..bubbles', function( bubbles ){
     nativeEvent.initEvent( this.type(), Boolean( bubbles ), this.cancelable() )
     
     return this
-} )
+}})
 
-$jin.method( '$jin.dom.event..cancelable', function( cancelable ){
+/**
+ * @name $jin.dom.event#cancelable
+ * @method cancelable
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..cancelable': function( cancelable ){
     var nativeEvent = this.nativeEvent()
     
     if( !arguments.length ){
@@ -72,9 +126,15 @@ $jin.method( '$jin.dom.event..cancelable', function( cancelable ){
     nativeEvent.initEvent( this.type(), this.bubbles(), Boolean( cancelable ) )
     
     return this
-} )
+}})
 
-$jin.method( '$jin.event..catched', '$jin.dom.event..catched', function( catched ){
+/**
+ * @name $jin.dom.event#catched
+ * @method catched
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..catched': function( catched ){
+    '$jin.event..catched'
     var nativeEvent = this.nativeEvent()
     
     if( !arguments.length ){
@@ -90,34 +150,69 @@ $jin.method( '$jin.event..catched', '$jin.dom.event..catched', function( catched
     nativeEvent.$jin_dom_event_catched = nativeEvent.defaultPrevented = !!catched
     
     return this
-} )
+}})
 
-$jin.method( '$jin.dom.event..keyCode', function( ){
+/**
+ * @name $jin.dom.event#keyCode
+ * @method keyCode
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..keyCode': function( ){
     return this.nativeEvent().keyCode
-} )
+}})
 
-$jin.method( '$jin.dom.event..modCtrl', function( ){
+/**
+ * @name $jin.dom.event#modCtrl
+ * @method modCtrl
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..modCtrl': function( ){
 	var nativeEvent = this.nativeEvent()
     return nativeEvent.ctrlKey || nativeEvent.metaKey
-} )
+}})
 
-$jin.method( '$jin.dom.event..modAlt', function( ){
+/**
+ * @name $jin.dom.event#modAlt
+ * @method modAlt
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..modAlt': function( ){
     return this.nativeEvent().altKey
-} )
+}})
 
-$jin.method( '$jin.dom.event..modShift', function( ){
+/**
+ * @name $jin.dom.event#modShift
+ * @method modShift
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..modShift': function( ){
     return this.nativeEvent().shiftKey
-} )
+}})
 
-$jin.method( '$jin.dom.event..mouseButton', function( ){
+/**
+ * @name $jin.dom.event#mouseButton
+ * @method mouseButton
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..mouseButton': function( ){
     return this.nativeEvent().button
-} )
+}})
 
-$jin.method( '$jin.dom.event..transfer', function( ){
+/**
+ * @name $jin.dom.event#transfer
+ * @method transfer
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..transfer': function( ){
     return this.nativeEvent().dataTransfer
-} )
+}})
 
-$jin.property( '$jin.dom.event..data', function( data ){
+/**
+ * @name $jin.dom.event#data
+ * @method data
+ * @member $jin.dom.event
+ */
+$jin.property({ '$jin.dom.event..data': function( data ){
 	if( arguments.length ){
 		var str = data ? JSON.stringify( data ) : data
 		
@@ -149,12 +244,22 @@ $jin.property( '$jin.dom.event..data', function( data ){
 			return null
 		}
 	}
-} )
+}})
 
-$jin.method( '$jin.dom.event..offset', function( ){
+/**
+ * @name $jin.dom.event#offset
+ * @method offset
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..offset': function( ){
     return $jin.vector([ this.nativeEvent().offsetX, this.nativeEvent().offsetY ])
-} )
+}})
 
-$jin.method( '$jin.dom.event..pos', function( ){
+/**
+ * @name $jin.dom.event#pos
+ * @method pos
+ * @member $jin.dom.event
+ */
+$jin.method({ '$jin.dom.event..pos': function( ){
     return $jin.vector([ this.nativeEvent().pageX, this.nativeEvent().pageY ])
-} )
+}})

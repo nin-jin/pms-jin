@@ -6,14 +6,22 @@
 
 /**
  * Hash map of created instances.
+ * @name $jin.registry.storage
+ * @method storage
+ * @static
+ * @member $jin.registry
  */
-$jin.property.hash( '$jin.registry.storage', {} )
+$jin.property.hash({ '$jin.registry.storage': {} })
 
 /**
  * Select instance from registry.
  * Otherwise creats new one.
+ * @name $jin.registry.exec
+ * @method exec
+ * @static
+ * @member $jin.registry
  */
-$jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
+$jin.method({ '$jin.registry.exec': function( id ){
 	if( !arguments.length ) return this['$jin.klass.exec']()
 	
 	if( id instanceof this ) return id
@@ -37,25 +45,35 @@ $jin.method( '$jin.klass.exec', '$jin.registry.exec', function( id ){
 	this.storage( id2, newObj )
 	
     return newObj
-} )
+}})
 
 /**
  * Identifier of instance.
+ * @name $jin.registry#id
+ * @method id
+ * @member $jin.registry
  */
-$jin.property( '$jin.registry..id', String )
+$jin.property({ '$jin.registry..id': String })
 
 /**
  * Removes from registry on destroy.
+ * @name $jin.registry#destroy
+ * @method destroy
+ * @member $jin.registry
  */
-$jin.method( '$jin.klass..destroy', '$jin.registry..destroy', function( ){
+$jin.method({ '$jin.registry..destroy': function( ){
 	this.constructor.storage( this.id(), null )
 	var destroy = this['$jin.pool..destroy'] || this['$jin.klass..destroy']
 	destroy.call( this )
-} )
+}})
 
 /**
  * Identifier as primitive representation.
+ * @name $jin.registry#toString
+ * @method toString
+ * @member $jin.registry
  */
-$jin.method( '$jin.klass..toString', '$jin.registry..toString', function( ){
+$jin.method({ '$jin.registry..toString': function( ){
+    '$jin.klass..toString'
     return this.id()
-} )
+}})

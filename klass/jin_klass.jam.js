@@ -1,58 +1,121 @@
+/**
+ * @name $jin.klass
+ * @method klass
+ * @static
+ * @member $jin
+ */
 $jin.definer({ '$jin.klass': function( path, mixins ){
     mixins.unshift( '$jin.klass' )
     var klass = $jin.mixin( path, mixins )
 	return klass
 }})
 
-$jin.konst( '$jin.klass.klass', function( ){
+/**
+ * @name $jin.klass.klass
+ * @method klass
+ * @static
+ * @member $jin.klass
+ */
+$jin.konst({ '$jin.klass.klass': function( ){
 	var klass = function Instance( ){ }
 	klass.prototype = this.prototype
 	return klass
-})
+}})
 
-$jin.method( '$jin.klass.exec', function( ){
+/**
+ * @name $jin.klass.exec
+ * @method exec
+ * @static
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass.exec': function( ){
 	var klass = this.klass()
 	var obj = new klass
 	obj.init.apply( obj, arguments )
 	return obj
-} )
+}})
 
-$jin.property( '$jin.klass.descendantClasses', function( ){ // TODO: use atoms!
+/**
+ * @name $jin.klass.descendantClasses
+ * @method descendantClasses
+ * @static
+ * @member $jin.klass
+ */
+$jin.property({ '$jin.klass.descendantClasses': function( ){ // TODO: use atoms!
 	var paths = this.jin_mixin_slaveList || []
 	var lists = paths.map( function( path ){
 		var klass = $jin.glob( path )
 		return klass.descendantClasses()
 	} )
 	return [].concat.apply( [ this ], lists )
-} )
+}})
 
-$jin.method( '$jin.klass.subClass', function( fields ){
+/**
+ * @name $jin.klass.subClass
+ * @method subClass
+ * @static
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass.subClass': function( fields ){
 	var klass = $jin.trait.make()
 	for( var key in this ) klass[ key ] = this[ key ]
 	var proto = klass.prototype = Object.create( this.prototype )
 	for( var key in fields ) proto[ key ] = fields[ key ]
 	return klass
-} )
+}})
 
-$jin.method( '$jin.klass.id', function( ){
+/**
+ * @name $jin.klass.id
+ * @method id
+ * @static
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass.id': function( ){
     return this.displayName || this.name
-} )
+}})
 
-$jin.method( '$jin.klass.toString', function( ){
+/**
+ * @name $jin.klass.toString
+ * @method toString
+ * @static
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass.toString': function( ){
     return this.id()
-} )
+}})
 
-$jin.method( '$jin.klass..init', function( json ){
+/**
+ * @name $jin.klass#init
+ * @method init
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass..init': function( json ){
     return this.json( json )
-} )
+}})
 
-$jin.property( '$jin.klass..entangleList', Array )
-$jin.method( '$jin.klass..entangle', function( value ){
+/**
+ * @name $jin.klass#entangleList
+ * @method entangleList
+ * @member $jin.klass
+ */
+$jin.property({ '$jin.klass..entangleList': Array })
+
+/**
+ * @name $jin.klass#entangle
+ * @method entangle
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass..entangle': function( value ){
     this.entangleList().push( value )
     return value
-} )
+}})
 
-$jin.method( '$jin.klass..destroy', function( ){
+/**
+ * @name $jin.klass#destroy
+ * @method destroy
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass..destroy': function( ){
     
     this.entangleList().forEach( function( entangle ){
        entangle.destroy()
@@ -63,9 +126,14 @@ $jin.method( '$jin.klass..destroy', function( ){
     }
     
     return this
-} )
+}})
 
-$jin.method( '$jin.klass..json', function( json ){
+/**
+ * @name $jin.klass#json
+ * @method json
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass..json': function( json ){
     if( !arguments.length ) return null
     
     if( !json ) return this
@@ -75,10 +143,21 @@ $jin.method( '$jin.klass..json', function( json ){
     }
     
     return this
-} )
+}})
 
-$jin.property( '$jin.klass..methodList', Object )
-$jin.method( '$jin.klass..method', function( name ){
+/**
+ * @name $jin.klass#methodList
+ * @method methodList
+ * @member $jin.klass
+ */
+$jin.property({ '$jin.klass..methodList': Object })
+
+/**
+ * @name $jin.klass#method
+ * @method method
+ * @member $jin.klass
+ */
+$jin.method({ '$jin.klass..method': function( name ){
     var hash = this.methodHash()
     
     var method = hash[ '_' + name ]
@@ -89,4 +168,4 @@ $jin.method( '$jin.klass..method', function( name ){
     }
     
     return hash[ '_' + name ] = method
-} )
+}})

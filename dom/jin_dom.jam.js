@@ -1,3 +1,10 @@
+/**
+ * @name $jin.dom
+ * @class $jin.dom
+ * @returns $jin.dom
+ * @mixins $jin.klass
+ * @mixins $jin.wrapper
+ */
 $jin.klass({ '$jin.dom': [ '$jin.wrapper' ] })
 
 //$jin.method( '$jin.wrapper.exec', '$jin.wrapper.exec', function( node ){
@@ -16,21 +23,45 @@ $jin.klass({ '$jin.dom': [ '$jin.wrapper' ] })
 //    return obj
 //} )
 
-$jin.method( '$jin.dom.env', function( ){
+/**
+ * @name $jin.dom.env
+ * @method env
+ * @static
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom.env': function( ){
     return $jin.env()
-} )
+}})
 
-$jin.method( '$jin.dom.escape', function( val ){
+/**
+ * @name $jin.dom.escape
+ * @method escape
+ * @static
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom.escape': function( val ){
     return val.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' ).replace( /'/g, '&apos;' )
-} )
+}})
 
-$jin.method( '$jin.dom.decode', function( text ){
+/**
+ * @name $jin.dom.decode
+ * @method decode
+ * @static
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom.decode': function( text ){
 	var decoder = document.createElement( 'textarea' )
 	decoder.innerHTML = text
 	return decoder.value
-} )
+}})
 
-$jin.method( '$jin.dom.html2text', function( html ){
+/**
+ * @name $jin.dom.html2text
+ * @method html2text
+ * @static
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom.html2text': function( html ){
 	return $jin.dom.decode(
 		String( html )
 		.replace( /<div><br[^>]*>/gi, '\n' )
@@ -38,10 +69,15 @@ $jin.method( '$jin.dom.html2text', function( html ){
 		.replace( /<div>/gi, '\n' )
 		.replace( /<[^<>]+>/g, '' )
 	)
-} )
+}})
 
-
-$jin.method( '$jin.wrapper..init', '$jin.dom..init', function( node ){
+/**
+ * @name $jin.dom#init
+ * @method init
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..init': function( node ){
+    '$jin.wrapper..init'
     if( typeof node === 'string' ){
 		if( $jin.dom.env().DOMParser ){
 			var parser = new( $jin.dom.env().DOMParser )
@@ -73,29 +109,54 @@ $jin.method( '$jin.wrapper..init', '$jin.dom..init', function( node ){
 	    this.nativeNode( node )
 		return this
     }
-} )
+}})
 
 $jin.alias( '$jin.wrapper..raw', '$jin.dom..raw', 'nativeNode' )
-$jin.property( '$jin.dom..nativeNode', null )
+/**
+ * @name $jin.dom#nativeNode
+ * @method nativeNode
+ * @member $jin.dom
+ */
+$jin.property({ '$jin.dom..nativeNode': null })
     
-$jin.method( '$jin.dom..nativeDoc', function( ){
+/**
+ * @name $jin.dom#nativeDoc
+ * @method nativeDoc
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..nativeDoc': function( ){
     var node = this.raw()
     return node.ownerDocument || node
-} )
+}})
     
-$jin.method( '$jin.dom..toString', function( ){
+/**
+ * @name $jin.dom#toString
+ * @method toString
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..toString': function( ){
     var serializer = new( $jin.dom.env().XMLSerializer )
     return serializer.serializeToString( this.nativeNode() )
-} )
+}})
     
-$jin.method( '$jin.dom..transform', function( stylesheet ){
+/**
+ * @name $jin.dom#transform
+ * @method transform
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..transform': function( stylesheet ){
     var proc= new( $jin.dom.env().XSLTProcessor )
     proc.importStylesheet( $jin.dom( stylesheet ).nativeDoc() )
     var doc= proc.transformToDocument( this.nativeNode() )
     return $jin.dom( doc )
-} )
+}})
     
-$jin.method( '$jin.dom..render', function( from, to ){
+/**
+ * @name $jin.dom#render
+ * @method render
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..render': function( from, to ){
     from= $jin.dom( from ).nativeNode()
     to= $jin.dom( to ).nativeNode()
     
@@ -106,13 +167,23 @@ $jin.method( '$jin.dom..render', function( from, to ){
     to.appendChild( res )
     
     return this
-} )
+}})
     
-$jin.method( '$jin.dom..name', function( ){
+/**
+ * @name $jin.dom#name
+ * @method name
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..name': function( ){
     return this.nativeNode().nodeName
-} )
+}})
 
-$jin.method( '$jin.dom..attr', function( name, value ){
+/**
+ * @name $jin.dom#attr
+ * @method attr
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..attr': function( name, value ){
     if( arguments.length > 1 ){
         if( value == null ) this.nativeNode().removeAttribute( name )
         else this.nativeNode().setAttribute( name, value )
@@ -120,9 +191,14 @@ $jin.method( '$jin.dom..attr', function( name, value ){
     } else {
         return this.nativeNode().getAttribute( name )
     }
-} )
+}})
     
-$jin.method( '$jin.dom..attrList', function( ){
+/**
+ * @name $jin.dom#attrList
+ * @method attrList
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..attrList': function( ){
     var nodes= this.nativeNode().attributes
     
     if( !nodes ) return []
@@ -133,9 +209,14 @@ $jin.method( '$jin.dom..attrList', function( ){
     }
     
     return list
-} )
+}})
 
-$jin.method( '$jin.dom..text', function( value ){
+/**
+ * @name $jin.dom#text
+ * @method text
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..text': function( value ){
     var node = this.nativeNode()
     if( arguments.length ){
         node.textContent = String( value )
@@ -143,18 +224,28 @@ $jin.method( '$jin.dom..text', function( value ){
     } else {
         return node.textContent
     }
-} )
+}})
 
-$jin.method( '$jin.dom..clear', function( ){
+/**
+ * @name $jin.dom#clear
+ * @method clear
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..clear': function( ){
     var node = this.nativeNode()
     var child
     while( child= node.firstChild ){
         node.removeChild( child )
     }
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..parent', function( parent ){
+/**
+ * @name $jin.dom#parent
+ * @method parent
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..parent': function( parent ){
     var node = this.nativeNode()
     if( arguments.length ){
         if( parent == null ){
@@ -168,9 +259,14 @@ $jin.method( '$jin.dom..parent', function( parent ){
         parent= node.parentNode || node.ownerElement
         return parent ? $jin.dom( parent ) : parent
     }
-} )
+}})
 
-$jin.method( '$jin.dom..next', function( next ){
+/**
+ * @name $jin.dom#next
+ * @method next
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..next': function( next ){
     var node = this.nativeNode()
     if( !arguments.length ){
         var next = node.nextSibling
@@ -180,9 +276,14 @@ $jin.method( '$jin.dom..next', function( next ){
     throw new Error( 'Not implemented' )
     this.parent().nativeNode().insertBefore( $jin.dom( prev ).nativeNode(), node.nextSibling )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..prev', function( prev ){
+/**
+ * @name $jin.dom#prev
+ * @method prev
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..prev': function( prev ){
     var node = this.nativeNode()
     if( !arguments.length ){
         var prev = node.previousSibling
@@ -191,9 +292,14 @@ $jin.method( '$jin.dom..prev', function( prev ){
     }
     this.parent().nativeNode().insertBefore( $jin.dom( prev ).nativeNode(), node )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..head', function( dom ){
+/**
+ * @name $jin.dom#head
+ * @method head
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..head': function( dom ){
     var node = this.nativeNode()
     if( !arguments.length ){
         var node = node.firstChild
@@ -202,9 +308,14 @@ $jin.method( '$jin.dom..head', function( dom ){
     }
     node.insertBefore( $jin.dom( dom ).nativeNode(), this.head().nativeNode() )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..tail', function( dom ){
+/**
+ * @name $jin.dom#tail
+ * @method tail
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..tail': function( dom ){
     var node = this.nativeNode()
     if( !arguments.length ){
         var node = node.lastChild
@@ -213,9 +324,14 @@ $jin.method( '$jin.dom..tail', function( dom ){
     }
     $jin.dom( dom ).parent( this )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..follow', function( ){
+/**
+ * @name $jin.dom#follow
+ * @method follow
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..follow': function( ){
 	var node = this
 	while( true ){
 		var next = node.next()
@@ -223,9 +339,14 @@ $jin.method( '$jin.dom..follow', function( ){
 		node = node.parent()
 		if( !node ) return null
 	}
-} )
+}})
 
-$jin.method( '$jin.dom..precede', function( ){
+/**
+ * @name $jin.dom#precede
+ * @method precede
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..precede': function( ){
 	var dom = this
 	while( true ){
 		var next = node.prev()
@@ -233,13 +354,23 @@ $jin.method( '$jin.dom..precede', function( ){
 		dom = dom.parent()
 		if( !dom ) return null
 	}
-} )
+}})
 
-$jin.method( '$jin.dom..delve', function( ){
+/**
+ * @name $jin.dom#delve
+ * @method delve
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..delve': function( ){
 	return this.head() || this.follow()
-} )
+}})
 
-$jin.method( '$jin.dom..childList', function( ){
+/**
+ * @name $jin.dom#childList
+ * @method childList
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..childList': function( ){
     var nodes= this.nativeNode().childNodes
     
     var list= []
@@ -248,63 +379,118 @@ $jin.method( '$jin.dom..childList', function( ){
     }
     
     return list
-} )
+}})
 
-$jin.method( '$jin.dom..xpathFind', function( xpath ){
+/**
+ * @name $jin.dom#xpathFind
+ * @method xpathFind
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..xpathFind': function( xpath ){
     var node= this.nativeDoc().evaluate( xpath, this.nativeNode(), null, null, null ).iterateNext()
     if( !node ) return node
     return $jin.dom( node )
-} )
+}})
 
-$jin.method( '$jin.dom..xpathSelect', function( xpath ){
+/**
+ * @name $jin.dom#xpathSelect
+ * @method xpathSelect
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..xpathSelect': function( xpath ){
     var list= []
     
     var found= this.nativeDoc().evaluate( xpath, this.nativeNode(), null, null, null )
     for( var node; node= found.iterateNext(); ) list.push( $jin.dom( node ) )
     
     return list
-} )
+}})
 
-$jin.method( '$jin.dom..cssFind', function( css ){
+/**
+ * @name $jin.dom#cssFind
+ * @method cssFind
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..cssFind': function( css ){
     var node = this.nativeNode().querySelector( css )
     if( !node ) return node
     return $jin.dom( node )
-} )
+}})
 
-$jin.method( '$jin.dom..cssSelect', function( css ){
+/**
+ * @name $jin.dom#cssSelect
+ * @method cssSelect
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..cssSelect': function( css ){
     return [].slice.call( this.nativeNode().querySelectorAll( css ) ).map( $jin.dom )
-} )
+}})
 
-$jin.method( '$jin.dom..clone', function( ){
+/**
+ * @name $jin.dom#clone
+ * @method clone
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..clone': function( ){
     return $jin.dom( this.nativeNode().cloneNode() )
-} )
+}})
 
-$jin.method( '$jin.dom..cloneTree', function( ){
+/**
+ * @name $jin.dom#cloneTree
+ * @method cloneTree
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..cloneTree': function( ){
     return $jin.dom( this.nativeNode().cloneNode( true ) )
-} )
+}})
 
 
-$jin.method( '$jin.dom..makeText', function( value ){
+/**
+ * @name $jin.dom#makeText
+ * @method makeText
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..makeText': function( value ){
     return $jin.dom( this.nativeDoc().createTextNode( value ) )
-} )
+}})
 
-$jin.method( '$jin.dom..makeFragment', function( ){
+/**
+ * @name $jin.dom#makeFragment
+ * @method makeFragment
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..makeFragment': function( ){
     return $jin.dom( this.nativeDoc().createDocumentFragment() )
-} )
+}})
 
-$jin.method( '$jin.dom..makePI', function( name, content ){
+/**
+ * @name $jin.dom#makePI
+ * @method makePI
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..makePI': function( name, content ){
     return $jin.dom( this.nativeDoc().createProcessingInstruction( name, content ) )
-} )
+}})
 
-$jin.method( '$jin.dom..makeElement', function( name, ns ){
+/**
+ * @name $jin.dom#makeElement
+ * @method makeElement
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..makeElement': function( name, ns ){
     if( arguments.length > 1 ){
         return $jin.dom( this.nativeDoc().createElementNS( ns, name ) )
     } else {
         return $jin.dom( this.nativeDoc().createElement( name ) )
     }
-} )
+}})
 
-$jin.method( '$jin.dom..makeTree', function( json ){
+/**
+ * @name $jin.dom#makeTree
+ * @method makeTree
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..makeTree': function( json ){
     if( !json ) return this.makeFragment()
     if( ~[ 'string', 'number' ].indexOf( typeof json ) ) return this.makeText( json )
     
@@ -322,26 +508,46 @@ $jin.method( '$jin.dom..makeTree', function( json ){
         }
     }
     return result
-} )
+}})
 
-$jin.method( '$jin.dom..listen', function( eventName, handler ){
+/**
+ * @name $jin.dom#listen
+ * @method listen
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..listen': function( eventName, handler ){
 	handler = $jin.defer.callback( handler )
     this.nativeNode().addEventListener( eventName, handler, false )
     return $jin.listener().crier( this ).eventName( eventName ).handler( handler )
-} )
+}})
 
-$jin.method( '$jin.dom..forget', function( eventName, handler ){
+/**
+ * @name $jin.dom#forget
+ * @method forget
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..forget': function( eventName, handler ){
     this.nativeNode().removeEventListener( eventName, handler, false )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..scream', function( event ){
+/**
+ * @name $jin.dom#scream
+ * @method scream
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..scream': function( event ){
     event = $jin.dom.event( event )
     this.nativeNode().dispatchEvent( event.nativeEvent() )
     return this
-} )
+}})
 
-$jin.method( '$jin.dom..flexShrink', function( value ){
+/**
+ * @name $jin.dom#flexShrink
+ * @method flexShrink
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..flexShrink': function( value ){
     var node = this.nativeNode()
     if( arguments.length ){
         node.style.flexShrink = String( value )
@@ -349,9 +555,14 @@ $jin.method( '$jin.dom..flexShrink', function( value ){
     } else {
         return document.getComputedStyles( node ).flexShrink
     }
-} )
+}})
 
-$jin.method( '$jin.dom..normalize', function( map ){
+/**
+ * @name $jin.dom#normalize
+ * @method normalize
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..normalize': function( map ){
     var node = this.nativeNode()
 	
 	var childs = []
@@ -376,12 +587,22 @@ $jin.method( '$jin.dom..normalize', function( map ){
 	} )
 	
 	return this
-} )
+}})
 
-$jin.method( '$jin.dom..rangeAround', function( ){
+/**
+ * @name $jin.dom#rangeAround
+ * @method rangeAround
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..rangeAround': function( ){
 	return $jin.dom.range.create().aimNode( this )
-} )
+}})
 
-$jin.method( '$jin.dom..rangeContent', function( ){
+/**
+ * @name $jin.dom#rangeContent
+ * @method rangeContent
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..rangeContent': function( ){
 	return $jin.dom.range.create().aimNodeContent( this )
-} )
+}})

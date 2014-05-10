@@ -1,3 +1,9 @@
+/**
+ * @name $jin.audio.input
+ * @method input
+ * @static
+ * @member $jin.audio
+ */
 $jin.atom.prop({ '$jin.audio.input': {
 	pull: function( ){
 		
@@ -18,6 +24,12 @@ $jin.atom.prop({ '$jin.audio.input': {
 	}
 }})
 
+/**
+ * @name $jin.audio.inputText
+ * @method inputText
+ * @static
+ * @member $jin.audio
+ */
 $jin.atom.prop({ '$jin.audio.inputText': {
 	pull: function( ){
 		
@@ -51,6 +63,12 @@ $jin.atom.prop({ '$jin.audio.inputText': {
 	}
 }})
 
+/**
+ * @name $jin.audio.output
+ * @method output
+ * @static
+ * @member $jin.audio
+ */
 $jin.atom.prop({ '$jin.audio.output': {
 	pull: function( ){
 		return []

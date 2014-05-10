@@ -1,5 +1,17 @@
+/**
+ * @name $jin.dnd.event
+ * @class $jin.dnd.event
+ * @returns $jin.dnd.event
+ * @mixins $jin.klass
+ * @mixins $jin.dom.event
+ */
 $jin.klass({ '$jin.dnd.event': [ '$jin.dom.event' ] })
 
+/**
+ * @name $jin.dnd.event#view
+ * @method view
+ * @member $jin.dnd.event
+ */
 $jin.method({ '$jin.dnd.event..view': function( dom, x, y ){
 
 	if( dom ){
@@ -23,6 +35,11 @@ $jin.method({ '$jin.dnd.event..view': function( dom, x, y ){
 	return this
 }})
 
+/**
+ * @name $jin.dnd.event#effect
+ * @method effect
+ * @member $jin.dnd.event
+ */
 $jin.method({ '$jin.dnd.event..effect': function( effect ){
 	if( !arguments.length ) return this.transfer().dropEffect
 
@@ -33,6 +50,11 @@ $jin.method({ '$jin.dnd.event..effect': function( effect ){
 	this.transfer().dropEffect = effect
 }})
 
+/**
+ * @name $jin.dnd.event#effectAllowed
+ * @method effectAllowed
+ * @member $jin.dnd.event
+ */
 $jin.method({ '$jin.dnd.event..effectAllowed': function( effectAllowed ){
 	if( !arguments.length ) return this.transfer().effectAllowed
 

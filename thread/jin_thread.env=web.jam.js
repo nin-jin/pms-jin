@@ -1,4 +1,10 @@
-$jin.method( '$jin.thread', function( proc ){
+/**
+ * @name $jin.thread
+ * @method thread
+ * @static
+ * @member $jin
+ */
+$jin.method({ '$jin.thread': function( proc ){
     return function $jin_thread_wrapper( ){
         var self= this
         var args= arguments
@@ -25,4 +31,5 @@ $jin.method( '$jin.thread', function( proc ){
         
         return res
     }
-} )
+}})
+

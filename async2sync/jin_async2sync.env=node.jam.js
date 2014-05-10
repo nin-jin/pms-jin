@@ -1,3 +1,9 @@
+/**
+ * @name $jin.async2sync
+ * @method async2sync
+ * @static
+ * @member $jin
+ */
 $jin.method({ '$jin.async2sync': function( func ){
     return $jin.proxy
     (   {   apply:

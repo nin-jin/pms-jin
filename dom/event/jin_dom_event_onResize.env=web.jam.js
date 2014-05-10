@@ -1,5 +1,19 @@
+/**
+ * @name $jin.dom.event.onResize
+ * @class $jin.dom.event.onResize
+ * @returns $jin.dom.event.onResize
+ * @mixins $jin.klass
+ * @mixins $jin.dom.event
+ */
 $jin.klass({ '$jin.dom.event.onResize': [ '$jin.dom.event' ] })
 
-$jin.method( '$jin.event.type', '$jin.dom.event.onResize.type', function( ){
+/**
+ * @name $jin.dom.event.onResize.type
+ * @method type
+ * @static
+ * @member $jin.dom.event.onResize
+ */
+$jin.method({ '$jin.dom.event.onResize.type': function( ){
+    '$jin.event.type'
     return 'resize'
-} )
+}})

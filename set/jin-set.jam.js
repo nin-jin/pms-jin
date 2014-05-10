@@ -1,5 +1,17 @@
+/**
+ * @name $jin.set
+ * @class $jin.set
+ * @returns $jin.set
+ * @mixins $jin.klass
+ * @mixins $jin.list
+ */
 $jin.klass({ '$jin.set': [ '$jin.list' ] })
 
+/**
+ * @name $jin.set#init
+ * @method init
+ * @member $jin.set
+ */
 $jin.method({ '$jin.set..init': function( raw ){
 	raw.forEach( function( value ){
 		raw[ '?' + value ] = value
@@ -8,12 +20,22 @@ $jin.method({ '$jin.set..init': function( raw ){
     return this
 }})
 
-$jin.method( '$jin.set..has', function( value ){
+/**
+ * @name $jin.set#has
+ * @method has
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..has': function( value ){
 	return this.raw()[ '?' + value ] !== void 0
-} )
+}})
 
 
-$jin.method( '$jin.set..head', function( value ){
+/**
+ * @name $jin.set#head
+ * @method head
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..head': function( value ){
 	if( !arguments.length ) this['$jin.list..head']()
 	
 	var raw = this.raw()
@@ -25,17 +47,28 @@ $jin.method( '$jin.set..head', function( value ){
 	raw[ key ] = value
 	
 	return this
-} )
+}})
 
-$jin.method( '$jin.list..spit', function( ){
+/**
+ * @name $jin.set#spit
+ * @method spit
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..spit': function( ){
+    '$jin.list..spit'
 	var raw = this.raw()
 	var value = raw.shift()
 	raw[ '?' + value ] === void 0
 	return value
-} )
+}})
 
 
-$jin.method( '$jin.set..tail', function( value ){
+/**
+ * @name $jin.set#tail
+ * @method tail
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..tail': function( value ){
 	if( !arguments.length ) this['$jin.list..tail']()
 	
 	var raw = this.raw()
@@ -47,28 +80,28 @@ $jin.method( '$jin.set..tail', function( value ){
 	raw[ key ] = value
 	
 	return this
-} )
+}})
 
-$jin.method( '$jin.list..pop', function( ){
+/**
+ * @name $jin.set#pop
+ * @method pop
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..pop': function( ){
+    '$jin.list..pop'
 	var raw = this.raw()
 	var value = raw.pop()
 	raw[ '?' + value ] === void 0
 	return value
-} )
+}})
 
-
-$jin.method( '$jin.list..drop', function( value ){
-	if( !this.has( value ) ) return this
-	
-	var raw = this.raw()
-	var index = raw.indexOf( value )
-	
-	raw.splice( index, 1 )
-	
-	return this
-} )
-
-$jin.method({ '$jin.list..item': function( index, next ){
+/**
+ * @name $jin.set#item
+ * @method item
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..item': function( index, next ){
+    '$jin.list..item'
 	var raw = this.raw()
 	
 	if( arguments.length < 2 ) return this.raw()[ index ]

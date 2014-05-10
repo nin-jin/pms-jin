@@ -1,4 +1,10 @@
-$jin.property( '$jin.param.hash', function( ){
+/**
+ * @name $jin.param.hash
+ * @method hash
+ * @static
+ * @member $jin.param
+ */
+$jin.property({ '$jin.param.hash': function( ){
     var param = {}
     var query = document.location.search + document.location.hash
     var chunks = query.split( /[&;?#]/g )
@@ -8,4 +14,4 @@ $jin.property( '$jin.param.hash', function( ){
         param[ values.shift() ] = values
     } )
     return param
-} )
+}})

@@ -1,7 +1,24 @@
+/**
+ * @name $jin.slide
+ * @class $jin.slide
+ * @returns $jin.slide
+ * @mixins $jin.klass
+ * @mixins $jin.view
+ */
 $jin.klass({ '$jin.slide': [ '$jin.view' ] })
 
+/**
+ * @name $jin.slide#stack
+ * @method stack
+ * @member $jin.slide
+ */
 $jin.property({ '$jin.slide..stack': null })
 
+/**
+ * @name $jin.slide#resizeCount
+ * @method resizeCount
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..resizeCount': {
 	pull: function( ){
 		$jin.dom.event.onResize.listen( window, function(){
@@ -11,6 +28,11 @@ $jin.atom.prop({ '$jin.slide..resizeCount': {
 	}
 }})
 
+/**
+ * @name $jin.slide#zoom
+ * @method zoom
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..zoom': {
 	pull: function( ){
 		this.resizeCount()
@@ -20,6 +42,11 @@ $jin.atom.prop({ '$jin.slide..zoom': {
 	}
 }})
 
+/**
+ * @name $jin.slide#pageNodeList
+ * @method pageNodeList
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..pageNodeList': {
 	pull: function( ){
 		var nodes = $jin.doc().cssSelect( '#' + this.id() + ' > section' )
@@ -30,6 +57,11 @@ $jin.atom.prop({ '$jin.slide..pageNodeList': {
 	}
 }})
 
+/**
+ * @name $jin.slide#pageNodeMap
+ * @method pageNodeMap
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..pageNodeMap': {
 	pull: function( ){
 		var map = {}
@@ -40,6 +72,11 @@ $jin.atom.prop({ '$jin.slide..pageNodeMap': {
 	}
 }})
 
+/**
+ * @name $jin.slide#pageNodeCurrent
+ * @method pageNodeCurrent
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..pageNodeCurrent': {
 	pull: function( prev ){
 		var id = $jin.state.url.item( 'slide' )
@@ -53,6 +90,11 @@ $jin.atom.prop({ '$jin.slide..pageNodeCurrent': {
 	}
 }})
 
+/**
+ * @name $jin.slide#pageNumber
+ * @method pageNumber
+ * @member $jin.slide
+ */
 $jin.atom.prop({ '$jin.slide..pageNumber': {
 	pull: function( prev ){
 		return this.pageNodeList().indexOf( this.pageNodeCurrent() )
@@ -68,22 +110,42 @@ $jin.atom.prop({ '$jin.slide..pageNumber': {
 	}
 }})
 
+/**
+ * @name $jin.slide#goPrev
+ * @method goPrev
+ * @member $jin.slide
+ */
 $jin.method({ '$jin.slide..goPrev': function( ){
 	this.pageNumber( this.pageNumber() - 1 )
 	return this
 }})
 
+/**
+ * @name $jin.slide#goNext
+ * @method goNext
+ * @member $jin.slide
+ */
 $jin.method({ '$jin.slide..goNext': function( ){
 	this.pageNumber( this.pageNumber() + 1 )
 	return this
 }})
 
+/**
+ * @name $jin.slide#onWheel
+ * @method onWheel
+ * @member $jin.slide
+ */
 $jin.method({ '$jin.slide..onWheel': function( event ){
 	if( event.nativeEvent().wheelDelta < 0 ) this.goNext()
 	else this.goPrev()
 	event.catched( true )
 }})
 
+/**
+ * @name $jin.slide#onPress
+ * @method onPress
+ * @member $jin.slide
+ */
 $jin.method({ '$jin.slide..onPress': function( event ){
 	var code = event.keyCode()
 	
