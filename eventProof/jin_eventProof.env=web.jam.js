@@ -8,11 +8,11 @@
 $jin.klass({ '$jin.eventProof': [ '$jin.event' ] })
 
 /**
- * @name $jin_eventProof#scream
+ * @name $jin.eventProof#scream
  * @method scream
- * @member $jin_eventProof
+ * @member $jin.eventProof
  */
-$jin.method({ '$jin_eventProof..scream': function( crier ){
+$jin.method({ '$jin.eventProof..scream': function( crier ){
     this['$jin.event..scream']( crier )
     
     if( !this.catched() ){
