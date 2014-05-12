@@ -1,6 +1,34 @@
 /**
+ * Трансформирует асинхронную  процедуру вида
+ *
+ *     function( ... , callback: function( error, result ) )
+ *
+ * в псевдосинхронную функцию вида
+ *
+ *     function( ... ) : result
+ *
+ * которая возвращает прокси, который останавливает текущее волокно, в момент обращения к его значению.
+ *
+ * Используется для автоматического распарралеливания асинхронных запросов:
+ *
+ *     var get = $jin.async2defer( $node.request.get )
+ *
+ * Последовательное исполнение:
+ *
+ *     console.log( get( "http://example.org/1" ).statusCode ) // request1, sync1
+ *     console.log( get( "http://example.org/2" ).statusCode ) // resuest2, sync2
+ *
+ * Параллельное исполнение:
+ *
+ *     var response1 = get( "http://example.org/1" ) // request1
+ *     var response2 = get( "http://example.org/2" ) // request2
+ *     console.log( response1.statusCode ) // sync1
+ *     console.log( response2.statusCode ) // sync2
+ *
  * @name $jin.async2defer
  * @method async2defer
+ * @param {function} func
+ * @returns {function}
  * @static
  * @member $jin
  */

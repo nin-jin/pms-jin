@@ -1,8 +1,33 @@
+/**
+ * Исключение, которое можно бросить в атоме, чтобы прервать вычисление всей текущей цепочки атомов.
+ *
+ * На любом уровне его можно либо перехватить через try-catch, либо обработать через fail метод атома.
+ *
+ * @name $jin.atom.wait
+ * @class $jin.atom.wait
+ * @mixins $jin.error
+ * @returns $jin.atom.wait
+ */
 $jin.error({ '$jin.atom.wait': [] })
 
 /**
+ * Атом - минимальный кирпичик реактивного приложения. Умеет:
+ *
+ *  * хранить в себе значение (value) или ошибку (error)
+ *  * лениво вычислять значение (pull) и автоматически подписываться на изменения значений атомов, от которых зависит.
+ *  * вызывать обработчики в случае изменения значения (push) или возникновении ошибки (fail)
+ *  * сливать новое значение с предыдущим через колбэк (merge)
+ *
  * @name $jin.atom
  * @class $jin.atom
+ * @cfg {string} name - Имя атома. Используется для отладки. Старайтесь давать атомам уникальные имена.
+ * @cfg {any} value - Исходное значение атома. undefined в качестве значения означает, что оно не определено и его надлежит вычислить.
+ * @cfg {Error} error - Объект ошибки. При попытке получения значения атома извне она будет бросаться в качестве исключения.
+ * @cfg {function( prev )} pull - Функция ленивого вычисления значения.
+ * @cfg {function( next, prev )} push - Обработчик изменения значения. В качестве аргументов принимает новое и старое значения.
+ * @cfg {function( next, prev )} merge - Функция слияния нового значения со старым. Вызывается перед записью нового значения. Может валидировать, нормализовывать и даже отменять изменение.
+ * @cfg {function( error )} fail - Обработчик возникновения ошибки.
+ * @cfg {object} context - Контекст в котором вызываются все обработчики.
  * @returns $jin.atom
  * @mixins $jin.klass
  */
@@ -21,6 +46,9 @@ $jin.glob( '$jin.atom.._slavesCount', 0 )
 $jin.glob( '$jin.atom.._isScheduled', false )
 
 /**
+ * Инициирует вычисление всех запланированных к вычислению атомов. Вычисление происходит по слоям,
+ * чем меньше у атома номер слоя (slice), тем  раньше он будет вычислен.
+ *
  * @name $jin.atom.induce
  * @method induce
  * @static
@@ -49,6 +77,8 @@ $jin.method({ '$jin.atom.induce': function( ){
 }})
 
 /**
+ * Запланировать вычисление отложенных атомов как можно скорее.
+ *
  * @name $jin.atom.schedule
  * @method schedule
  * @static
@@ -61,8 +91,12 @@ $jin.method({ '$jin.atom.schedule': function( ){
 }})
 
 /**
+ * Временно отключить автоматическое слежение за зависимостми, выполнить функцию и включить слежение обратно.
+ * Возвращает то, что вернула функция.
+ *
  * @name $jin.atom.bound
  * @method bound
+ * @param {function} handler
  * @static
  * @member $jin.atom
  */
@@ -77,6 +111,7 @@ $jin.method({ '$jin.atom.bound': function( handler ){
 /**
  * @name $jin.atom#init
  * @method init
+ * @param {object} config
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..init': function jin_atom__init( config ){
@@ -101,8 +136,11 @@ $jin.method({ '$jin.atom..destroy': function( ){
 }})
 
 /**
+ * Автогенерированный идентификатор.
+ *
  * @name $jin.atom#id
  * @method id
+ * @returns {string}
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..id': function( ){
@@ -110,6 +148,8 @@ $jin.method({ '$jin.atom..id': function( ){
 }})
 
 /**
+ * Получить значение атома (если оно ещё не вычислено – сначала вычислить).
+ *
  * @name $jin.atom#get
  * @method get
  * @member $jin.atom
@@ -140,6 +180,8 @@ $jin.method({ '$jin.atom..valueOf': function( ){
 }})
 
 /**
+ * Немедленно вычислить значение, слить с предыдущим и вернуть его.
+ *
  * @name $jin.atom#pull
  * @method pull
  * @member $jin.atom
@@ -178,8 +220,11 @@ $jin.method({ '$jin.atom..pull': function( ){
 }})
 
 /**
+ * Записать новое значение (предварительно слив с текущим).
+ *
  * @name $jin.atom#put
  * @method put
+ * @param {any} next
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..put': function( next ){
@@ -206,6 +251,7 @@ $jin.method({ '$jin.atom..put': function( next ){
 /**
  * @name $jin.atom#fail
  * @method fail
+ * @param {Error} error
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..fail': function( error ){
@@ -215,8 +261,11 @@ $jin.method({ '$jin.atom..fail': function( error ){
 }})
 
 /**
+ * Изменить значение используя функцию преобразования.
+ *
  * @name $jin.atom#mutate
  * @method mutate
+ * @param {function( value )} mutator
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..mutate': function( mutator ){
@@ -232,18 +281,24 @@ $jin.method({ '$jin.atom..mutate': function( mutator ){
 }})
 
 /**
+ * Сохраненный объект ошибки
+ *
  * @name $jin.atom#error
  * @method error
+ * @returns {Error|null}
  * @member $jin.atom
  */
-$jin.method({ '$jin.atom..error': function( next ){
+$jin.method({ '$jin.atom..error': function( ){
 	if( arguments.length ) throw new Error( 'Property (error) is read only, use (fail) method' )
 	return this._error
 }})
 
 /**
+ * Прямой доступ к текущему значению.
+ *
  * @name $jin.atom#value
  * @method value
+ * @param {any} [next]
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..value': function( next ){
@@ -281,8 +336,11 @@ $jin.method({ '$jin.atom..value': function( next ){
 }})
 
 /**
+ * Установлено ли текущее значение.
+ *
  * @name $jin.atom#defined
  * @method defined
+ * @returns {boolean}
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..defined': function( ){
@@ -290,8 +348,11 @@ $jin.method({ '$jin.atom..defined': function( ){
 }})
 
 /**
+ * Текущий номер слоя. На один больше чем максимальный номер среди всех хозяев.
+ *
  * @name $jin.atom#slice
  * @method slice
+ * @returns {number}
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..slice': function( ){
@@ -299,6 +360,8 @@ $jin.method({ '$jin.atom..slice': function( ){
 }})
 
 /**
+ * Уведомить рабов, что значение изменилось.
+ *
  * @name $jin.atom#notify
  * @method notify
  * @member $jin.atom
@@ -320,6 +383,8 @@ $jin.method({ '$jin.atom..notify': function( ){
 }})
 
 /**
+ * Запланировать обновление.
+ *
  * @name $jin.atom#update
  * @method update
  * @member $jin.atom
@@ -341,8 +406,11 @@ $jin.method({ '$jin.atom..update': function( ){
 }})
 
 /**
+ * Возыметь власть над рабом.
+ *
  * @name $jin.atom#lead
  * @method lead
+ * @param {$jin.atom} slave
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..lead': function( slave ){
@@ -358,8 +426,11 @@ $jin.method({ '$jin.atom..lead': function( slave ){
 }})
 
 /**
+ * Приписать к хозяину.
+ *
  * @name $jin.atom#obey
  * @method obey
+ * @param {$jin.atom} master
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..obey': function( master ){
@@ -374,8 +445,11 @@ $jin.method({ '$jin.atom..obey': function( master ){
 }})
 
 /**
+ * Выгнать раба.
+ *
  * @name $jin.atom#dislead
  * @method dislead
+ * @param {$jin.atom} slave
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..dislead': function( slave ){
@@ -391,8 +465,11 @@ $jin.method({ '$jin.atom..dislead': function( slave ){
 }})
 
 /**
+ * Отписать от хозяина.
+ *
  * @name $jin.atom#disobey
  * @method disobey
+ * @param {$jin.atom} master
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..disobey': function( master ){
@@ -404,6 +481,8 @@ $jin.method({ '$jin.atom..disobey': function( master ){
 }})
 
 /**
+ * Выгнать всех рабов и отписать их от себя.
+ *
  * @name $jin.atom#disleadAll
  * @method disleadAll
  * @member $jin.atom
@@ -422,6 +501,8 @@ $jin.method({ '$jin.atom..disleadAll': function( ){
 }})
 
 /**
+ * Отписаться от всех хозяев и убежать от них.
+ *
  * @name $jin.atom#disobeyAll
  * @method disobeyAll
  * @member $jin.atom

@@ -1,6 +1,25 @@
 /**
+ * Трансформирует асинхронную процедуру вида
+ *
+ *     function( ... , callback: function( error, result ) )
+ *
+ * в псевдосинхронную функцию вида
+ *
+ *     function( ... ) : result
+ *
+ * которая останавливает текущее волокно до завершения асинхронной процедуры.
+ *
+ * Используется для работы с асинхронным апи в синхронном стиле:
+ *
+ *     var get = $jin.async2sync( $node.request.get )
+ *     console.log( get( "http://example.org/1" ).statusCode )
+ *
+ * Важно, что исполнение этого кода уже должно происходить в волокне.
+ *
  * @name $jin.async2sync
  * @method async2sync
+ * @param {function} func
+ * @returns {function}
  * @static
  * @member $jin
  */

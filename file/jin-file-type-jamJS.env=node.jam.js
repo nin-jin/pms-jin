@@ -65,7 +65,7 @@ $jin.atom.prop({ '$jin.file.type.jamJS..content': {
  * @member $jin.file.type.jamJS
  */
 $jin.method({ '$jin.file.type.jamJS.normalize': function( src ){
-	src = String( src ).replace( /((\/\*\*)((?:[\s\S](?!\/\*\*))*?)(\*\/[ \t]*[\n\r]*))?(([ \t]*)[$]jin\.(method|definer|klass|konst|property(?:\.(?:list|hash))?|atom\.prop(?:\.(?:list|hash))?)\(\{\s['"]([$\w.#]+)['"]:([^\n\r]+))/g, function( str, comm, prefix, doc, suffix, def, indent, type, name, config ){
+	src = String( src ).replace( /((\/\*\*)((?:[\s\S](?!\/\*\*))*?)(\*\/[ \t]*[\n\r]*))?(([ \t]*)[$]jin\.(method|definer|klass|error|konst|property(?:\.(?:list|hash))?|atom\.prop(?:\.(?:list|hash))?)\(\{\s['"]([$\w.#]+)['"]:([^\n\r]+))/g, function( str, comm, prefix, doc, suffix, def, indent, type, name, config ){
         var tags = {}
         if( doc ) doc.replace( / \*(?:[ \t]+@(\w+))?(?:[ \t]([^\n\r]+))?/g, function( str, tagName, tagValue ){
             if( !tagName ) tagName = ''
@@ -73,9 +73,16 @@ $jin.method({ '$jin.file.type.jamJS.normalize': function( src ){
             tags[ tagName ].push( tagValue )
         } )
         tags.name = [ name.replace( /\.\./g, '#' ) ]
-        if( type === 'klass' ){
+        if( type === 'klass' ) {
             tags['class'] = [ name ]
-            tags.mixins = [ '$jin.klass' ]
+            tags.mixins = [ '$'+'jin.klass' ]
+            config.replace(/\$[\w.]+/g, function (ref) {
+                tags.mixins.push(ref)
+            })
+            tags.returns = [ name ]
+        } else if( type === 'error' ){
+            tags['class'] = [ name ]
+            tags.mixins = [ '$'+'jin.error' ]
             config.replace( /\$[\w.]+/g, function( ref ){
                 tags.mixins.push( ref )
             } )

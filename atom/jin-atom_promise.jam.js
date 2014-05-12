@@ -1,6 +1,10 @@
 /**
+ * Возращает атом, который дожидается вычисления текущего, после чего отписывается и вызывает один из колбэков.
+ *
  * @name $jin.atom#then
  * @method then
+ * @param {function( result )} [done]
+ * @param {function( error }} [fail]
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..then': function( done, fail ){
@@ -36,8 +40,12 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 }})
 
 /**
+ * Короткая запись для
+ *     .then( null, function( error ){ ... } )
+ *
  * @name $jin.atom#catch
  * @method catch
+ * @param {function( error }} [fail]
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..catch': function( fail ){
