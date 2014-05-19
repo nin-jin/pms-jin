@@ -138,7 +138,7 @@ $jin.method({ '$jin.dom.event..catched': function( catched ){
     var nativeEvent = this.nativeEvent()
     
     if( !arguments.length ){
-        return nativeEvent.defaultPrevented || nativeEvent.$jin_dom_event_catched
+        return nativeEvent.defaultPrevented || nativeEvent.$jin_dom_event_catched || ( nativeEvent.returnValue === false )
     }
     
     nativeEvent.returnValue= !catched

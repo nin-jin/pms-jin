@@ -44,6 +44,24 @@ $jin.test( function defer_resolve( test ){
 	})
 } )
 
+$jin.test( function double_change( test ){
+	test.timeout( 100 )
+    
+	var x = $jin.atom({})
+	var done = false
+	
+	x.then( function( value ){
+		if( done ) test.fail()
+		done = true
+		x.put( 2 )
+		$jin.defer( function(){
+			test.done( true )
+		} )
+	} )
+	
+	x.put( 1 )
+} )
+
 $jin.test( function pipeline( test ){
 	test.timeout( 100 )
     

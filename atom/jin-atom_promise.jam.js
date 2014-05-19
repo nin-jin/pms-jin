@@ -21,15 +21,12 @@ $jin.method({ '$jin.atom..then': function( done, fail ){
 	
 	var self = this
 	var promise = $jin.atom({
-		pull: function( ){
-			return self.get()
+		pull: function( prev ){
+			return prev || self.get()
 		},
-		push: function( next ){
-			if( next === void  0 ) return
+		merge: function( next, prev ){
+			if( next === prev ) return prev
 			promise.disobeyAll()
-		},
-		merge: function( next ){
-			if( next === void  0 ) return
 			return done ? done( next ) : next
 		},
 		fail: fail

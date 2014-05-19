@@ -11,7 +11,7 @@ $jin.defer.queue = []
 $jin.defer.scheduled = false
 
 $jin.defer.schedule = function( ){
-	if( typeof postMesasge === 'function' ) postMessage( '$jin.defer', document.location.href )
+	if( typeof postMessage === 'function' ) postMessage( '$jin.defer', document.location.href )
 	else $jin.schedule( 0, $jin.defer.check )
 	$jin.defer.scheduled = true
 }

@@ -164,9 +164,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								}
 							} )
 							sample.entangle( cover )
-							$jin.atom.bound( function( ){
-								cover.pull()
-							} )
+							cover.pull()
 						}
 					})
 					
@@ -214,9 +212,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 							}
 						})
 						sample.entangle( cover )
-						$jin.atom.bound( function( ){
-							cover.pull()
-						} )
+						cover.pull()
 					}
 				}
 				rules.push( rule )
@@ -282,9 +278,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								}
 							})
 							sample.entangle( cover )
-							$jin.atom.bound( function( ){
-								cover.pull()
-							} )
+							cover.pull()
 						}
 					})
 				} )
@@ -432,14 +426,15 @@ $jin.atom.prop({ '$jin.sample..view': {
 $jin.atom.prop({ '$jin.sample..nativeNode': {
 	resolves: [ '$jin.dom..nativeNode' ],
 	pull: function( ){
+		return this.constructor.dom( this.type() ).cloneNode( true )
+	},
+	push: function( next ){
 		
-		var type = this.type()
-		var node = this.constructor.dom( type ).cloneNode( true )
-		var rules = this.constructor.rules( type )
+		var rules = this.constructor.rules( this.type() )
 		var sample = this
 		
 		rules.forEach( function ruleIterator( rule ){
-			var current = node
+			var current = next
 			
 			rule.path.forEach( function pathIterator( name ){
 				current = current[ name ]
@@ -447,7 +442,5 @@ $jin.atom.prop({ '$jin.sample..nativeNode': {
 			
 			rule.attach( rule, sample, current )
 		} )
-		
-		return node
 	}
 }})

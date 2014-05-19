@@ -8,7 +8,7 @@ $jin.atom.prop.list({ '$jin.build..cssIndex': {
 		var pack = this.pack()
 		var vary = this.vary()
 		
-		var target = pack.buildFile( pack.name(), vary, 'css' )
+		var target = pack.buildFile( 'index', vary, 'css' )
 		var targets = [ target ]
 		
 		var sources = this.cssSources()
@@ -20,7 +20,7 @@ $jin.atom.prop.list({ '$jin.build..cssIndex': {
 			var pageLines = []
 			
 			function makePage( ){
-				var pageFile= pack.buildFile( pack.name() + '.page=' + page, vary, 'css' )
+				var pageFile= pack.buildFile( 'index.page=' + page, vary, 'css' )
 				pageFile.content( pageLines.join( '\n' ) )
 				targets.push( pageFile )
 				lines.push( '@import url( "' + pageFile.uri( target.parent() ) + '" );' )
