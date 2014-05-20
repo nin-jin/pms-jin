@@ -14,7 +14,7 @@ $jin.klass({ '$jin.dnd.onStart': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onStart
  */
 $jin.method({ '$jin.dnd.onStart.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'dragstart'
 }})
 
@@ -25,7 +25,7 @@ $jin.method({ '$jin.dnd.onStart.type': function( ){
  * @member $jin.dnd.onStart
  */
 $jin.method({ '$jin.dnd.onStart.listen': function( crier, handler ){
-    '$jin.dom.event.listen'
+    this['$jin.dom.event.listen']
 	var crier = $jin.dom( crier )
 	
 	crier.nativeNode().draggable = true

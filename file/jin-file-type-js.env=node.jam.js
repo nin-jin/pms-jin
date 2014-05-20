@@ -14,7 +14,7 @@ $jin.klass({ '$jin.file.type.js': [ '$jin.file.type.text' ] })
  * @member $jin.file.type.js
  */
 $jin.method({ '$jin.file.type.js.ext': function( ){
-	'$jin.file.type.text.ext'
+	this['$jin.file.type.text.ext']
 	return '.js'
 }})
 
@@ -25,7 +25,7 @@ $jin.method({ '$jin.file.type.js.ext': function( ){
  * @member $jin.file.type.js
  */
 $jin.method({ '$jin.file.type.js.mime': function( ){
-	'$jin.file.type.text.mime'
+	this['$jin.file.type.text.mime']
 	return 'text/javascript'
 }})
 

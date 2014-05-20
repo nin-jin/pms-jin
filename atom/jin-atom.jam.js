@@ -115,7 +115,7 @@ $jin.method({ '$jin.atom.bound': function( handler ){
  * @member $jin.atom
  */
 $jin.method({ '$jin.atom..init': function jin_atom__init( config ){
-	'$jin.klass..init'
+	this['$jin.klass..init']
 	this._id = $jin.makeId( '$jin.atom' )
 	this._config = config
 	this._value = config.value

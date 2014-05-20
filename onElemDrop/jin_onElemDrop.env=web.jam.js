@@ -14,6 +14,6 @@ $jin.klass({ '$jin.onElemDrop': [ '$jin.dom.event' ] })
  * @member $jin.onElemDrop
  */
 $jin.method({ '$jin.onElemDrop.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'DOMNodeRemoved'
 }})

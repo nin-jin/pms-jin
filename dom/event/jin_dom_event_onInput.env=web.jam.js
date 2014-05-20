@@ -14,7 +14,7 @@ $jin.klass({ '$jin.dom.event.onInput': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onInput
  */
 $jin.method({ '$jin.dom.event.onInput.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'input'
 }})
 

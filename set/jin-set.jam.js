@@ -55,7 +55,7 @@ $jin.method({ '$jin.set..head': function( value ){
  * @member $jin.set
  */
 $jin.method({ '$jin.set..spit': function( ){
-    '$jin.list..spit'
+    this['$jin.list..spit']
 	var raw = this.raw()
 	var value = raw.shift()
 	raw[ '?' + value ] === void 0
@@ -88,7 +88,7 @@ $jin.method({ '$jin.set..tail': function( value ){
  * @member $jin.set
  */
 $jin.method({ '$jin.set..pop': function( ){
-    '$jin.list..pop'
+    this['$jin.list..pop']
 	var raw = this.raw()
 	var value = raw.pop()
 	raw[ '?' + value ] === void 0
@@ -101,7 +101,7 @@ $jin.method({ '$jin.set..pop': function( ){
  * @member $jin.set
  */
 $jin.method({ '$jin.set..item': function( index, next ){
-    '$jin.list..item'
+    this['$jin.list..item']
 	var raw = this.raw()
 	
 	if( arguments.length < 2 ) return this.raw()[ index ]

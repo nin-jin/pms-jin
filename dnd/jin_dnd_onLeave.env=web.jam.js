@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dnd.onLeave': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onLeave
  */
 $jin.method({ '$jin.dnd.onLeave.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'dragleave'
 }})

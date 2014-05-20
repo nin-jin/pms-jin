@@ -14,6 +14,6 @@ $jin.klass({ '$jin.storage': [ '$jin.registry', '$jin.uri' ] })
  * @member $jin.storage
  */
 $jin.method({ '$jin.storage..toString': function( ){
-    '$jin.registry..toString'
+    this['$jin.registry..toString']
     return this['$jin.uri..toString']()
 }})

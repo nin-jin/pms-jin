@@ -70,7 +70,7 @@ $jin.property({ '$jin.tree..name': String })
  * @member $jin.tree
  */
 $jin.method({ '$jin.tree..init': function( content, name ){
-    '$jin.klass..init'
+    this['$jin.klass..init']
     if( content instanceof this.constructor ) content = content.content()
     
     this.name( name )

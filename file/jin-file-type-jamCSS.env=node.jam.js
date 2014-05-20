@@ -14,7 +14,7 @@ $jin.klass({ '$jin.file.type.jamCSS': [ '$jin.file.type.css' ] })
  * @member $jin.file.type.jamCSS
  */
 $jin.method({ '$jin.file.type.jamCSS.ext': function( ){
-	'$jin.file.type.css.ext'
+	this['$jin.file.type.css.ext']
 	return '.jam.css'
 }})
 

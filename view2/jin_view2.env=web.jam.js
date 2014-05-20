@@ -109,3 +109,14 @@ $jin.method({ '$jin.view2..clone': function( ){
 $jin.method({ '$jin.view2..toString': function( ){
     return this.constructor + '=' + this.id()
 }})
+
+/**
+ * @name $jin.view2#destroy
+ * @method destroy
+ * @member $jin.view2
+ */
+$jin.method({ '$jin.view2..destroy': function( ){
+	var samples = this.sample()
+	for( var key in samples ) samples[ key ].view( null )
+	this['$jin.klass..destroy']()
+}})

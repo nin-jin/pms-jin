@@ -74,6 +74,6 @@ $jin.method({ '$jin.registry..destroy': function( ){
  * @member $jin.registry
  */
 $jin.method({ '$jin.registry..toString': function( ){
-    '$jin.klass..toString'
+    this['$jin.klass..toString']
     return this.id()
 }})

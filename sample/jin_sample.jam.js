@@ -366,7 +366,7 @@ $jin.property.hash({ '$jin.sample.pool': { pull: function( ){
  * @member $jin.sample
  */
 $jin.method({ '$jin.sample.exec': function( type ){
-	'$jin.wrapper.exec'
+	this['$jin.wrapper.exec']
 	
 	var pool = this.pool( type )
 	var sample = pool.shift()
@@ -383,7 +383,7 @@ $jin.method({ '$jin.sample.exec': function( type ){
  * @member $jin.sample
  */
 $jin.method({ '$jin.sample..init': function( config ){
-	'$jin.dom..init'
+	this['$jin.dom..init']
     return this['$jin.klass..init']( config )
 }})
 

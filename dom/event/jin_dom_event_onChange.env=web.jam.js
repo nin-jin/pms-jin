@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dom.event.onChange': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onChange
  */
 $jin.method({ '$jin.dom.event.onChange.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'change'
 }})

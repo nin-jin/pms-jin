@@ -22,20 +22,20 @@ $jin.method({ '$jin.model.klass..state': function( ){
  * @static
  * @member $jin.model
  */
-$jin.method({ '$jin.model.prop': function( config ){
+$jin.definer({ '$jin.model.prop': function( name, config ){
     var parse = config.parse || function( val ){ return val }
     var serial = config.parse || String
     
-    var prop = $jin.atom.prop( config.name,
+    var prop = $jin.atom.prop( name,
     {   pull: function( ){
-            var val = this.state( config.name + '=' + this )
+            var val = this.state( name + '=' + this )
             if( val === null ) val = config.def
             val = parse.call( this, val )
             return ( val === void 0 ) ? null : val
         }
     ,   put: function( val, old ){
             if( val != null ) val = String( serial.call( this, val ) )
-            this.state( config.name + '=' + this, val )
+            this.state( name + '=' + this, val )
             return old
         }
     } )
@@ -49,9 +49,9 @@ $jin.method({ '$jin.model.prop': function( config ){
  * @static
  * @member $jin.model
  */
-$jin.definer({ '$jin.model.list': function( config ){
+$jin.definer({ '$jin.model.list': function( name, config ){
     
-    var propName = config.name.match( /[a-z0-9]+$/i )[0]
+    var propName = name.match( /[a-z0-9]+$/i )[0]
     
     var parseItem = config.parseItem || function( val ){ return val }
     var parse = config.parse || function( val ){
@@ -64,14 +64,13 @@ $jin.definer({ '$jin.model.list': function( config ){
         return ( typeof val === 'string' ) ? val : val.map( serialItem, this ).join( ',' )
     }
     
-    $jin.model.prop(
-    {   name: config.name
-    ,   parse: parse
+    $jin.model.prop( name,
+    {   parse: parse
     ,   serial: serial
     ,   def: config.def
     } )
     
-    $jin.method( config.name + 'Add', function( newItems ){
+    $jin.method( name + 'Add', function( newItems ){
         var items = this[propName]()
         
         newItems = parse( newItems ).filter( function( item ){
@@ -84,7 +83,7 @@ $jin.definer({ '$jin.model.list': function( config ){
 		return this
     })
 
-    $jin.method( config.name + 'Drop', function( oldItems ){
+    $jin.method( name + 'Drop', function( oldItems ){
         oldItems = parse( oldItems )
         
         var items = this[propName]().filter( function( item ){

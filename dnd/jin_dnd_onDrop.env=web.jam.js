@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dnd.onDrop': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onDrop
  */
 $jin.method({ '$jin.dnd.onDrop.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'drop'
 }})

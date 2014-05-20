@@ -14,7 +14,7 @@ $jin.klass({ '$jin.file.type.sampleHTML': [ '$jin.file.type.html' ] })
  * @member $jin.file.type.sampleHTML
  */
 $jin.method({ '$jin.file.type.sampleHTML.ext': function( ){
-	'$jin.file.type.html.ext'
+	this['$jin.file.type.html.ext']
 	return '.sample.html'
 }})
 

@@ -14,7 +14,7 @@ $jin.klass({ '$jin.press.onEscape': [ '$jin.dom.event' ] })
  * @member $jin.press.onEscape
  */
 $jin.method({ '$jin.press.onEscape.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'keydown'
 }})
 

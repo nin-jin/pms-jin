@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dnd.onOver': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onOver
  */
 $jin.method({ '$jin.dnd.onOver.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'dragover'
 }})

@@ -109,7 +109,7 @@ $jin.property({ '$jin.test..errors': Array })
  * @member $jin.test
  */
 $jin.method({ '$jin.test..init': function( code ){
-    '$jin.klass..init'
+    this['$jin.klass..init']
     this.code( code )
 	this.constructor.next( this )
     return this

@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dnd.onEnter': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onEnter
  */
 $jin.method({ '$jin.dnd.onEnter.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'dragenter'
 }})

@@ -14,6 +14,6 @@ $jin.klass({ '$jin.onElemAdd': [ '$jin.dom.event' ] })
  * @member $jin.onElemAdd
  */
 $jin.method({ '$jin.onElemAdd.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'DOMNodeInserted'
 }})

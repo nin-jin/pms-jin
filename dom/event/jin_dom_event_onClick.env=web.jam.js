@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dom.event.onClick': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onClick
  */
 $jin.method({ '$jin.dom.event.onClick.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'click'
 }})

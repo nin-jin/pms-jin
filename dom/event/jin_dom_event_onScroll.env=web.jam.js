@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dom.event.onScroll': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onScroll
  */
 $jin.method({ '$jin.dom.event.onScroll.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'scroll'
 }})

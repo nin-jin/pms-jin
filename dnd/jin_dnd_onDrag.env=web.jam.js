@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dnd.onDrag': [ '$jin.dnd.event' ] })
  * @member $jin.dnd.onDrag
  */
 $jin.method({ '$jin.dnd.onDrag.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'drag'
 }})

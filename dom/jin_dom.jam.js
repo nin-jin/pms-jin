@@ -77,7 +77,7 @@ $jin.method({ '$jin.dom.html2text': function( html ){
  * @member $jin.dom
  */
 $jin.method({ '$jin.dom..init': function( node ){
-    '$jin.wrapper..init'
+    this['$jin.wrapper..init']
     if( typeof node === 'string' ){
 		if( $jin.dom.env().DOMParser ){
 			var parser = new( $jin.dom.env().DOMParser )

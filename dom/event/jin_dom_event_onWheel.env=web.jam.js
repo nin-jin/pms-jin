@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dom.event.onWheel': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onWheel
  */
 $jin.method({ '$jin.dom.event.onWheel.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'wheel'
 }})

@@ -32,7 +32,7 @@ if( $jin.support.xmlModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..toString': function( ){
-        '$jin.dom..toString'
+        this['$jin.dom..toString']
         return String( this.nativeNode().xml )
     }})
 
@@ -43,7 +43,7 @@ if( $jin.support.xmlModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..transform': function( stylesheet ){
-        '$jin.dom..transform'
+        this['$jin.dom..transform']
         var result= this.nativeNode().transformNode( $jin.dom( stylesheet ).nativeNode() )
         return $jin.dom.parse( result )
     }})
@@ -54,7 +54,7 @@ if( $jin.support.xmlModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..render': function( from, to ){
-        '$jin.dom..render'
+        this['$jin.dom..render']
         from = $jin.dom( from ).nativeNode()
         to = $jin.dom( to ).nativeNode()
         
@@ -67,7 +67,7 @@ if( $jin.support.xmlModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..text': function( value ){
-        '$jin.dom..text'
+        this['$jin.dom..text']
         var node = this.nativeNode()
         if( arguments.length ){
             node.innerText = value
@@ -83,7 +83,7 @@ if( $jin.support.xmlModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..select': function( xpath ){
-        '$jin.dom..select'
+        this['$jin.dom..select']
         var list= []
         
         var found= this.nativeNode().selectNodes( xpath )
@@ -102,7 +102,7 @@ if( $jin.support.eventModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..listen': function( eventName, handler ){
-        '$jin.dom..listen'
+        this['$jin.dom..listen']
         eventName = this.normalizeEventName( eventName )
         this.nativeNode().attachEvent( eventName, function( ){
             var event = $jin.dom.event( window.event )
@@ -118,7 +118,7 @@ if( $jin.support.eventModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..forget': function( eventName, handler ){
-        '$jin.dom..forget'
+        this['$jin.dom..forget']
         eventName = this.normalizeEventName( eventName )
         this.nativeNode().detachEvent( eventName, handler )
         return this
@@ -130,7 +130,7 @@ if( $jin.support.eventModel() === 'ms' ){
      * @member $jin.dom.ms
      */
     $jin.method({ '$jin.dom.ms..scream': function( event ){
-        '$jin.dom..scream'
+        this['$jin.dom..scream']
         event = $jin.dom.event( event )
         var eventName = this.normalizeEventName( event.type() )
         this.nativeNode().fireEvent( eventName, event.nativeEvent() )

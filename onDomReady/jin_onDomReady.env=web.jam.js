@@ -14,6 +14,6 @@ $jin.klass({ '$jin.onDomReady': [ '$jin.dom.event' ] })
  * @member $jin.onDomReady
  */
 $jin.method({ '$jin.onDomReady.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'DOMContentLoaded'
 }})

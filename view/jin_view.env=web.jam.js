@@ -75,3 +75,14 @@ $jin.method({ '$jin.view..clone': function( id ){
 $jin.method({ '$jin.view..make': function( postfix, factory ){
     return factory( this.id() + ';' + postfix )
 }})
+
+/**
+ * @name $jin.view#destroy
+ * @method destroy
+ * @member $jin.view
+ */
+$jin.method({ '$jin.view..destroy': function( ){
+	var samples = this.sample()
+	for( var key in samples ) samples[ key ].view( null )
+	this['$jin.registry..destroy']()
+}})

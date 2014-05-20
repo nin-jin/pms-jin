@@ -7,6 +7,6 @@ $jin.mixin({ '$jin.dom': [ '$jin.dom.nodejs' ] })
  * @member $jin.dom.nodejs
  */
 $jin.method({ '$jin.dom.nodejs.env': function( ){
-    '$jin.dom.env'
+    this['$jin.dom.env']
     return $node.xmldom
 }})

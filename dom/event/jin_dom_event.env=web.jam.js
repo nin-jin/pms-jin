@@ -70,7 +70,7 @@ $jin.method({ '$jin.dom.event..nativeEvent': function( ){
  * @member $jin.dom.event
  */
 $jin.method({ '$jin.dom.event..target': function( ){
-    '$jin.event..target'
+    this['$jin.event..target']
     return $jin.dom( this.nativeEvent().target || this.nativeEvent().srcElement )
 }})
 
@@ -80,7 +80,7 @@ $jin.method({ '$jin.dom.event..target': function( ){
  * @member $jin.dom.event
  */
 $jin.method({ '$jin.dom.event..type': function( type ){
-    '$jin.event..type'
+    this['$jin.event..type']
     var nativeEvent = this.nativeEvent()
     type = String( type )
     
@@ -134,7 +134,7 @@ $jin.method({ '$jin.dom.event..cancelable': function( cancelable ){
  * @member $jin.dom.event
  */
 $jin.method({ '$jin.dom.event..catched': function( catched ){
-    '$jin.event..catched'
+    this['$jin.event..catched']
     var nativeEvent = this.nativeEvent()
     
     if( !arguments.length ){

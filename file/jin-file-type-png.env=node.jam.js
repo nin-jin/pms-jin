@@ -14,7 +14,7 @@ $jin.klass({ '$jin.file.type.png': [ '$jin.file.base' ] })
  * @member $jin.file.type.png
  */
 $jin.method({ '$jin.file.type.png.ext': function( ){
-	'$jin.file.base.ext'
+	this['$jin.file.base.ext']
 	return '.png'
 }})
 
@@ -25,7 +25,7 @@ $jin.method({ '$jin.file.type.png.ext': function( ){
  * @member $jin.file.type.png
  */
 $jin.method({ '$jin.file.type.png.mime': function( ){
-	'$jin.file.base.mime'
+	this['$jin.file.base.mime']
 	return 'image/png'
 }})
 

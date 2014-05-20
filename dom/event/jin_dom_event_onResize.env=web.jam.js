@@ -14,6 +14,6 @@ $jin.klass({ '$jin.dom.event.onResize': [ '$jin.dom.event' ] })
  * @member $jin.dom.event.onResize
  */
 $jin.method({ '$jin.dom.event.onResize.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'resize'
 }})

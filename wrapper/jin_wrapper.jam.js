@@ -31,7 +31,7 @@ $jin.method({ '$jin.wrapper.exec': function( obj ){
  * @member $jin.wrapper
  */
 $jin.method({ '$jin.wrapper..init': function( obj ){
-    '$jin.klass..init'
+    this['$jin.klass..init']
     this.raw( obj )
     return this
 }})

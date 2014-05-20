@@ -14,7 +14,7 @@ $jin.klass({ '$jin.press.onEnter': [ '$jin.dom.event' ] })
  * @member $jin.press.onEnter
  */
 $jin.method({ '$jin.press.onEnter.type': function( ){
-    '$jin.event.type'
+    this['$jin.event.type']
     return 'keydown'
 }})
 
