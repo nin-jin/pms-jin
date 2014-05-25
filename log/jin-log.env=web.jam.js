@@ -6,7 +6,9 @@
 $jin.method({ '$jin.log' : function( ){
 	if( typeof console === 'undefined' ) return
 	
-	return console.log.apply( console, arguments )
+	console.log.apply( console, arguments )
+
+	return arguments[0]
 }})
 
 /**

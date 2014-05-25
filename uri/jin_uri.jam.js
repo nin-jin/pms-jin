@@ -124,7 +124,7 @@ $jin.method({ '$jin.uri..json': function( json ){
     
     var query = this.query()
     json.query = {}
-    for( key in query ) json.query = query[ key ]
+    for( key in query ) json.query[ key ] = query[ key ]
     
     json.hash = this.hash()
     

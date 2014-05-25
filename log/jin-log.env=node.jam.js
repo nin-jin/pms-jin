@@ -11,7 +11,7 @@ $jin.method({ '$jin.log' : function( ){
 	
 	console.log.apply( console, out )
 	
-	return $jin.log
+	return arguments[0]
 }})
 
 /**

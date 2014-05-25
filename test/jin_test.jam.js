@@ -46,7 +46,6 @@ $jin.property({ '$jin.test.timer': null })
  */
 $jin.method({ '$jin.test.next': function( next ){
 	if( arguments.length ) this.pendingList().push( next )
-	
 	clearTimeout( this.timer() )
 	this.timer( setTimeout( function( ){
 	    var next = this.pendingList()[0]
@@ -182,7 +181,8 @@ $jin.property({ '$jin.test..done': function( done ){
     
     this.constructor.completeList().push( this )
     var pendingList = this.constructor.pendingList()
-    pendingList.splice( pendingList.indexOf( this ), 1 )
+	var index = pendingList.indexOf( this )
+    if( index > -1 ) pendingList.splice( index, 1 )
 	
 	this.constructor.next()
 

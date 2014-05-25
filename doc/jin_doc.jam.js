@@ -38,7 +38,7 @@ $jin.method({ '$jin.doc..findById': function( id ){
  */
 $jin.method({ '$jin.doc..selection': function( ){
 	var doc = this.nativeNode()
-	return $jin.dom.selection( doc.selection || doc.defaultView.getSelection() )
+	return $jin.dom.selection( doc.defaultView ? doc.defaultView.getSelection() : doc.selection )
 }})
 
 /**
