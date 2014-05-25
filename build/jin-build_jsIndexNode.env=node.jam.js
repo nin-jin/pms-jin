@@ -17,7 +17,7 @@ void function( path ){                                   \n\
     path = require( 'path' ).resolve( __dirname, path )  \n\
     var fs = require( 'fs' )                             \n\
     var source= fs.readFileSync( path )                  \n\
-    source= 'with(this){' + source + '}'                 \n\
+    source= 'with(this){' + source + '\n}'               \n\
     module._compile( source, path )                      \n\
     return arguments.callee                              \n\
 }                                                        \n\
