@@ -26,11 +26,25 @@ $jin.method({ '$jin.view2..state': function( ){
 }})
 
 /**
+ * @name $jin.view2#name
+ * @method name
+ * @member $jin.view2
+ */
+$jin.property({ '$jin.view2..name': String })
+
+/**
  * @name $jin.view2#id
  * @method id
  * @member $jin.view2
  */
-$jin.property({ '$jin.view2..id': String })
+$jin.property({ '$jin.view2..id': function( ){
+	var id = this.name()
+
+	var parent = this.parent()
+	if( parent ) id = parent.id() + ';' + id
+
+	return id
+} })
 
 /**
  * @name $jin.view2#parent
@@ -77,7 +91,7 @@ $jin.method({ '$jin.view2..child': function( name, factory ){
 	var child = this.childs( name )
 	if( child ) return child
 	
-	child = factory({ id: this.id() + ';' + name, parent: this })
+	child = factory({ name: name, parent: this })
 	this.childs( name, child )
 	
 	return child
@@ -119,4 +133,21 @@ $jin.method({ '$jin.view2..destroy': function( ){
 	var samples = this.sample()
 	for( var key in samples ) samples[ key ].view( null )
 	this['$jin.klass..destroy']()
+}})
+
+/**
+ * @name $jin.view2#focused
+ * @method focused
+ * @member $jin.view2
+ */
+$jin.atom.prop({ '$jin.view2..focused': {
+	pull: function( ){
+		return null
+	},
+	push: function( next ){
+		var parent = this.parent()
+		if( !parent ) return
+
+		parent.focused( next && this.name() )
+	}
 }})

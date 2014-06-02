@@ -227,6 +227,8 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					if( !chunk ) return
 					
 					var subPath = chunk.split( /[-_:=.]/g )
+					if( !subPath[0] ) return
+
 					var key = subPath.pop()
 					var fieldName = subPath.pop()
 					
@@ -292,6 +294,8 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					if( !chunk ) return
 					
 					var eventName = chunk.split( /[-_:=.]/g )
+					if( !eventName[0] ) return
+
 					var key = eventName.pop()
 					eventName = eventName.join( '.' )
 					

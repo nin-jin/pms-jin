@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+	<head>
+
+	</head>
+	<body>
+		<script src="-mix/index.env=web.stage=dev.js"></script>
+		<script>
+			$jin.bench.log([ 'with({x:1}){###x = 2###}', 'with({x:1}){###x++###}', '###this.x###' ])
+		</script>
+	</body>
+</html>

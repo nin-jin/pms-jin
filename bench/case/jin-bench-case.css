@@ -1,0 +1,25 @@
+[jin-bench-case]{
+	line-height: 1.5em;
+	font-family: monospace;
+	display: table-row;
+	text-align: left;
+}
+
+[jin-bench-case-code] {
+	display: table-cell;
+	background: white;
+	outline: 1px solid #ccc;
+	white-space: pre;
+}
+
+[jin-bench-case-code][jin-view2-focused] {
+	outline: 1px solid steelblue;
+}
+
+[jin-bench-case-measure] {
+	display: table-cell;
+	padding: 0 .2em;
+	text-align: right;
+	font-weight: bold;
+	position: relative;
+}

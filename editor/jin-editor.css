@@ -1,0 +1,17 @@
+[jin-editor]{
+	padding: .2em .4em;
+}
+
+[jin-editor] p {
+	margin: 0;
+}
+
+[jin-editor]:empty:after {
+	display: block;
+	content: attr( jin-editor-placeholder ) ' ';
+	color: #999;
+}
+
+[jin-editor]:focus{
+	outline: none;
+}

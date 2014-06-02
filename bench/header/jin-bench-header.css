@@ -1,0 +1,9 @@
+[jin-bench-header] {
+	display: table-row;
+}
+
+[jin-bench-header-column] {
+	display: table-cell;
+	font-family: sans-serif;
+	color: #666;
+}

@@ -8,22 +8,21 @@ $jin.klass({ '$jin.state.url': [] })
 
 $jin.atom.prop( '$jin.state.url.href',
 {   pull: function( ){
-        return document.location.search + document.location.hash
+        return document.location.href
     }
 ,   put: String
 } )
 
 $jin.atom.prop( '$jin.state.url.hash',
 {   pull: function( ){
-        var href = this.href().replace( /#/, '?' )
-        return $jin.uri.parse( href ).query()
+        return $jin.uri.query( $jin.uri.parse( this.href() ).hash() ).raw()
     }
 } )
 
 $jin.atom.prop( '$jin.state.url.listener',
 {   pull: function( ){
         return setInterval( function( ){
-            $jin.state.url.href( document.location.search + document.location.hash )
+            $jin.state.url.href_atom().pull()
         }, 50 )
     }
 } )
@@ -40,6 +39,6 @@ $jin.atom.prop.hash( '$jin.state.url.item',
         if( value == null ) delete hash[ key ]
         else hash[ key ] = value
         
-        document.location = $jin.uri({ query: hash }).toString().replace( '?', '#' ) || '#'
+        document.location = '#' + $jin.uri.query( hash ).toString( ';=' )
     }
 } )

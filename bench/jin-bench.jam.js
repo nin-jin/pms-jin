@@ -1,0 +1,135 @@
+/**
+ * @name $jin.bench
+ * @method bench
+ * @member $jin
+ * @static
+ */
+$jin.method({ '$jin.bench': function( sources ){
+
+	var cases = sources.map( function( source ){
+		source = $jin.bench.split( source )
+
+		return {
+			source: source,
+			code: {
+				outer: source.prefix + source.postfix,
+				inner: source.infix,
+				full: source.prefix + source.infix + source.postfix
+			},
+			measure: {}
+		}
+	})
+
+//	var measures = codes.map( function( code ){
+//		return {
+//			outer: $jin.bench.measure( code.outer ),
+//			full: $jin.bench.measure( code.full )
+//		}
+//	} )
+
+	var count = 1
+	while( true ){
+		count *= 2
+
+		var totalTime = cases.reduce( function( time, kase ){
+			kase.code.outer = kase.code.outer + kase.code.outer
+			kase.code.inner = kase.code.inner + kase.code.inner
+
+			kase.measure.outer = $jin.bench.measure( kase.code.outer )
+			kase.measure.full = $jin.bench.measure( kase.source.prefix + kase.code.inner + kase.source.postfix )
+
+			return time + kase.measure.outer.compile + kase.measure.outer.execute + kase.measure.full.compile + kase.measure.full.execute
+		}, 0 )
+
+		if(!( totalTime < 1000000 )) break
+		if(!( count < 1000000 )) break
+	}
+
+	return cases.map( function( kase ){
+		return {
+			outer: {
+				compile: kase.measure.outer.compile / count,
+				execute: kase.measure.outer.execute / count,
+				code: kase.source.prefix + kase.source.postfix,
+				error: kase.measure.outer.error
+			},
+			inner: {
+				compile: ( kase.measure.full.compile - kase.measure.outer.compile / count ) / count,
+				execute: ( kase.measure.full.execute - kase.measure.outer.execute / count ) / count,
+				code: kase.source.infix,
+				error: kase.measure.full.error
+			}
+		}
+	} )
+
+} })
+
+/**
+ * @name $jin.bench.split
+ * @method split
+ * @member $jin.bench
+ * @static
+ */
+$jin.method({ '$jin.bench.split': function( source ){
+
+	var matches = /^([\s\S]*?)#{3,}([\s\S]*)#{3,}([\s\S]*)$/.exec( source )
+	if( !matches ) throw new Error( 'Can not split js source to prefix###infix###+postfix' )
+
+	return {
+		prefix: matches[1],
+		infix: matches[2],
+		postfix: matches[3],
+		source: source
+	}
+}})
+
+/**
+ * @name $jin.bench.measure
+ * @method measure
+ * @member $jin.bench
+ * @static
+ */
+$jin.method({ '$jin.bench.measure': $jin.thread( function( proc ){
+	var time = window.perfromance || window.Date
+	
+	if( typeof proc === 'string' ){
+		try {
+			var startCompile = time.now()
+				proc = new Function( '', proc )
+			var endCompile = time.now()
+		} catch( error ){
+			return { error: error }
+		}
+	}
+
+	try {
+		var startExec = time.now()
+			proc()
+		var endExec= time.now()
+	} catch( error ){
+		return { error: error }
+	}
+
+	return {
+		compile: 1000 * ( endCompile - startCompile ),
+		execute: 1000 * ( endExec - startExec )
+	}
+
+}) })
+
+/**
+ * @name $jin.bench.log
+ * @method log
+ * @member $jin.bench
+ * @static
+ */
+$jin.method({ '$jin.bench.log': function( codes ){
+	var measures = $jin.bench( codes )
+	
+	for( var key in measures ){
+		$jin.log( key )
+		console.table( measures[ key ] )
+	}
+
+	return measures
+}})

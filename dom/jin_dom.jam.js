@@ -64,9 +64,9 @@ $jin.method({ '$jin.dom.decode': function( text ){
 $jin.method({ '$jin.dom.html2text': function( html ){
 	return $jin.dom.decode(
 		String( html )
-		.replace( /<div><br[^>]*>/gi, '\n' )
+		.replace( /<br[^>]*><\/div>/gi, '</div>' )
+		.replace( /<\/div><div[^>]*>/gi, '\n' )
 		.replace( /<br[^>]*>/gi, '\n' )
-		.replace( /<div>/gi, '\n' )
 		.replace( /<[^<>]+>/g, '' )
 	)
 }})
@@ -219,10 +219,15 @@ $jin.method({ '$jin.dom..attrList': function( ){
 $jin.method({ '$jin.dom..text': function( value ){
     var node = this.nativeNode()
     if( arguments.length ){
-        node.textContent = String( value )
+	    if( 'innerText' in node ) node.innerText = value
+        else if( 'textContent' in node ) node.textContent = value
+	    else throw new Error( 'Can not put text to node (' + node + ')' )
         return this
     } else {
-        return node.textContent
+        //innerText is buggy
+	    if( 'innerHTML' in node ) return $jin.dom.html2text( node.innerHTML )
+	    else if( 'textContent' in node ) return node.textContent
+	    else throw new Error( 'Can not get text from node (' + node + ')' )
     }
 }})
 
@@ -586,6 +591,30 @@ $jin.method({ '$jin.dom..normalize': function( map ){
 		node.removeChild( child )
 	} )
 	
+	return this
+}})
+
+/**
+ * @name $jin.dom#tree
+ * @method tree
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..tree': function( items ){
+	if( !arguments.length ) throw new Error( 'Not implemented yet' )
+
+	var node = this
+	this.clear()
+
+	items.forEach( function( item ){
+		if( item.nodeName === '#text' ){
+			var child = node.makeText( item.nodeValue )
+		} else {
+			var child = node.makeElement( item.nodeName )
+			if( item.childNodes ) child.tree( item.childNodes )
+		}
+		child.parent( node )
+	} )
+
 	return this
 }})
 

@@ -1,0 +1,23 @@
+[jin-bench-app]{
+	box-sizing: border-box;
+	padding: 1%;
+	display: inline-block;
+}
+
+[jin-bench-app-setup] {
+	background: white;
+	outline: 1px solid #ccc;
+	white-space: pre;
+	text-align: left;
+	margin: 1em;
+}
+
+[jin-bench-app-setup][jin-view2-focused="setup"] {
+	outline: 1px solid steelblue;
+}
+
+[jin-bench-app-cases]{
+	display: inline-table;
+	border-spacing: 1em;
+}
+

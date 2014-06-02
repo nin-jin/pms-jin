@@ -35,7 +35,7 @@ $jin.property({ '$jin.uri.valueSep': function( sep ){
 $jin.method({ '$jin.uri.escape': function( str ){
     return String( str )
     .replace
-    (   /[^- a-zA-Z\/?:@!$'()*+,._~\xA0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF\u10000-\u1FFFD\u20000-\u2FFFD\u30000-\u3FFFD\u40000-\x{4FFFD\u50000-\u5FFFD\u60000-\u6FFFD\u70000-\u7FFFD\u80000-\u8FFFD\u90000-\u9FFFD\uA0000-\uAFFFD\uB0000-\uBFFFD\uC0000-\uCFFFD\uD0000-\uDFFFD\uE1000-\uEFFFD\uE000-\uF8FF\uF0000-\uFFFFD\u100000-\u10FFFD}]+/
+    (   /[^- a-zA-Z\/?@!$'()*,.~\xA0-\uD7FF\uE000-\uFDCF\uFDF0-\uFFEF]+/g
     ,   encodeURIComponent
     )
     .replace( / /g, '+' )
@@ -215,7 +215,9 @@ $jin.method({ '$jin.uri.parse': function( string ){
         var chunkList = queryString.split( Uri.chunkSep() )
         var query = {}
         chunkList.forEach( function( chunk ){
-            var values = chunk.split( Uri.valueSep() ).map( decodeURIComponent )
+            var values = chunk.split( Uri.valueSep() ).map( function( value ){
+	            return decodeURIComponent( value.replace( /\+/g, ' ' ) )
+            } )
             var key = values.shift()
             query[ key ] = values
         }.bind(this) )

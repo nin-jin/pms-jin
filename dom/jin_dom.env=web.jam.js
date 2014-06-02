@@ -62,22 +62,6 @@ if( $jin.support.xmlModel() === 'ms' ){
     }})
     
     /**
-     * @name $jin.dom.ms#text
-     * @method text
-     * @member $jin.dom.ms
-     */
-    $jin.method({ '$jin.dom.ms..text': function( value ){
-        this['$jin.dom..text']
-        var node = this.nativeNode()
-        if( arguments.length ){
-            node.innerText = value
-            return this
-        } else {
-            return node.innerText
-        }
-    }})
-    
-    /**
      * @name $jin.dom.ms#select
      * @method select
      * @member $jin.dom.ms
