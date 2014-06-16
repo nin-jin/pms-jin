@@ -79,13 +79,16 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 						path: path.slice(),
 						coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '=' + key,
 						attach: function( rule, sample, current ){
-							var cover = new $jin.atom(
+							var cover = $jin.atom(
 							{	name: rule.coverName
 							,	pull: function jin_sample_pull( ){
 									var view = sample.view()
 									if( !view ) return null
-									
-									return view[ rule.key ]()
+
+									var prop = view[ rule.key ]
+									if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+									return prop.call( view )
 								}
 							, 	merge: function contentPull( nextItems, prevItems ){
 									
@@ -197,13 +200,16 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '/@' + attrName + '=' + key,
 					path: path.slice(),
 					attach: function( rule, sample, node ){
-						var cover = new $jin.atom(
+						var cover = $jin.atom(
 						{	name: rule.coverName
 						,	pull: function jin_sample_pull( ){
 								var view = sample.view()
 								if( !view ) return null
-								
-								var next = view[ rule.key ]()
+
+								var prop = view[ rule.key ]
+								if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+								var next = prop.call( view )
 								return next ? String( next ) : next
 							}
 						,	push: function attrPush( next, prev ){
@@ -242,7 +248,11 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								var handler = function( event ){
 									var view = sample.view()
 									if( !view ) return
-									view[ rule.key ]( current[ rule.fieldName ] )
+
+									var prop = view[ rule.key ]
+									if( !prop ) throw new Error( 'Handler (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+									prop.call( view, current[ rule.fieldName ] )
 								}
 								sample.entangle( $jin.dom( current ).listen( 'input', handler ) )
 								sample.entangle( $jin.dom( current ).listen( 'change', handler ) )
@@ -252,26 +262,35 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								var handler = function( event ){
 									var view = sample.view()
 									if( !view ) return
-									
-									view[ rule.key ]( current.scrollTop )
+
+									var prop = view[ rule.key ]
+									if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+									prop.call( view, current.scrollTop )
 								}
 								sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
 							} else if( rule.fieldName === 'scrollLeft' ){
 								var handler = function( event ){
 									var view = sample.view()
 									if( !view ) return
-									
-									view[ rule.key ]( current.scrollLeft )
+
+									var prop = view[ rule.key ]
+									if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+									prop.call( view, current.scrollLeft )
 								}
 								sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
 							}
-							var cover = new $jin.atom(
+							var cover = $jin.atom(
 							{	name: rule.coverName
 							,	pull: function jin_sample_pull( ){
 									var view = sample.view()
 									if( !view ) return null
-									
-									return view[ rule.key ]()
+
+									var prop = view[ rule.key ]
+									if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+									return prop.call( view )
 								}
 							,	push: function fieldPush( next, prev ){
 									if( next == null ) return

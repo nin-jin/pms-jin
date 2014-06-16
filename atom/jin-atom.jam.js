@@ -160,7 +160,7 @@ $jin.method({ '$jin.atom..get': function( ){
 
 	var slave = this.constructor.current
 	if( slave ){
-		if( slave === this ) throw new Error( 'Circular dependency of atoms!' )
+		if( slave === this ) throw new Error( 'Circular dependency of atoms (' + this._config.name + ')' )
 		slave.obey( this )
 		this.lead( slave )
 	}
@@ -236,7 +236,7 @@ $jin.method({ '$jin.atom..put': function( next ){
 	if( merge ){
 		var context = config.context
 		var prev = this._value
-		next = merge.call( context, next, prev )
+		var next = merge.call( context, next, prev )
 	}
 	
 	this.value( next )

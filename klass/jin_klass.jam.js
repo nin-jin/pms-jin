@@ -11,28 +11,20 @@ $jin.definer({ '$jin.klass': function( path, mixins ){
 }})
 
 /**
- * @name $jin.klass.klass
- * @method klass
- * @static
- * @member $jin.klass
- */
-$jin.konst({ '$jin.klass.klass': function( ){
-	var klass = function Instance( ){ }
-	klass.prototype = this.prototype
-	return klass
-}})
-
-/**
  * @name $jin.klass.exec
  * @method exec
  * @static
  * @member $jin.klass
  */
 $jin.method({ '$jin.klass.exec': function( ){
-	var klass = this.klass()
-	var obj = new klass
-	obj.init.apply( obj, arguments )
-	return obj
+	var klass = this._internalKlass
+	if( !klass ){
+		klass = this._internalKlass = function $jin_klass( args ){
+			this.init.apply( this, args )
+		}
+		klass.prototype = this.prototype
+	}
+	return new klass( arguments )
 }})
 
 /**

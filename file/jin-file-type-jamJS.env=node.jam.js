@@ -29,6 +29,7 @@ $jin.atom.prop({ '$jin.file.type.jamJS..dependList': {
 		var depends = {}
 		
 		String( this.content() )
+		.replace( /\/\*[\s\S]*?\*\//g, '' )
 		.replace
 		(   /\$([a-z][a-z0-9]+(?:[._][a-z0-9]+)*)/ig
 		,   function( str, path ){
