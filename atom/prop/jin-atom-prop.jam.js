@@ -85,7 +85,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	var propName = path.replace( /([$\w]*\.)+/, '' )
 	
 	$jin.method( path + '_add', function( newItems ){
-        var items = this[propName]() || []
+        var items = this[ propName + '_atom' ]().value() || []
         
 		if( config.merge ) newItems = config.merge.call( this, newItems )
 		
@@ -100,7 +100,7 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
 	} )
 	
 	$jin.method( path + '_drop', function( oldItems ){
-		var items = this[propName]() || []
+		var items = this[ propName + '_atom' ]().value() || []
         
 		if( config.merge ) oldItems = config.merge.call( this, oldItems )
 		
@@ -146,6 +146,8 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
 		
         if( put && ( next !== prev ) ) next = put.call( this, key, next, prev )
 		atom.value( next )
+		
+		return this
     }
     
     var fieldName = fieldName = '_' + path
@@ -177,5 +179,14 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
 
 	$jin.method( path, prop )
 
+	$jin.method( path + '_atom', function( key ){
+		return prop.atom( this, key )
+    } )
+	
+	$jin.method( path + '_clear', function( ){
+		var atomHash = this[ fieldName ]
+		for( var key in atomHash ) atomHash[ key ].put( void 0 )
+    } )
+	
     return prop
 }})
