@@ -81,6 +81,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 						attach: function( rule, sample, current ){
 							var cover = $jin.atom(
 							{	name: rule.coverName
+							,	context: sample
 							,	pull: function jin_sample_pull( ){
 									var view = sample.view()
 									if( !view ) return null
@@ -202,6 +203,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					attach: function( rule, sample, node ){
 						var cover = $jin.atom(
 						{	name: rule.coverName
+						,	context: sample
 						,	pull: function jin_sample_pull( ){
 								var view = sample.view()
 								if( !view ) return null
@@ -283,6 +285,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 							}
 							var cover = $jin.atom(
 							{	name: rule.coverName
+							,	context: sample
 							,	pull: function jin_sample_pull( ){
 									var view = sample.view()
 									if( !view ) return null
