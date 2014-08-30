@@ -312,7 +312,6 @@ $jin.property({ '$jin.file.base..update': function( ){
  */
 $jin.method({ '$jin.file.base..notify': function( ){
 	this.update( void 0 )
-	//$jin.log( this.relate() )
 	this.watcher_atom().notify()
 }})
 

@@ -3,7 +3,7 @@
  * @class $jin.file.type.ts
  * @returns $jin.file.type.ts
  * @mixins $jin.klass
- * @mixins $jin.file.type.html
+ * @mixins $jin.file.type.text
  */
 $jin.klass({ '$jin.file.type.ts': [ '$jin.file.type.text' ] })
 
