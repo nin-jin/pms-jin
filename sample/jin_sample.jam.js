@@ -114,12 +114,12 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 										return item
 									} )
 									
-									prevItems.map( function jin_sample_freePrevs( item ){
+									prevItems.reduceRight( function jin_sample_freePrevs( nope, item ){
 										if( typeof item === 'string' ) return
 										if( nextItems.indexOf( item ) !== -1 ) return
 										var sample = item.element ? item.element() : item 
 										if( sample.view ) sample.view( null )
-									} )
+									}, void 0 )
 									
 									var textNodes = []
 									var elements = []
