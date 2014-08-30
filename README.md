@@ -17,18 +17,16 @@ Create build-script "build.js" and put into:
 ```js
 with( require( 'pms' ) ) // loads prebuilded builder (may be old version)
 $pms.application( function( ){ // use $jin.persistent for rebuilding on file changes
-    with( $jin.build4node.dev( 'jin' ).load() ){ // install, build and load $jin package
-    	$jin.build4web.js.release( 'jin/atom' ) // builds $jin.atom standalone js-library
-	
-    	$jin.build4web.sample.release( 'foo/bar' ) // builds samples for $foo.bar
+    with( $jin.build( 'jin/build?env=node' ).jsIndexNode()[0].load() ){ // install, build and load $jin.build package
+    	$jin.build( 'jin/atom?env=web' ).jsCompiled() // builds $jin.atom standalone js-library
 	
 	// builds js for $foo.bar
-    	$jin.build4web.js.dev( 'foo/bar' )
-    	$jin.build4web.js.release( 'jin/slide' )
-	
+    	$jin.build( 'jin/slide?env=web' ).jsIndexWeb()
+    	$jin.build( 'jin/slide?env=web' ).jsCompiled()
+
 	// builds css for $foo.bar
-    	$jin.build4web.css.dev( 'jin/slide' )
-    	$jin.build4web.css.release( 'jin/slide' )
+    	$jin.build( 'jin/slide?env=web' ).cssIndex()
+    	$jin.build( 'jin/slide?env=web' ).cssCompiled()
     }
 })
 ```
