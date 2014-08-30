@@ -31,3 +31,13 @@ $jin.atom.prop({ '$jin.field..editor': {
 		return [ this.child( 'editor', $jin.editor ).valueProp( this.valueProp() ) ]
 	}
 }})
+
+/**
+ * @name $jin.field#focus
+ * @method focus
+ * @member $jin.field
+ */
+$jin.method({ '$jin.field..focus': function( ){
+	this.child( 'editor' ).focus()
+}})
+

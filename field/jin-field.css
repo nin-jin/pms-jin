@@ -2,13 +2,13 @@
 	display: flex;
 	flex: 1;
 	background: white;
-	outline: 1px solid #ccc;
+	outline: 1px solid rgba( 0, 0, 0, .1 );
 	text-align: left;
 	position: relative;
 }
 
 [jin-field-label]:before {
-	display: block;
+	display: none;
 	content: attr( jin-field-label );
 	position: absolute;
 	right: -1px;
@@ -17,18 +17,20 @@
 	z-index: -1;
 	/*font: 11px/1 sans-serif;*/
 	border: 1px solid #ccc;
-	padding: .2em .5em;
+	padding: .1em .5em;
 	opacity: 0.85;
 	/*transition: top .1s .1s ease-in-out;*/
-	border-radius: 2px;
+	border-radius: 2px 2px  0 0;
 	white-space: nowrap;
+	margin-top: -2px;
 }
 
 [jin-field-label][jin-view2-focused]:before,
 [jin-field-label]:hover:before {
-	top: -2em;
+	top: -1.7em;
 	opacity: 1;
 	z-index: 1;
+	display: block;
 }
 
 [jin-field][jin-view2-focused] {

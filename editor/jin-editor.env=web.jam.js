@@ -32,6 +32,15 @@ $jin.atom.prop({ '$jin.editor..valueProp': {
 }})
 
 /**
+ * @name $jin.editor#focus
+ * @method focus
+ * @member $jin.editor
+ */
+$jin.method({ '$jin.editor..focus': function( ){
+	this.nativeNode().focus()
+}})
+
+/**
  * @name $jin.editor#render
  * @method render
  * @member $jin.editor
