@@ -2,10 +2,10 @@
  * @name $jin.field
  * @class $jin.field
  * @mixins $jin.klass
- * @mixins $jin.view2
+ * @mixins $jin.view
  * @returns $jin.field
  */
-$jin.klass({ '$jin.field': [ '$jin.view2' ] })
+$jin.klass({ '$jin.field': [ '$jin.view' ] })
 
 /**
  * @name $jin.field#label

@@ -4,10 +4,10 @@ document.execCommand( 'DefaultParagraphSeparator', false, 'div' )
  * @name $jin.editor
  * @class $jin.editor
  * @mixins $jin.klass
- * @mixins $jin.view2
+ * @mixins $jin.view
  * @returns $jin.editor
  */
-$jin.klass({ '$jin.editor': [ '$jin.view2' ] })
+$jin.klass({ '$jin.editor': [ '$jin.view' ] })
 
 /**
  * @name $jin.editor#isEditable

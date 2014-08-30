@@ -2,10 +2,10 @@
  * @name $jin.bench.app
  * @class $jin.bench.app
  * @mixins $jin.klass
- * @mixins $jin.view2
+ * @mixins $jin.view
  * @returns $jin.bench.app
  */
-$jin.klass({ '$jin.bench.app': [ '$jin.view2' ] })
+$jin.klass({ '$jin.bench.app': [ '$jin.view' ] })
 
 /**
  * @name $jin.bench.app#setupCode

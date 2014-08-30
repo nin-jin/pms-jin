@@ -83,11 +83,21 @@ $jin.atom.prop({ '$jin.file.base..exists': {
 	put: function( exists ){
 		if( exists == this.exists() ) return exists
 		
+		var api = this.constructor.nativeAPI()
+		var path = this.path()
         if( exists ){
             this.parent().exists( true )
-            this.constructor.nativeAPI().mkdirSync( this.path() )
+			try {
+				api.mkdirSync( path )
+			} catch( error ){
+				if( error.code !== 'EEXIST' ) throw error
+			}
         } else {
-            this.constructor.nativeAPI().unlinkSync( this.path() )
+			try {
+	            api.unlinkSync( path )
+			} catch( error ){
+				if( error.code !== 'ENOEXIST' ) throw error
+			}
         }
 		
 		return exists

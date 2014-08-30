@@ -15,9 +15,10 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 				var urn = $jin.uri( this.urn().json() ).query( 'env', 'node' ).query( 'stage', 'dev' )
 				result.jsIndexNode = $jin.build( urn ).jsIndexNode()
 			}
-			if( /|release/.test( vary.env ) ){
+			if( /|release/.test( vary.stage ) ){
 				var urn = $jin.uri( this.urn().json() ).query( 'env', 'web' ).query( 'stage', 'release' )
 				result.jsCompiled = $jin.build( urn ).jsCompiled()
+				result.cssCompiled = $jin.build( urn ).cssCompiled()
 				
 				var urn = $jin.uri( this.urn().json() ).query( 'env', 'node' ).query( 'stage', 'release' )
 				result.jsCompiled = $jin.build( urn ).jsCompiled()
