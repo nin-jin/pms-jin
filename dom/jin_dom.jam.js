@@ -64,8 +64,11 @@ $jin.method({ '$jin.dom.decode': function( text ){
 $jin.method({ '$jin.dom.html2text': function( html ){
 	return $jin.dom.decode(
 		String( html )
-		.replace( /<br[^>]*><\/div>/gi, '</div>' )
-		.replace( /<\/div><div[^>]*>/gi, '\n' )
+		//.replace( /<span[^>]*>/gi, '' )
+		//.replace( /<div[^>]*><br[^>]*><\/div>?/gi, '\n' )
+		//.replace( /(^|\n)<div[^>]*>/gi, '' )
+		//.replace( /<br[^>]*><\/div>/gi, '' )
+		//.replace( /<div[^>]*>/gi, '\n' )
 		.replace( /<br[^>]*>/gi, '\n' )
 		.replace( /<[^<>]+>/g, '' )
 	)
@@ -111,7 +114,16 @@ $jin.method({ '$jin.dom..init': function( node ){
     }
 }})
 
-$jin.alias( '$jin.wrapper..raw', '$jin.dom..raw', 'nativeNode' )
+/**
+ * @name $jin.dom#raw
+ * @method raw
+ * @member $jin.dom
+ */
+$jin.method({ '$jin.dom..raw': function(){
+	this['$jin.wrapper..raw']
+	return this.nativeNode.apply( this, arguments )
+}})
+
 /**
  * @name $jin.dom#nativeNode
  * @method nativeNode
@@ -175,7 +187,8 @@ $jin.method({ '$jin.dom..render': function( from, to ){
  * @member $jin.dom
  */
 $jin.method({ '$jin.dom..name': function( ){
-    return this.nativeNode().nodeName
+	var node = this.nativeNode()
+    return node.nodeName
 }})
 
 /**
@@ -224,10 +237,7 @@ $jin.method({ '$jin.dom..text': function( value ){
 	    else throw new Error( 'Can not put text to node (' + node + ')' )
         return this
     } else {
-        //innerText is buggy
-	    if( 'innerHTML' in node ) return $jin.dom.html2text( node.innerHTML )
-	    else if( 'textContent' in node ) return node.textContent
-	    else throw new Error( 'Can not get text from node (' + node + ')' )
+        return $jin.dom.html2text( this.html() )
     }
 }})
 
@@ -257,7 +267,8 @@ $jin.method({ '$jin.dom..parent': function( parent ){
             parent= node.parentNode
             if( parent ) parent.removeChild( node )
         } else {
-            $jin.dom( parent ).nativeNode().appendChild( node )
+            var parentNode = $jin.dom( parent ).nativeNode()
+            if( node.parentNode !== parentNode ) parentNode.appendChild( node )
         }
         return this
     } else {
@@ -606,8 +617,8 @@ $jin.method({ '$jin.dom..tree': function( items ){
 	this.clear()
 
 	items.forEach( function( item ){
-		if( item.nodeName === '#text' ){
-			var child = node.makeText( item.nodeValue )
+		if( typeof item === 'string' ){
+			var child = node.makeText( item )
 		} else {
 			var child = node.makeElement( item.nodeName )
 			if( item.childNodes ) child.tree( item.childNodes )

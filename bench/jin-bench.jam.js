@@ -4,10 +4,14 @@
  * @member $jin
  * @static
  */
-$jin.method({ '$jin.bench': function( sources ){
+$jin.method({ '$jin.bench': function( setup, sources, teardown ){
+	if( !setup ) setup = ''
+	if( !teardown ) teardown = ''
 
 	var cases = sources.map( function( source ){
 		source = $jin.bench.split( source )
+		source.prefix = setup + source.prefix
+		source.postfix = teardown + source.postfix
 
 		return {
 			source: source,
@@ -29,18 +33,21 @@ $jin.method({ '$jin.bench': function( sources ){
 
 	var count = 1
 	while( true ){
-		count *= 2
 
 		var totalTime = cases.reduce( function( time, kase ){
 			kase.code.outer = kase.code.outer + kase.code.outer
-			kase.code.inner = kase.code.inner + kase.code.inner
-
+			kase.code.inner = kase.code.inner + kase.code.inner.replace( /(\d+)(\/\*num\*\/)/g, function( str, numb, suffix ){
+				return ( Number( numb ) + count )  + suffix
+			} )
+			
 			kase.measure.outer = $jin.bench.measure( kase.code.outer )
 			kase.measure.full = $jin.bench.measure( kase.source.prefix + kase.code.inner + kase.source.postfix )
-
+			
 			return time + kase.measure.outer.compile + kase.measure.outer.execute + kase.measure.full.compile + kase.measure.full.execute
 		}, 0 )
-
+		
+		count *= 2
+		
 		if(!( totalTime < 1000000 )) break
 		if(!( count < 1000000 )) break
 	}
@@ -72,14 +79,13 @@ $jin.method({ '$jin.bench': function( sources ){
  */
 $jin.method({ '$jin.bench.split': function( source ){
 
-	var matches = /^([\s\S]*?)#{3,}([\s\S]*)#{3,}([\s\S]*)$/.exec( source )
-	if( !matches ) throw new Error( 'Can not split js source to prefix###infix###+postfix' )
+	var matches = /^(?:([\s\S]*?)\/\*in\*\/)?([\s\S]*?)(?:\\\*out\*\/([\s\S]*))?$/.exec( source )
+	if( !matches ) throw new Error( 'Can not split js source to prefix{in}infix{out}+postfix' )
 
 	return {
-		prefix: matches[1],
+		prefix: matches[1] || '\n',
 		infix: matches[2],
-		postfix: matches[3],
-		source: source
+		postfix: matches[3] || '\n'
 	}
 }})
 

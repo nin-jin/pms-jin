@@ -1,5 +1,5 @@
 $jin.test( function bisect_general( test ){
-	var list = $jin.list( [0,1,2,3,4,5,6,7,8,9] )
+	var list = $jin.list( 0,1,2,3,4,5,6,7,8,9 )
 	var index = list.bisect( function( item ){
 		return item > 3
 	} )
@@ -7,7 +7,7 @@ $jin.test( function bisect_general( test ){
 } )
 
 $jin.test( function bisect_empty( test ){
-	var list = $jin.list( [] )
+	var list = $jin.list()
 	var index = list.bisect( function( item ){
 		return item > 3
 	} )
@@ -15,7 +15,7 @@ $jin.test( function bisect_empty( test ){
 } )
 
 $jin.test( function bisect_all_matches( test ){
-	var list = $jin.list( [0,1,2,3,4,5,6,7,8,9] )
+	var list = $jin.list( 0,1,2,3,4,5,6,7,8,9 )
 	var index = list.bisect( function( item ){
 		return item >= 0
 	} )
@@ -23,7 +23,7 @@ $jin.test( function bisect_all_matches( test ){
 } )
 
 $jin.test( function bisect_no_matches( test ){
-	var list = $jin.list( [0,1,2,3,4,5,6,7,8,9] )
+	var list = $jin.list( 0,1,2,3,4,5,6,7,8,9 )
 	var index = list.bisect( function( item ){
 		return item > 10
 	} )

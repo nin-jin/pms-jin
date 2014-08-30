@@ -1,0 +1,10 @@
+--- jin-editor.sample.html
++++ jin-editor.sample.html
+@@ -1,6 +1,6 @@
+-<div jin-editor="" id="{id}"
++<div jin-editor="{render}" id="{id}"
+ 	jin-sample-props="
+ 		contentEditable=isEditable
+ 	"
+     jin-sample-events="
+ 		oninput=onInput

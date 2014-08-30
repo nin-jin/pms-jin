@@ -14,7 +14,37 @@ $jin.klass({ '$jin.bench.app': [ '$jin.view2' ] })
  */
 $jin.atom.prop({ '$jin.bench.app..setupCode': {
 	pull: function( ){
-		return ''
+		return ( $jin.state.url.item( 'setup' ) || [] ).join( '' )
+	},
+	put: function( next ){
+		$jin.state.url.item( 'setup', next )
+		return next
+	}
+}})
+
+/**
+ * @name $jin.bench.app#tearDownCode
+ * @method tearDownCode
+ * @member $jin.bench.app
+ */
+$jin.atom.prop({ '$jin.bench.app..tearDownCode': {
+	pull: function( ){
+		return ( $jin.state.url.item( 'teardown' ) || [] ).join( '' )
+	},
+	put: function( next ){
+		$jin.state.url.item( 'teardown', next )
+		return next
+	}
+}})
+
+/**
+ * @name $jin.bench.app#titleEditor
+ * @method titleEditor
+ * @member $jin.bench.app
+ */
+$jin.atom.prop({ '$jin.bench.app..titleEditor': {
+	pull: function( ){
+		return [ this.child( 'title', $jin.field ).label( 'Benchmark title' ).valueProp( function(){} ) ]
 	}
 }})
 
@@ -25,7 +55,18 @@ $jin.atom.prop({ '$jin.bench.app..setupCode': {
  */
 $jin.atom.prop({ '$jin.bench.app..setup': {
 	pull: function( ){
-		return this.child( 'setup', $jin.editor ).valueProp( this.setupCode.bind( this ) )
+		return [ this.child( 'setup', $jin.field ).label( 'Set Up' ).valueProp( this.setupCode.bind( this ) ) ]
+	}
+}})
+
+/**
+ * @name $jin.bench.app#tearDown
+ * @method tearDown
+ * @member $jin.bench.app
+ */
+$jin.atom.prop({ '$jin.bench.app..tearDown': {
+	pull: function( ){
+		return [ this.child( 'tearDown', $jin.field ).label( 'Tear Down' ).valueProp( this.tearDownCode.bind( this ) ) ]
 	}
 }})
 
@@ -36,11 +77,27 @@ $jin.atom.prop({ '$jin.bench.app..setup': {
  */
 $jin.atom.prop({ '$jin.bench.app..sources': {
 	pull: function( ){
-		return $jin.state.url.item( 'source' ) || []
+		var next = $jin.state.url.item( 'source' ) || [ 'with({ a: 1 }){\n/*in*/\n    a\n/*out*/\n}' ]
+		next = next.filter( function( source ){
+			return source
+		} )
+		next.push( '' )
+		return next
 	},
 	put: function( next ){
 		$jin.state.url.item( 'source', next )
 		return next
+	}
+}})
+
+/**
+ * @name $jin.bench.app#measures
+ * @method measures
+ * @member $jin.bench.app
+ */
+$jin.atom.prop({ '$jin.bench.app..measures': {
+	pull: function(){
+		return []
 	}
 }})
 
@@ -51,7 +108,7 @@ $jin.atom.prop({ '$jin.bench.app..sources': {
  */
 $jin.method({ '$jin.bench.app..cases': function( ){
 	return this.sources().map( function( code, index ){
-		return this.child( 'row=' + index, $jin.bench.case ).index( index )
+		return this.child( 'case=' + index, $jin.bench.case ).index( index )
 	}.bind( this ) )
 }})
 
@@ -61,9 +118,5 @@ $jin.method({ '$jin.bench.app..cases': function( ){
  * @member $jin.bench.app
  */
 $jin.method({ '$jin.bench.app..run': function( ){
-	var measures = $jin.bench( this.sources() )
-	var cases = this.cases()
-	measures.forEach( function( measure, index ){
-		cases[ index ].measure( measure )
-	} )
+	this.measures( $jin.bench( this.setupCode(), this.sources(), this.tearDownCode() ) )
 }})

@@ -17,7 +17,15 @@ $jin.property({ '$jin.file.base.nativeAPI': function( ){
     return /*$jin.fiberize*/( $node['fs'] )
 }})
 
-$jin.alias( '$jin.registry..id', '$jin.file.base..id', 'path' )
+/**
+ * @name $jin.file.base#id
+ * @method id
+ * @member $jin.file.base
+ */
+$jin.method({ '$jin.file.base..id': function(){
+	this['$jin.registry..id']
+	return this.path.apply( this, arguments )
+}})
 
 /**
  * @name $jin.file.base#path
@@ -381,7 +389,7 @@ $jin.property({ '$jin.file.base.mime': function( ){
  * @member $jin.file.base
  */
 $jin.property({ '$jin.file.base.matcher': function( ){
-	return RegExp( this.ext().replace( /\\./g, '\\.', 'i' ) + '$' )
+	return RegExp( this.ext().replace( /\./g, '\\.' ) + '$', 'i' )
 }})
 
 /**

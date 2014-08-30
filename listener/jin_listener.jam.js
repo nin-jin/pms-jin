@@ -27,10 +27,15 @@ $jin.property({ '$jin.listener..eventName': String })
  */
 $jin.property({ '$jin.listener..handler': null })
 
-$jin.method( '$jin.listener..forget', function( ){
+/**
+ * @name $jin.listener#forget
+ * @method forget
+ * @member $jin.listener
+ */
+$jin.method({ '$jin.listener..forget': function( ){
     this.crier().forget( this.eventName(), this.handler() )
     return this
-} )
+}})
 
 /**
  * @name $jin.listener#destroy

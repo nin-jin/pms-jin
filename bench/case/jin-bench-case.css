@@ -1,25 +1,41 @@
 [jin-bench-case]{
+	display: flex;
+	flex-direction: column;
+	flex-align: stretch;
+	flex: 1;
+}
+
+[jin-bench-case-title]{
 	line-height: 1.5em;
 	font-family: monospace;
-	display: table-row;
-	text-align: left;
-}
-
-[jin-bench-case-code] {
-	display: table-cell;
-	background: white;
-	outline: 1px solid #ccc;
 	white-space: pre;
+	margin: .5em;
+	min-width: 10em;
+	display: flex;
 }
 
-[jin-bench-case-code][jin-view2-focused] {
-	outline: 1px solid steelblue;
+[jin-bench-case-code]{
+	line-height: 1.5em;
+	font-family: monospace;
+	white-space: pre;
+	margin: .5em;
+	min-width: 10em;
+	flex: 1;
+	display: flex;
 }
 
 [jin-bench-case-measure] {
-	display: table-cell;
 	padding: 0 .2em;
+	margin: .5em;
 	text-align: right;
 	font-weight: bold;
 	position: relative;
+	background: #f6f6f6;
+	z-index: 0;
+}
+
+[jin-field-label][jin-view2-focused]:before,
+[jin-field-label]:hover:before {
+	top: -2em;
+	opacity: 1;
 }

@@ -213,36 +213,51 @@ $jin.method({ '$jin.dom.event..transfer': function( ){
  * @member $jin.dom.event
  */
 $jin.property({ '$jin.dom.event..data': function( data ){
+	function encode( data ){
+		var str = JSON.stringify( data )
+		var res = ''
+		for( var i = 0; i < str.length; ++i ){
+			var code = str.charCodeAt(i)
+			res += '\\u'
+			res += ( ( code >> 12 ) % 16 ).toString( 16 )
+			res += ( ( code >> 8 ) % 16 ).toString( 16 )
+			res += ( ( code >> 4 ) % 16 ).toString( 16 )
+			res += ( code % 16 ).toString( 16 )
+		}
+		return res
+	}
+	
+	function decode( str ){
+		return JSON.parse( JSON.parse( '"' + str + '"' ) )
+	}
+	
+	var transfer = this.transfer()
 	if( arguments.length ){
-		var str = data ? JSON.stringify( data ) : data
-		
+		var str = encode( data )
 		$jin.state.local.item( '$jin.dom.event.data', str )
 		
-		if( str ){
-			try {
-				this.transfer().setData( 'text/json', str )
-			} catch( error ){
-				this.transfer().setData( 'Text', str )
-			}
-		}
+		str = '$jin.dom.event.data:' + str
+		//transfer.setData( 'Text', str )
+		try {
+			transfer.setData( str, '' )
+		} catch( error ){ }
 		
 		return data
 	} else {
-		try {
-			var str = this.transfer().getData( 'text/json' )
-		} catch( error ){
-			var str = this.transfer().getData( 'Text' )
+		var str = transfer.getData( 'Text' )
+		if( str ) str = str.split( /^$jin.dom.event.data:/ )[1]
+		if( !str ){
+			var types = transfer.types
+			if( types ) for( var i = 0; i < types.length; ++i ){
+				var type = transfer.types[i]
+				if( !type ) continue
+				str = type.split( /^$jin.dom.event.data:/ )[1]
+				if( !str ) continue
+			}
 		}
-		
 		if( !str ) str = $jin.state.local.item( '$jin.dom.event.data' )
-		if( !str ) return null
-		
-		try {
-			return JSON.parse( str )
-		} catch( error ){
-			$jin.log.error( error )
-			return null
-		}
+		if( !str ) return {}
+		return decode( str )
 	}
 }})
 

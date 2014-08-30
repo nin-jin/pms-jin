@@ -14,23 +14,20 @@ $jin.klass({ '$jin.dnd.event': [ '$jin.dom.event' ] })
  */
 $jin.method({ '$jin.dnd.event..view': function( dom, x, y ){
 
-	if( dom ){
-		dom = $jin.dom( dom )
-	} else {
-		var autoDom = dom = $jin.doc().makeElement( 'div' )
-		dom.nativeNode().style.background = 'red'
-		dom.nativeNode().style.visibility = 'hidden'
-		dom.parent( document.body )
-		x = y =-16
-	}
-
+	dom = $jin.dom( dom || '<div></div>' )
+	dom.parent( document.body )
+	dom.nativeNode().style.position = 'absolute'
+	dom.nativeNode().style.zIndex = '-1'
+	
+	var transfer = this.transfer()
+	var node = dom.nativeNode()
 	try {
-		this.transfer().setDragImage( dom.nativeNode(), x, y )
+		transfer.setDragImage( node, x, y )
 	} catch( e ){ }
-
-	if( autoDom ) $jin.schedule( 0, function( ){
-		autoDom.parent( null )
-	} )
+	
+	$jin.schedule( 0, function(){
+		dom.parent( null )
+	})
 
 	return this
 }})

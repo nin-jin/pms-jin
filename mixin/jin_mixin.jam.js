@@ -23,6 +23,7 @@ $jin.definer({ '$jin.mixin': function( targetPath, sourcePathList ){
  * @member $jin.mixin
  */
 $jin.definer({ '$jin.mixin.object': function( targetPath, sourcePathList ){
+	targetPath = String( targetPath )
     var target = $jin.trait( targetPath )
     
     sourcePathList.forEach( function( sourcePath ){

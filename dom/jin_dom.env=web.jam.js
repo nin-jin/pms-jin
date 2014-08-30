@@ -8,7 +8,9 @@ $jin.method({ '$jin.dom..html': function( html ){
         this.nativeNode().innerHTML = html
         return this
     } else {
-        return this.nativeNode().innerHTML
+		var node = this.nativeNode()
+		if( 'innerHTML' in node ) return node.innerHTML
+        return this.toString()
     }
 }})
 

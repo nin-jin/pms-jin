@@ -5,29 +5,29 @@
  * @member $jin.atom
  */
 $jin.definer({ '$jin.atom.prop': function( path, config ){
-    
-	var pull = config.pull
-	if( pull && !pull.displayName ) pull.displayName = path + '.pull'
-
-	var put = config.put
-	if( put && !put.displayName ) put.displayName = path + '.put'
-
-	var push = config.push
-	if( push && !push.displayName ) push.displayName = path + '.push'
-
-	var merge = config.merge
-	if( merge && !merge.displayName ) merge.displayName = path + '.merge'
-
+    if( !config.name ) config.name = path
+	
+	config.clear = config.clear || function( ){
+		this[ fieldName ] = null;
+	}
+	
     var prop = function jin_atom_prop_accessor( next ){
         var atom = propAtom.call( this )
         if( !arguments.length ) return atom.get()
         
+		if( next === void 0 ){
+			atom.clear()
+			return this
+		}
+		
 		var prev = atom.value()
-		var next2 = merge ? merge.call( this, next, prev ) : next
+		var next2 = config.merge ? config.merge.call( this, next, prev ) : next
 		
-		var next3 = ( put && ( next2 !== prev ) ) ? put.call( this, next2, prev ) : next2
+		if( next2 === prev ) return this
 		
-        atom.put( next3 )
+		var next3 = config.put ? config.put.call( this, next2, prev ) : next2
+		
+		if( next3 !== void 0 ) atom.put( next3 )
 		
         return this
     }
@@ -35,18 +35,11 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
     var fieldName = '_' + path
     
     var propAtom = function jin_atom_prop_stor( ){
-        var atom = this[ fieldName ]
-        
-        if( atom ) return atom
-        
-        return this[ fieldName ] = new $jin.atom(
-		{	name: path /*+ ':' + this.id()*/
-		,	context: this
-		,	pull: pull
-		,	push: push
-		,	merge: merge
-		,	value: config.value
-		} )
+		var atom = this[ fieldName ]
+		if( atom ) return atom
+		
+		config.context = this
+        return this[ fieldName ] = Atom( config )
     }
 
 	prop.jin_method_resolves = config.resolves || []
@@ -57,6 +50,47 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
 	$jin.method( path, prop )
 	$jin.method( path + '_atom', propAtom )
 
+	// var Atom = $jin.klass( path + '.atom', [ '$jin.atom.variable' ] ) // very slow init
+	var Atom = $jin.atom.subClass({})
+	
+	Atom.prototype._name = path
+	
+	if( config.get ){
+		config.get.displayName = path + '.get'
+		Atom.prototype._get = config.get
+		$jin.mixin( Atom, [ '$jin.atom.getable' ] )
+	}
+	
+	if( config.pull ){
+		config.pull.displayName = path + '.pull'
+		Atom.prototype._pull = config.pull
+		$jin.mixin( Atom, [ '$jin.atom.pullable' ] )
+	}
+	
+	if( config.clear ){
+		config.clear.displayName = path + '.clear'
+		Atom.prototype._clear = config.clear
+		$jin.mixin( Atom, [ '$jin.atom.clearable' ] )
+	}
+	
+	if( config.push ){
+		config.push.displayName = path + '.push'
+		Atom.prototype._push = config.push
+		$jin.mixin( Atom, [ '$jin.atom.pushable' ] )
+	}
+	
+	if( config.fail ){
+		config.push.displayName = path + '.fail'
+		Atom.prototype._fail = config.fail
+		$jin.mixin( Atom, [ '$jin.atom.failable' ] )
+	}
+	
+	if( config.merge ){
+		config.merge.displayName = path + '.merge'
+		Atom.prototype._merge = config.merge
+		$jin.mixin( Atom, [ '$jin.atom.mergable' ] )
+	}
+	
     return prop
 }})
 
@@ -67,24 +101,26 @@ $jin.definer({ '$jin.atom.prop': function( path, config ){
  * @member $jin.atom.prop
  */
 $jin.definer({ '$jin.atom.prop.list': function( path, config ){
-	if( !config.merge ) config.merge = function( next, prev ){
-		if( !prev || !next ) return next
+	var baseMerge = config.merge
+	config.merge = function( next, prev ){
+		if( !next ) return next
 		
-		if( next.length !== prev.length ) return next
-		
-		for( var i = 0; i < next.length; ++i ){
-			if( next[ i ] === prev[ i ] ) continue
-			return next
+		if( baseMerge ){
+			next = baseMerge.call( this, next, prev )
+			if( next === prev ) return next;
 		}
 		
-		return prev
+		if( !prev ) return next
+		if( $jin.list.isEqual( next, prev ) ) return prev
+		
+		return next
 	}
 	
 	$jin.atom.prop( path, config )
 	
 	var propName = path.replace( /([$\w]*\.)+/, '' )
 	
-	$jin.method( path + '_add', function( newItems ){
+	var add = function( newItems ){
         var items = this[ propName + '_atom' ]().value() || []
         
 		if( config.merge ) newItems = config.merge.call( this, newItems )
@@ -97,29 +133,41 @@ $jin.definer({ '$jin.atom.prop.list': function( path, config ){
         this[propName]( items )
 		
 		return this
+	}
+	add.jin_method_resolves = ( config.resolves || [] ).map( function( path ){
+		return path + '_add'
 	} )
+	$jin.method( path + '_add', add )
 	
-	$jin.method( path + '_drop', function( oldItems ){
+	var drop = function( dropItems ){
 		var items = this[ propName + '_atom' ]().value() || []
         
-		if( config.merge ) oldItems = config.merge.call( this, oldItems )
+		if( config.merge ) dropItems = config.merge.call( this, dropItems )
 		
         items = items.filter( function( item ){
-            return !~oldItems.indexOf( item )
+            return dropItems.indexOf( item ) === -1
         })
         
         this[propName]( items )
 		
 		return this
-    } )
-	
-	$jin.method( path + '_has', function( item ){
+    }
+	drop.jin_method_resolves = ( config.resolves || [] ).map( function( path ){
+		return path + '_drop'
+	} )
+	$jin.method( path + '_drop', drop )
+
+	var has = function( item ){
 		if( config.merge ) item = config.merge.call( this, [ item ] )[ 0 ]
 		var items = this[propName]()
 		if( !items ) return items
         
         return items.indexOf( item ) >= 0 
-    } )
+    }
+	has.jin_method_resolves = ( config.resolves || [] ).map( function( path ){
+		return path + '_has'
+	} )
+	$jin.method( path + '_has', has )
 	
 }})
 
@@ -145,9 +193,11 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
 		if( merge ) next = merge.call( this, key, next, prev )
 		
         if( put && ( next !== prev ) ) next = put.call( this, key, next, prev )
-		atom.value( next )
 		
-		return this
+		if( next === void 0 ) atom.clear()
+		else atom.put( next )
+		
+		return this;
     }
     
     var fieldName = fieldName = '_' + path
@@ -164,8 +214,8 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
         var atom = atomHash[ key ]
         if( atom ) return atom
         
-        return atomHash[ key ] = new $jin.atom(
-		{	name: path/* + ':' + this.id()*/
+        return atomHash[ key ] = $jin.atom(
+		{	name: path + ':' + key /* + ':' + this.id()*/
 		,	context: context
 		,	pull: pull && function( prev ){
 				return pull.call( context, key, prev )
@@ -185,7 +235,7 @@ $jin.definer({ '$jin.atom.prop.hash': function( path, config ){
 	
 	$jin.method( path + '_clear', function( ){
 		var atomHash = this[ fieldName ]
-		for( var key in atomHash ) atomHash[ key ].put( void 0 )
+		for( var key in atomHash ) atomHash[ key ].clear()
     } )
 	
     return prop

@@ -1,19 +1,20 @@
 <div jin-bench-case="" id="{id}">
-	<div jin-bench-case-code=""
-	    jin-view2-focused="{focused}"
-		>
-		{editor}
+	<div jin-bench-case-measure="compileOuter">
+		{measureCompileOuter}
 	</div>
-	<div jin-bench-case-measure="">
-		{measureExecuteInner}
-	</div>
-	<div jin-bench-case-measure="">
+	<div jin-bench-case-measure="compileInner">
 		{measureCompileInner}
 	</div>
-	<div jin-bench-case-measure="">
+	<div jin-bench-case-measure="executeOuter">
 		{measureExecuteOuter}
 	</div>
-	<div jin-bench-case-measure="">
-		{measureCompileOuter}
+	<div jin-bench-case-measure="executeInner">
+		{measureExecuteInner}
+	</div>
+	<div jin-bench-case-title="">
+		{title}
+	</div>
+	<div jin-bench-case-code="">
+		{code}
 	</div>
 </div>

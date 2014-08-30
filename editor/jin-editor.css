@@ -1,5 +1,6 @@
 [jin-editor]{
 	padding: .2em .4em;
+	flex: 1;
 }
 
 [jin-editor] p {

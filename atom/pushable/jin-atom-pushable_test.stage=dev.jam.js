@@ -1,0 +1,17 @@
+$jin.test( function pushing( test ){
+	var x
+    var y = $jin.atom({
+		name: 'test',
+		pull: function(){
+			return 12
+		},
+		push: function( next, prev ){
+			x = next + '<-' + prev
+		}
+	})
+	y.get()
+	
+	$jin.defer( function( ){
+	    test.equal( x, '12<-undefined' )
+	} )
+} )

@@ -1,5 +1,6 @@
 $jin.test( function getting( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return 123
 		}
@@ -10,6 +11,7 @@ $jin.test( function getting( test ){
 
 $jin.test( function memorizing( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return Math.random()
 		}
@@ -23,13 +25,14 @@ $jin.test( function memorizing( test ){
 
 $jin.test( function resetting( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return Math.random()
 		}
 	})
     
 	var x1 = x.get()
-    x.value( void 0 )
+    x.clear()
     var x2 = x.get()
     
 	test.unique( x1, x2 )
@@ -37,21 +40,21 @@ $jin.test( function resetting( test ){
 
 $jin.test( function pulling( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function( ){
 			return Math.random()
 		}
 	})
 	
 	var x1 = x.get()
-	var x2 = x.pull()
-	var x3 = x.get()
+	var x2 = x.pull().get()
     
 	test.unique( x1, x2 )
-    test.equal( x2, x3 )
 } )
 
 $jin.test( function prev_accessing( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function( old ){
 			return old || Math.random()
 		}
@@ -65,6 +68,7 @@ $jin.test( function prev_accessing( test ){
 
 $jin.test( function stringifing( test ){
     var x = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return 'foo'
 		}
@@ -75,6 +79,7 @@ $jin.test( function stringifing( test ){
 
 $jin.test( function numberifing( test ){
     var y = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return 11
 		}
@@ -83,30 +88,16 @@ $jin.test( function numberifing( test ){
 	test.equal( y + 31, 42 )
 } )
 
-$jin.test( function pushing( test ){
-	var x
-    var y = $jin.atom(
-	{	pull: function(){
-			return 12
-		}
-	,	push: function( next, prev ){
-			x = next + '<-' + prev
-		}
-	} )
-	y.get()
-	
-    test.equal( x, '12<-undefined' )
-} )
-
 $jin.test( function merging( test ){
-    var x = $jin.atom(
-	{	pull: function(){
+    var x = $jin.atom({
+		name: 'test',
+		pull: function(){
 			return 12
-		}
-	,	merge: function( next, prev ){
+		},
+		merge: function( next, prev ){
 			return next + '<-' + prev
 		}
-	} )
+	})
 	var x1 = x.get()
 	
     test.equal( x1, '12<-undefined' )
@@ -116,12 +107,14 @@ $jin.test( function tracking( test ){
     test.timeout( 100 )
     
 	var x = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return 21
 		}
 	})
     
 	var y = $jin.atom({
+		name: 'test',
 		pull: function(){
 			return x + 30
 		}
@@ -137,26 +130,18 @@ $jin.test( function tracking( test ){
     } )
 } )
 
-$jin.test( function mutating( test ){
-    var x = $jin.atom({
-		value: 12
-	})
-	
-	x.mutate( function( prev ){
-		return prev + 30
-	} )
-	
-	test.equal( x.get(), 42 )
-} )
-
 $jin.test( function failing_while_pulling( test ){
     test.timeout( 200 )
 	
 	var error = $jin.log.error.ignore( new Error( 'test error' ) )
 	
-    var x = $jin.atom({ merge: Boolean })
+    var x = $jin.atom({
+		name: 'test',
+		merge: Boolean
+	})
     
 	var y = $jin.atom({
+		name: 'test',
 		pull: function(){
 			if( x.get() ) throw error
 			else return 12
@@ -164,6 +149,7 @@ $jin.test( function failing_while_pulling( test ){
 	})
     
 	var z = $jin.atom({
+		name: 'test',
 		pull: function( ){
 			return y + 30
 		}
@@ -174,27 +160,27 @@ $jin.test( function failing_while_pulling( test ){
 	
     $jin.defer( function( ){
 		try {
-			var z2 = z.get()
+			throw z.get()
 		} catch( err ){
 			test.equal( error, err ).done( true )
 		}
     })
 } )
 
-$jin.test( function reaping( test ){
-	test.timeout( 100 )
-    var x = 1
-    var y = $jin.atom({ pull: function( ){
-		return x + 1
-	} })
-    var z = $jin.atom({ pull: function( ){
-		return y + 1
-	} })
-    z.get()
-    x = 2
-    z.disobeyAll()
-	$jin.schedule( 10, function(){
-		test.equal( y.get(), 3 )
-		test.done( true )
-	} )
-} )
+//$jin.test( function reaping( test ){
+//	test.timeout( 100 )
+//    var x = 1
+//    var y = $jin.atom({ pull: function( ){
+//		return x + 1
+//	} })
+//    var z = $jin.atom({ pull: function( ){
+//		return y + 1
+//	} })
+//    z.get()
+//    z.disobeyAll()
+//    x = 2
+//	$jin.schedule( 10, function(){
+//		test.equal( y.get(), 3 )
+//		test.done( true )
+//	} )
+//} )

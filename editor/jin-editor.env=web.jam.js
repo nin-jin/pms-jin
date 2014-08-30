@@ -32,6 +32,16 @@ $jin.atom.prop({ '$jin.editor..valueProp': {
 }})
 
 /**
+ * @name $jin.editor#render
+ * @method render
+ * @member $jin.editor
+ */
+$jin.method({ '$jin.editor..render': function( ){
+	this.value()
+	return true
+}})
+
+/**
  * @name $jin.editor#value
  * @method value
  * @member $jin.editor
@@ -43,6 +53,48 @@ $jin.atom.prop({ '$jin.editor..value': {
 	put: function( next ){
 		this.valueProp()( next )
 		return next
+	},
+	push: function( next ){
+		if( next == null ) return
+		
+		//$jin.log( 'from', JSON.stringify( this.element().text() ) )
+		//$jin.log( 'next', JSON.stringify( next ) )
+		
+		var content = next.split( '\n' ).map( function( str ){
+			return {
+				nodeName: 'div',
+				childNodes: str
+				? [
+					str,
+					{ nodeName: 'br' }
+				] : [
+					{ nodeName: 'br' }
+				]
+			}
+		} )
+		
+		//$jin.log( 'next', JSON.stringify( content ) )
+		
+		var sel = $jin.dom.range.create()
+		var target = this.element()
+		
+		var offsetStart = $jin.dom( target.rangeContent().equalize( 'end2start', sel ).nativeRange().cloneContents() ).text().length
+		var offsetEnd = $jin.dom( target.rangeContent().equalize( 'end2end', sel ).nativeRange().cloneContents() ).text().length
+		
+		this.element().tree( content )
+		
+		var zone = target.rangeContent()
+		var selStart = zone.clone().move( offsetStart )
+		var selEnd = zone.clone().move( offsetEnd )
+		
+		zone
+			.equalize( 'start2start', selStart )
+			.equalize( 'end2end', selEnd )
+			.select()
+		
+		$jin.log( offsetStart, offsetEnd )
+		
+		//$jin.log( 'to', JSON.stringify( this.element().text() ) )
 	}
 }})
 
@@ -55,9 +107,6 @@ $jin.method({ '$jin.editor..onInput': function( event ){
 
 	var target = event.target();
 
-//	var sel = $jin.dom.range.create();
-//	var offsetStart = target.rangeContent().equalize( 'end2start', sel ).nativeRange().cloneContents().textContent.length
-//	var offsetEnd = target.rangeContent().equalize( 'end2end', sel ).nativeRange().cloneContents().textContent.length
 //
 //	//	target.normalize({
 //	//		'#text': function( node ){
@@ -81,23 +130,8 @@ $jin.method({ '$jin.editor..onInput': function( event ){
 //		.equalize( 'end2end', selEnd )
 //		.select()
 
-	var text = target.text()
-
-	var content = text.split( '\n' ).map( function( str ){
-		return {
-			nodeName: 'div',
-			childNodes: str
-			? [
-				{ nodeName: '#text', nodeValue: str },
-				{ nodeName: 'br' }
-			] : [
-				{ nodeName: 'br' }
-			]
-		}
-	})
-
-	target.tree( content )
-
+	var text = target.text().replace( /\n$/, '' )
+	
 	this.value( text )
 }})
 
@@ -117,4 +151,27 @@ $jin.method({ '$jin.editor..onFocus': function( event ){
  */
 $jin.method({ '$jin.editor..onBlur': function( event ){
 	this.focused( null )
+}})
+
+/**
+ * @name $jin.editor#onKeyPress
+ * @method onKeyPress
+ * @member $jin.editor
+ */
+$jin.method({ '$jin.editor..onKeyPress': function( event ){
+
+	var target = event.target();
+
+	if( event.keyCode() === 13 ){
+		var br = target.makeElement( 'br' )
+		$jin.dom.range.create().replace( br )
+
+		var next = br.next()
+		if( next ) next.rangeContent().collapse2start().select()
+		else br.rangeContent().collapse2end().select()
+
+		event.catched( true )
+	}
+	
+	this.onInput( event )
 }})

@@ -15,15 +15,11 @@
  * @static
  * @member $jin
  */
-$jin.definer({ '$jin.method': function( ){ // arguments: resolveName*, path, func
-    var resolveList = [].slice.call( arguments )
-    var func = resolveList.pop()
-    
-	var name = resolveList.pop()
-	if( !name ) throw new Error( 'Not defined method name' )
+$jin.definer({ '$jin.method': function( name, func ){
 	
-	if( !func.jin_method_resolves ){
-		func.jin_method_resolves = resolveList
+	var resolveList = func.jin_method_resolves
+	if( !resolveList ){
+		resolveList = func.jin_method_resolves = []
 		Object.toString.call( func ).replace( /['"](\$[.\w]+)['"]/g, function( str, token ){
 			if( resolveList.indexOf( token ) >= 0 ) return str
 			resolveList.push( token )

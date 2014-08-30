@@ -20,7 +20,7 @@
  *
  * Typical usage:
  *     var formatTime = $jin.time.format( 'Weekday, YYYY-MM-DD hh:mm' )
- *     formatTime( $jin.time() )
+ *     formatTime( $jin.time.moment() )
  *
  * @name $jin.time.format
  * @method format
@@ -40,10 +40,9 @@ $jin.property.hash({ '$jin.time.format': { pull: function( pattern ) {
 
 	var lexer = RegExp( '(.*?)(' + patterns.join( '|' ) + '|$)', 'g' )
 	pattern.replace( lexer, function( str, text, token ){
-		if( text ) funcs.push( text )
+		if( text ) funcs.push( $jin.value( text ) )
 		if( token ) funcs.push( lexems[ token ] )
 	})
 
 	return $jin.concater( funcs )
 }}})
-

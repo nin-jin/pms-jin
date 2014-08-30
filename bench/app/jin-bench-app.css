@@ -1,23 +1,67 @@
+@-webkit-keyframes jin-bench-app-show {
+	from {
+		-webkit-transform: scaleX( 0 );
+	}
+	to {
+		-webkit-transform: scaleX( 1 );
+	}
+}
+
+@keyframes jin-bench-app-show {
+	from {
+		transform: scaleX( 0 );
+	}
+	to {
+		transform: scaleX( 1 );
+	}
+}
+
 [jin-bench-app]{
+	line-height: 1.5em;
+	font-family: monospace;
 	box-sizing: border-box;
 	padding: 1%;
-	display: inline-block;
+	display: inline-flex;
+	flex-direction: column;
+	text-align: left;
+	min-width: 60em;
+}
+
+[jin-bench-app] * {
+	-webkit-animation: jin-bench-app-show .1s;
+	animation: jin-bench-app-show .1s;
+}
+
+[jin-bench-app-head] {
+	margin: .5em;
+	text-align: center;
 }
 
 [jin-bench-app-setup] {
-	background: white;
-	outline: 1px solid #ccc;
 	white-space: pre;
-	text-align: left;
-	margin: 1em;
+	margin: .5em;
+	line-height: 1.5em;
+	font-family: monospace;
 }
 
 [jin-bench-app-setup][jin-view2-focused="setup"] {
 	outline: 1px solid steelblue;
 }
 
+[jin-bench-app-tearDown] {
+	white-space: pre;
+	margin: .5em;
+	line-height: 1.5em;
+	font-family: monospace;
+}
+
+[jin-bench-app-tearDown][jin-view2-focused="tearDown"] {
+	outline: 1px solid steelblue;
+}
+
 [jin-bench-app-cases]{
-	display: inline-table;
-	border-spacing: 1em;
+	display: flex;
+	flex-direction: row-reverse;
+	border-spacing: 1em 0;
 }
 

@@ -7,7 +7,15 @@
  */
 $jin.klass({ '$jin.dom.selection': [ '$jin.wrapper' ] })
 
-$jin.alias( '$jin.wrapper..raw', '$jin.dom.selection..raw', 'nativeSelection' )
+/**
+ * @name $jin.dom.selection#raw
+ * @method raw
+ * @member $jin.dom.selection
+ */
+$jin.method({ '$jin.dom.selection..raw': function(){
+	this['$jin.wrapper..raw']
+	return this.nativeSelection.apply( this, arguments )
+}})
 
 /**
  * @name $jin.dom.selection#nativeSelection

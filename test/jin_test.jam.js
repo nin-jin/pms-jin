@@ -31,26 +31,16 @@ $jin.property({ '$jin.test.pendingList': Array })
 $jin.property({ '$jin.test.running': Array })
 
 /**
- * @name $jin.test.timer
- * @method timer
+ * @name $jin.test.start
+ * @method start
  * @static
  * @member $jin.test
  */
-$jin.property({ '$jin.test.timer': null })
-
-/**
- * @name $jin.test.next
- * @method next
- * @static
- * @member $jin.test
- */
-$jin.method({ '$jin.test.next': function( next ){
-	if( arguments.length ) this.pendingList().push( next )
-	clearTimeout( this.timer() )
-	this.timer( setTimeout( function( ){
-	    var next = this.pendingList()[0]
+$jin.method({ '$jin.test.start': function( ){
+	setTimeout( function(){
+		var next = this.pendingList().shift()
 		if( next ) next.run()
-	}.bind( this ), 0 ) )
+	}.bind( this ), 0 )
 }})
 
 /**
@@ -110,7 +100,7 @@ $jin.property({ '$jin.test..errors': Array })
 $jin.method({ '$jin.test..init': function( code ){
     this['$jin.klass..init']
     this.code( code )
-	this.constructor.next( this )
+	this.constructor.pendingList().push( this )
     return this
 }})
 
@@ -170,7 +160,8 @@ $jin.method({ '$jin.test..run': function( ){
  */
 $jin.property({ '$jin.test..done': function( done ){
     if( !arguments.length ) return false
-    
+    if( this.done() ) return true
+	
     this.timer( clearTimeout( this.timer() ) )
     
     var passed = true
@@ -180,11 +171,7 @@ $jin.property({ '$jin.test..done': function( done ){
     this.passed( passed )
     
     this.constructor.completeList().push( this )
-    var pendingList = this.constructor.pendingList()
-	var index = pendingList.indexOf( this )
-    if( index > -1 ) pendingList.splice( index, 1 )
-	
-	this.constructor.next()
+	this.constructor.start()
 
     return this
 }})

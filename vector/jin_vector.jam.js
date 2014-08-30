@@ -8,6 +8,22 @@
 $jin.klass({ '$jin.vector': [ '$jin.wrapper' ] })
 
 /**
+ * @name $jin.vector#init
+ * @method init
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..init': function( data ){
+	if( !arguments.length ) data = []
+	switch( $jin.type( data ) ){
+		case 'Array':
+			return this['$jin.wrapper..init']( data )
+		case 'Object':
+			return this['$jin.wrapper..init']([]).json( data )
+	}
+	throw new Error( 'Wrong data for vector' )
+}})
+
+/**
  * @name $jin.vector#x
  * @method x
  * @member $jin.vector
@@ -64,5 +80,32 @@ $jin.method({ '$jin.vector.merge': function( merger, left, right ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector..summ': function( right ){
-	return $jin.vector.merge( function( a, b ){ return a + b }, this, right )
+	return $jin.vector.merge( $jin.merge.summ, this, right )
+}})
+
+/**
+ * @name $jin.vector#sub
+ * @method sub
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..sub': function( right ){
+	return $jin.vector.merge( $jin.merge.sub, this, right )
+}})
+
+/**
+ * @name $jin.vector#mult
+ * @method mult
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..mult': function( right ){
+	return $jin.vector.merge( $jin.merge.mult, this, right )
+}})
+
+/**
+ * @name $jin.vector#div
+ * @method div
+ * @member $jin.vector
+ */
+$jin.method({ '$jin.vector..div': function( right ){
+	return $jin.vector.merge( $jin.merge.div, this, right )
 }})

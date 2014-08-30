@@ -3,18 +3,17 @@ $jin.glob = function $jin_glob( name, value ){
     var current = $jin.root()
     var currentName = ''
     
-    while( keyList.length > 1 ){
-        var key = keyList.shift() || 'prototype'
-        currentName += ( currentName ? '.' : '' ) + ( key === 'prototype' ? '' : key )
+    for( var i = 0; i < keyList.length - 1; ++i ){
+        var key = keyList[i] || 'prototype'
         
         if(!( key in current )){
-            current[ key ] = $jin.trait.make( currentName )
+            current[ key ] = $jin.trait.make( keyList.slice( 0, i + 1 ).join( '.' ) )
         }
         
         current = current[ key ]
     }
     
-    var key = keyList.shift() || 'prototype'
+    var key = keyList[ keyList.length - 1 ] || 'prototype'
     
     if( arguments.length > 1 ){
         current[ key ] = value

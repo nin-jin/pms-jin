@@ -1,0 +1,8 @@
+> title string =qwerty
+> false bool =false
+> disabled-val false
+input
+ @ value concat
+  title
+  string =123456
+ @ disabled disabled-val

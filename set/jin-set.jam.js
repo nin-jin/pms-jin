@@ -1,85 +1,105 @@
 /**
+ * Упорядоченное множество.
+ * Попытка добавления уже существующего элемента игнорируется.
+ * Уникальность определяется по строковому представлению элемента.
+ * Для быстрого поиска смещений хранит внутри себя индекс.
+ * 
+ * Сложность:
+ * indexOf - первый раз O(length), далее O(1).
+ * push - O(1).
+ * pop - O(1).
+ * shift - O(1).
+ * unshift - O(1).
+ * splice - будет O(del+add+tail), пока использовать нельзя ибо ломает индекс.
+ * reverse - O(length), пока использовать нельзя ибо ломает индекс.
+ * 
  * @name $jin.set
  * @class $jin.set
  * @returns $jin.set
- * @mixins $jin.klass
- * @mixins $jin.list
+ * @method collection
+ * @member $jin
+ * @static
  */
-$jin.klass({ '$jin.set': [ '$jin.list' ] })
 
 /**
- * @name $jin.set#init
- * @method init
+ * @name $jin.set#index
+ * @method index
  * @member $jin.set
+ * @static
  */
-$jin.method({ '$jin.set..init': function( raw ){
-	raw.forEach( function( value ){
-		raw[ '?' + value ] = value
-	})
-    this['$jin.wrapper..init']( raw )
-    return this
+$jin.property({ '$jin.set..index': function( ){
+	var index = {}
+	
+	for( var i = 0; i < this.length; ++i ){
+		index[ this[ i ] ] = i
+	}
+	
+	return index
 }})
 
 /**
- * @name $jin.set#has
- * @method has
+ * @name $jin.set#indexOffset
+ * @method indexOffset
  * @member $jin.set
  */
-$jin.method({ '$jin.set..has': function( value ){
-	return this.raw()[ '?' + value ] !== void 0
-}})
-
-
-/**
- * @name $jin.set#head
- * @method head
- * @member $jin.set
- */
-$jin.method({ '$jin.set..head': function( value ){
-	if( !arguments.length ) this['$jin.list..head']()
-	
-	var raw = this.raw()
-	
-	var key = '?' + value
-	if( raw[ key ] !== void 0 ) return this
-	
-	this['$jin.list..head']( value )
-	raw[ key ] = value
-	
-	return this
+$jin.property({ '$jin.set..indexOffset': function( offset ){
+	if( arguments.length ) return offset
+	return 0
 }})
 
 /**
- * @name $jin.set#spit
- * @method spit
+ * @name $jin.set#indexOf
+ * @method indexOf
  * @member $jin.set
  */
-$jin.method({ '$jin.set..spit': function( ){
-    this['$jin.list..spit']
-	var raw = this.raw()
-	var value = raw.shift()
-	raw[ '?' + value ] === void 0
-	return value
+$jin.method({ '$jin.set..indexOf': function( value ){
+	var index = this.index()[ value ]
+	return ( index === void 0 ) ? -1 : index + this.indexOffset()
 }})
 
-
 /**
- * @name $jin.set#tail
- * @method tail
+ * @name $jin.set#unshift
+ * @method unshift
  * @member $jin.set
  */
-$jin.method({ '$jin.set..tail': function( value ){
-	if( !arguments.length ) this['$jin.list..tail']()
+$jin.method({ '$jin.set..unshift': function( value ){
+	var index = this.index()
+	if( index[ value ] !== void 0 ) return
 	
-	var raw = this.raw()
+	++this.indexOffset
+	index[ value ] = -this.indexOffset
 	
-	var key = '?' + value
-	if( raw[ key ] !== void 0 ) return this
+	return Array.prototype.unshift.call( this, value )
+}})
+
+/**
+ * @name $jin.set#shift
+ * @method shift
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..shift': function( ){
+	var index = this.index()
 	
-	this['$jin.list..tail']( value )
-	raw[ key ] = value
+	if( this.length > 0 ){
+		delete index[ this[0] ]
+		--this.indexOffset
+	}
 	
-	return this
+	return Array.prototype.shift.call( this )
+}})
+
+/**
+ * @name $jin.set#push
+ * @method push
+ * @member $jin.set
+ */
+$jin.method({ '$jin.set..push': function( value ){
+	var index = this.index()
+	if( index[ value ] !== void 0 ) return
+	
+	index[ value ] = this.length
+	
+	return Array.prototype.push.call( this, value )
 }})
 
 /**
@@ -88,29 +108,11 @@ $jin.method({ '$jin.set..tail': function( value ){
  * @member $jin.set
  */
 $jin.method({ '$jin.set..pop': function( ){
-    this['$jin.list..pop']
-	var raw = this.raw()
-	var value = raw.pop()
-	raw[ '?' + value ] === void 0
-	return value
-}})
-
-/**
- * @name $jin.set#item
- * @method item
- * @member $jin.set
- */
-$jin.method({ '$jin.set..item': function( index, next ){
-    this['$jin.list..item']
-	var raw = this.raw()
+	var index = this.index()
 	
-	if( arguments.length < 2 ) return this.raw()[ index ]
+	if( this.length > 0 ){
+		delete index[ this[ this.length - 1 ] ]
+	}
 	
-	var prev = raw[ index ]
-	if( prev !== void 0 ) raw[ '?' + prev ] = void 0
-	
-	raw[ '?' + next ] = next
-	raw[ index ] = next
-	
-	return this
+	return Array.prototype.pop.call( this )
 }})

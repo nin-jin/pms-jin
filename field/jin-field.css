@@ -1,0 +1,41 @@
+[jin-field] {
+	display: flex;
+	flex: 1;
+	background: white;
+	outline: 1px solid #ccc;
+	text-align: left;
+	position: relative;
+}
+
+[jin-field-label]:before {
+	display: block;
+	content: attr( jin-field-label );
+	position: absolute;
+	right: -1px;
+	top: -1px;
+	background: #eee;
+	z-index: -1;
+	/*font: 11px/1 sans-serif;*/
+	border: 1px solid #ccc;
+	padding: .2em .5em;
+	opacity: 0.85;
+	/*transition: top .1s .1s ease-in-out;*/
+	border-radius: 2px;
+	white-space: nowrap;
+}
+
+[jin-field-label][jin-view2-focused]:before,
+[jin-field-label]:hover:before {
+	top: -2em;
+	opacity: 1;
+	z-index: 1;
+}
+
+[jin-field][jin-view2-focused] {
+	outline: 1px solid steelblue;
+}
+
+[jin-field][jin-view2-focused]:before {
+	border: 1px solid steelblue;
+	border-bottom: 1px solid #ccc;
+}

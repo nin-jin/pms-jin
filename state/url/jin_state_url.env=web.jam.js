@@ -38,7 +38,9 @@ $jin.atom.prop.hash( '$jin.state.url.item',
         
         if( value == null ) delete hash[ key ]
         else hash[ key ] = value
-        
-        document.location = '#' + $jin.uri.query( hash ).toString( ';=' )
+
+		document.location = '#' + $jin.uri.query( hash ).toString( ';=' )
+
+		return value
     }
 } )

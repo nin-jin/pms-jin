@@ -1,10 +1,11 @@
-<div jin-editor="" id="{id}"
+<div jin-editor="{render}" id="{id}"
+	jin-editor-name="{name}"
 	jin-sample-props="
 		contentEditable=isEditable
 	"
     jin-sample-events="
 		oninput=onInput
-		-onkeypress=onInput
+		onkeypress=onKeyPress
 		-onkeyup=onInput
 		-onmouseup=onInput
 		-onchange=onInput
@@ -13,5 +14,4 @@
 		onblur=onBlur
     "
 	>
-	{value}
 </div>

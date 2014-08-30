@@ -4,13 +4,19 @@
  * @static
  * @member $jin
  */
-$jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, filter
-    var resolveList = [].slice.call( arguments )
-    var filter = resolveList.pop()
-    var name = resolveList.pop()
+$jin.definer({ '$jin.property': function( name, filter ){
     var fieldName = '_' + name
 	
 	if( filter ){
+		var resolveList = filter.jin_method_resolves
+		if( !resolveList ){
+			resolveList = filter.jin_method_resolves = []
+			Object.toString.call( filter ).replace( /['"](\$[.\w]+)['"]/g, function( str, token ){
+				if( resolveList.indexOf( token ) >= 0 ) return str
+				resolveList.push( token )
+			})
+		}
+		
 		var property = function( next ){
 			var prev = this[ fieldName ]
 			if( arguments.length ){
@@ -40,7 +46,7 @@ $jin.definer({ '$jin.property': function( ){ // arguments: resolveName*, path, f
 		}
 	}
     
-    property.jin_method_resolves = filter && filter.jin_method_resolves || resolveList
+    property.jin_method_resolves = resolveList
     
     return $jin.method( name, property )
 }})

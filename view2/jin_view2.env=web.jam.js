@@ -7,6 +7,17 @@
 $jin.klass({ '$jin.view2': [] })
 
 /**
+ * @name $jin.view2.exec
+ * @method exec
+ * @member $jin.view2
+ * @static
+ */
+$jin.method({ '$jin.view2.exec': function( config ){
+	if( typeof config === 'string' ) config = { id: config }
+	return this[ '$jin.klass.exec' ]( config )
+}})
+
+/**
  * @name $jin.view2.sampleProtoId
  * @method sampleProtoId
  * @static
@@ -107,15 +118,6 @@ $jin.method({ '$jin.view2..nativeNode': function( ){
 }})
 
 /**
- * @name $jin.view2#clone
- * @method clone
- * @member $jin.view2
- */
-$jin.method({ '$jin.view2..clone': function( ){
-    return this.constructor()
-}})
-
-/**
  * @name $jin.view2#toString
  * @method toString
  * @member $jin.view2
@@ -130,8 +132,8 @@ $jin.method({ '$jin.view2..toString': function( ){
  * @member $jin.view2
  */
 $jin.method({ '$jin.view2..destroy': function( ){
-	var samples = this.sample()
-	for( var key in samples ) samples[ key ].view( null )
+	//var samples = this.sample()
+	//for( var key in samples ) samples[ key ].view( null )
 	this['$jin.klass..destroy']()
 }})
 

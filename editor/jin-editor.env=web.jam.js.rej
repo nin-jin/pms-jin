@@ -1,0 +1,108 @@
+--- jin-editor.env=web.jam.js
++++ jin-editor.env=web.jam.js
+@@ -43,7 +43,25 @@
+ 	put: function( next ){
+ 		this.valueProp()( next )
+ 		return next
++	},
++	push: function( next ){
++		var target = this.element()
++
++		var sel = $jin.dom.range.create();
++		var offsetStart = target.rangeContent().equalize( 'end2start', sel ).nativeRange().cloneContents().textContent.length
++		var offsetEnd = target.rangeContent().equalize( 'end2end', sel ).nativeRange().cloneContents().textContent.length
++
++		target.text( next )
++
++		var zone = target.rangeContent()
++		var selStart = zone.clone().move( offsetStart )
++		var selEnd = zone.clone().move( offsetEnd )
++
++		zone
++		.equalize( 'start2start', selStart )
++		.equalize( 'end2end', selEnd )
++		.select()
+ 	}
+ }})
+ 
+ /**
+@@ -46,7 +64,17 @@
+ 	}
+ }})
+ 
+ /**
++ * @name $jin.editor#render
++ * @method render
++ * @member $jin.editor
++ */
++$jin.method({ '$jin.editor..render': function( ){
++	this.value()
++	return true
++}})
++
++/**
+  * @name $jin.editor#onInput
+  * @method onInput
+  * @member $jin.editor
+@@ -82,9 +110,10 @@
+ //		.select()
+ 
+ 	var text = target.text()
++	if( !/\n$/.test( text ) ) text += '\n'
+ 
+ 	var content = text.split( '\n' ).map( function( str ){
+ 		return {
+ 			nodeName: 'div',
+ 			childNodes: str
+ 			? [
+@@ -85,10 +114,10 @@
+ 
+ 	var content = text.split( '\n' ).map( function( str ){
+ 		return {
+ 			nodeName: 'div',
+ 			childNodes: str
+ 			? [
+-				{ nodeName: '#text', nodeValue: str },
++				str,
+ 				{ nodeName: 'br' }
+ 			] : [
+ 				{ nodeName: 'br' }
+@@ -96,7 +125,8 @@
+ 		}
+ 	})
+ 
+-	target.tree( content )
++//	console.log( target.html(), text, content )
++	//target.tree( content )
+ 
+ 	this.value( text )
+ }})
+@@ -118,3 +148,27 @@
+ $jin.method({ '$jin.editor..onBlur': function( event ){
+ 	this.focused( null )
+ }})
++
++/**
++ * @name $jin.editor#onKeyPress
++ * @method onKeyPress
++ * @member $jin.editor
++ * @param {$jin.dom.event} event
++ */
++$jin.method({ '$jin.editor..onKeyPress': function( event ){
++
++	var target = event.target();
++
++	if( event.keyCode() === 13 ){
++		var br = target.makeText( '\n' )
++		$jin.dom.range.create().replace( br )
++
++		var next = br.next()
++		if( next ) next.rangeContent().collapse2start().select()
++		else br.rangeContent().collapse2end().select()
++
++		event.catched( true )
++	}
++	
++	this.onInput( event )
++}})
+\ No newline at end of file

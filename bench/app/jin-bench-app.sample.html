@@ -1,24 +1,23 @@
 <div jin-bench-app="" id="{id}">
-	<button jin-bench-app-runner=""
-	    jin-sample-events="
-	        onclick=run
-	    "
-		>
-		Bench!
-	</button>
-	<div jin-bench-app-setup="" jin-view2-focused="{focused}">
+	<div jin-bench-app-head="">
+		<div jin-bench-app-title="">
+			{titleEditor}
+		</div>
+		<button jin-bench-app-runner=""
+			jin-sample-events="
+				onclick=run
+			"
+			>
+			Bench!
+		</button>
+	</div>
+	<div jin-bench-app-setup="">
 		{setup}
 	</div>
 	<div jin-bench-app-cases="">
-		<div jin-bench-header="">
-			<div jin-bench-header-column="">Source</div>
-			<div jin-bench-header-column="">Inner execute</div>
-			<div jin-bench-header-column="">Inner compile</div>
-			<div jin-bench-header-column="">Outer execute</div>
-			<div jin-bench-header-column="">Outer compile</div>
-		</div>
-		<div style="display:table-row-group">
-			{cases}
-		</div>
+		{cases}
+	</div>
+	<div jin-bench-app-teardown="">
+		{tearDown}
 	</div>
 </div>

@@ -82,7 +82,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 							var cover = $jin.atom(
 							{	name: rule.coverName
 							,	context: sample
-							,	pull: function jin_sample_pull( ){
+							,	pull: function jin_sample_pullChilds( ){
 									var view = sample.view()
 									if( !view ) return null
 
@@ -91,8 +91,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 
 									return prop.call( view )
 								}
-							, 	merge: function contentPull( nextItems, prevItems ){
-									
+							, 	merge: function contentPull( nextItems, prevItems ){ return $jin.atom.bound( function( ){
 									if( !prevItems ) prevItems = []
 									
 									if( nextItems == null ){
@@ -111,8 +110,15 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 									
 									nextItems = nextItems.map( function jin_sample_normalizeNext( item ){
 										if( typeof item !== 'object' ) return String( item )
-										if( item.element ) return item.element()
+										//if( item.element ) return item.element()
 										return item
+									} )
+									
+									prevItems.map( function jin_sample_freePrevs( item ){
+										if( typeof item === 'string' ) return
+										if( nextItems.indexOf( item ) !== -1 ) return
+										var sample = item.element ? item.element() : item 
+										if( sample.view ) sample.view( null )
 									} )
 									
 									var textNodes = []
@@ -132,7 +138,9 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 											else if( node.nodeValue !== item ) node.nodeValue = item
 											return node
 										} else {
-											var node = item.nativeNode ? item.nativeNode() : item
+											var node = item
+											if( node.element ) node = node.element()
+											if( node.nativeNode ) node = node.nativeNode()
 											var index = elements.indexOf( node )
 											if( index >= 0 ) elements[ index ]  = null
 											return node
@@ -141,18 +149,12 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 									
 									var removeNode = function jin_sample_removeNode( node ){
 										if( !node ) return
+										if( node.parentNode !== current ) return
 										current.removeChild( node )
 									}
 									
 									elements.forEach( removeNode )
 									textNodes.forEach( removeNode )
-									
-									prevItems.map( function jin_sample_freePrevs( item ){
-										if( typeof item === 'string' ) return
-										if( !item['$jin.sample..view'] ) return
-										if( nextItems.indexOf( item ) >= 0 ) return
-										item.view( null )
-									} )
 									
 									for( var i = nextNodes.length; i > 0; --i ){
 										var next = nextNodes[ i ]
@@ -165,7 +167,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 									}
 									
 									return nextItems
-								}
+								})}
 							} )
 							sample.entangle( cover )
 							cover.pull()
@@ -184,49 +186,6 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 		
 		var attrs = node.attributes
 		if( attrs ){
-			var attrList = []
-			for( var i = 0; i < attrs.length; ++i ){
-				attrList.push( attrs[ i ] )
-			}
-			attrList.forEach( function( attr ){
-				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
-				if( !found ) return
-				
-				var key = found[1]
-				var attrName = attr.nodeName
-				
-				var rule = {
-					key: key,
-					attrName: attrName,
-					coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '/@' + attrName + '=' + key,
-					path: path.slice(),
-					attach: function( rule, sample, node ){
-						var cover = $jin.atom(
-						{	name: rule.coverName
-						,	context: sample
-						,	pull: function jin_sample_pull( ){
-								var view = sample.view()
-								if( !view ) return null
-
-								var prop = view[ rule.key ]
-								if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
-
-								var next = prop.call( view )
-								return next ? String( next ) : next
-							}
-						,	push: function attrPush( next, prev ){
-								if( next == null ) node.removeAttribute( rule.attrName )
-								else node.setAttribute( rule.attrName, next )
-							}
-						})
-						sample.entangle( cover )
-						cover.pull()
-					}
-				}
-				rules.push( rule )
-				
-				node.removeAttribute( attrName )
-			})
 			
 			var props = node.getAttribute( 'jin-sample-props' )
 			if( props ){
@@ -286,7 +245,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 							var cover = $jin.atom(
 							{	name: rule.coverName
 							,	context: sample
-							,	pull: function jin_sample_pull( ){
+							,	pull: function jin_sample_pullProp( ){
 									var view = sample.view()
 									if( !view ) return null
 
@@ -297,7 +256,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								}
 							,	push: function fieldPush( next, prev ){
 									if( next == null ) return
-									//if( current[ rule.fieldName ] == next ) return
+									if( current[ rule.fieldName ] == next ) return
 									current[ rule.fieldName ] = next
 								}
 							})
@@ -367,6 +326,50 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 				node.removeAttribute( 'jin-sample-events' )
 			}
 			
+			var attrList = []
+			for( var i = 0; i < attrs.length; ++i ){
+				attrList.push( attrs[ i ] )
+			}
+			attrList.forEach( function( attr ){
+				var found = /^\{(\w+)\}$/g.exec( attr.nodeValue )
+				if( !found ) return
+				
+				var key = found[1]
+				var attrName = attr.nodeName
+				
+				var rule = {
+					key: key,
+					attrName: attrName,
+					coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '/@' + attrName + '=' + key,
+					path: path.slice(),
+					attach: function( rule, sample, node ){
+						var cover = $jin.atom(
+						{	name: rule.coverName
+						,	context: sample
+						,	pull: function jin_sample_pullAttr( ){
+								var view = sample.view()
+								if( !view ) return null
+
+								var prop = view[ rule.key ]
+								if( !prop ) throw new Error( 'Property (' + rule.key + ') is not defined in (' + view.constructor + ')' )
+
+								var next = prop.call( view )
+								return next ? String( next ) : next
+							}
+						,	push: function attrPush( next, prev ){
+								if( next == null ) node.removeAttribute( rule.attrName )
+								else node.setAttribute( rule.attrName, next )
+							}
+						})
+						sample.entangle( cover )
+						cover.pull()
+					}
+				}
+				rules.push( rule )
+				
+				node.removeAttribute( attrName )
+			})
+			
 		}
 	}
 	
@@ -395,7 +398,7 @@ $jin.method({ '$jin.sample.exec': function( type ){
 	this['$jin.wrapper.exec']
 	
 	var pool = this.pool( type )
-	var sample = pool.shift()
+	var sample = pool.pop()
 	
 	if( !sample ) sample = this[ '$jin.klass.exec' ]({ type: type })
 	
@@ -452,9 +455,11 @@ $jin.atom.prop({ '$jin.sample..view': {
 $jin.atom.prop({ '$jin.sample..nativeNode': {
 	resolves: [ '$jin.dom..nativeNode' ],
 	pull: function( ){
+		var rules = this.constructor.rules( this.type() )
 		return this.constructor.dom( this.type() ).cloneNode( true )
 	},
 	push: function( next ){
+		if( !next ) throw new Error( 'Not found source node' )
 		
 		var rules = this.constructor.rules( this.type() )
 		var sample = this
@@ -465,6 +470,8 @@ $jin.atom.prop({ '$jin.sample..nativeNode': {
 			rule.path.forEach( function pathIterator( name ){
 				current = current[ name ]
 			} )
+			
+			if( !current ) throw new Error( 'Not found target node' )
 			
 			rule.attach( rule, sample, current )
 		} )

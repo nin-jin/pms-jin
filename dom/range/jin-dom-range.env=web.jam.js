@@ -7,7 +7,15 @@
  */
 $jin.klass({ '$jin.dom.range': [ '$jin.wrapper' ] })
 
-$jin.alias( '$jin.wrapper..raw', '$jin.dom.range..raw', 'nativeRange' )
+/**
+ * @name $jin.dom.range#raw
+ * @method raw
+ * @member $jin.dom.range
+ */
+$jin.method({ '$jin.dom.range..raw': function(){
+	this['$jin.wrapper..raw']
+	return this.nativeRange.apply( this, arguments )
+}})
 
 /**
  * @name $jin.dom.range#nativeRange
@@ -249,12 +257,12 @@ $jin.method({ '$jin.dom.range..move': function( offset ){
 				return this
 			}
 		}
-		if( current.name() === 'br' ){
-			if( offset > 1 ){
+		if( current.name() === 'BR' ){
+			if( offset ){
 				offset -= 1
 			} else {
 				var range = $jin.dom.range.create().aimNode( current )
-				this.equalize( 'start2end', range )
+				this.equalize( 'start2start', range )
 				return this
 			}
 		}
