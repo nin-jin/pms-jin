@@ -16,7 +16,7 @@ Create build-script "build.js" and put into:
 
 ```js
 with( require( 'pms' ) ) // loads prebuilded builder (may be old version)
-$pms.application( function( ){ // use $jin.persistent for rebuilding on file changes
+$pms.application( function( ){
     with( $jin.build( 'jin/build?env=node' ).jsIndexNode()[0].load() ){ // install, build and load $jin.build package
     	$jin.build( 'jin/atom?env=web' ).jsCompiled() // builds $jin.atom standalone js-library
 	
@@ -27,6 +27,9 @@ $pms.application( function( ){ // use $jin.persistent for rebuilding on file cha
 	// builds css for $foo.bar
     	$jin.build( 'jin/slide?env=web' ).cssIndex()
     	$jin.build( 'jin/slide?env=web' ).cssCompiled()
+    	
+    	//wait for file changes
+    	$jin.alert( 'Press any key to stop automatic rebuild' )
     }
 })
 ```
