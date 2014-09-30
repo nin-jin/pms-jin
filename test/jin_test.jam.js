@@ -250,18 +250,14 @@ $jin.method({ '$jin.test..unique': function( ){
  */
 $jin.method({ '$jin.test..callback': function( func ){
     var test = this
-    return $jin.thread( function( ){
+	func = $jin.thread( func )
+    return function( ){
         var mockHash = test.mockHash()
-        try {
-            for( var name in mockHash ) mockHash[ name ].mocking( true )
-            return func.apply( this, arguments )
-        } catch( error ){
-            test.errors().push( error )
-            throw error
-        } finally {
-            for( var name in mockHash ) mockHash[ name ].mocking( false )
-        }
-    } )
+		for( var name in mockHash ) mockHash[ name ].mocking( true )
+        var res = func.apply( this, arguments )
+		for( var name in mockHash ) mockHash[ name ].mocking( false )
+		return res
+    }
 }})
 
 /**

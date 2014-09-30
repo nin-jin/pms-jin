@@ -123,7 +123,7 @@ $jin.test( function tracking( test ){
 	var y1 = y.get()
     x.put( 12 )
 	
-    $jin.defer( function(){
+    new $jin.defer( function(){
         var y2 = y.get()
 		
         test.equal( y2, 42 ).done( true )
@@ -158,7 +158,7 @@ $jin.test( function failing_while_pulling( test ){
 	var z1 = z.get()
 	x.put( true )
 	
-    $jin.defer( function( ){
+    new $jin.defer( function( ){
 		try {
 			throw z.get()
 		} catch( err ){

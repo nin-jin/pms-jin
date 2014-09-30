@@ -340,7 +340,7 @@ $jin.method({ '$jin.atom.thenable..then': function( done, fail ){
 		},
 		fail: fail
 	})
-	$jin.defer( promise.pull.bind( promise ) )
+	new $jin.defer( promise.pull.bind( promise ) )
 	
 	return promise
 }})

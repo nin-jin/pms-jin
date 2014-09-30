@@ -11,7 +11,7 @@ $jin.test( function pushing( test ){
 	})
 	y.get()
 	
-	$jin.defer( function( ){
+	new $jin.defer( function( ){
 	    test.equal( x, '12<-undefined' )
 	} )
 } )

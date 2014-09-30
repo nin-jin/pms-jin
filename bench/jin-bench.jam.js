@@ -11,7 +11,7 @@ $jin.method({ '$jin.bench': function( setup, sources, teardown ){
 	var cases = sources.map( function( source ){
 		source = $jin.bench.split( source )
 		source.prefix = setup + source.prefix
-		source.postfix = teardown + source.postfix
+		source.postfix = source.postfix + teardown
 
 		return {
 			source: source,
@@ -55,15 +55,15 @@ $jin.method({ '$jin.bench': function( setup, sources, teardown ){
 	return cases.map( function( kase ){
 		return {
 			outer: {
+				code: kase.source.prefix + kase.source.postfix,
 				compile: kase.measure.outer.compile / count,
 				execute: kase.measure.outer.execute / count,
-				code: kase.source.prefix + kase.source.postfix,
 				error: kase.measure.outer.error
 			},
 			inner: {
+				code: kase.source.infix,
 				compile: ( kase.measure.full.compile - kase.measure.outer.compile / count ) / count,
 				execute: ( kase.measure.full.execute - kase.measure.outer.execute / count ) / count,
-				code: kase.source.infix,
 				error: kase.measure.full.error
 			}
 		}
@@ -79,8 +79,8 @@ $jin.method({ '$jin.bench': function( setup, sources, teardown ){
  */
 $jin.method({ '$jin.bench.split': function( source ){
 
-	var matches = /^(?:([\s\S]*?)\/\*in\*\/)?([\s\S]*?)(?:\\\*out\*\/([\s\S]*))?$/.exec( source )
-	if( !matches ) throw new Error( 'Can not split js source to prefix{in}infix{out}+postfix' )
+	var matches = /^(?:([\s\S]*?)\/\*in\*\/)?([\s\S]*?)(?:\/\*out\*\/([\s\S]*))?$/.exec( source )
+	if( !matches ) throw new Error( 'Can not split js source to prefix/*in*/infix/*out*/+postfix' )
 
 	return {
 		prefix: matches[1] || '\n',
@@ -129,13 +129,12 @@ $jin.method({ '$jin.bench.measure': $jin.thread( function( proc ){
  * @member $jin.bench
  * @static
  */
-$jin.method({ '$jin.bench.log': function( codes ){
-	var measures = $jin.bench( codes )
+$jin.method({ '$jin.bench.log': function( setup, codes, teardown ){
+	var measures = $jin.bench( setup, codes, teardown )
 	
-	for( var key in measures ){
-		$jin.log( key )
-		console.table( measures[ key ] )
-	}
+	measures.forEach( function( measure, i ){
+		console.table( measure )
+	})
 
 	return measures
 }})

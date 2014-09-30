@@ -80,7 +80,7 @@ $jin.test( function double_change( test ){
 		if( done ) test.fail()
 		done = true
 		x.put( 2 )
-		$jin.defer( function(){
+		new $jin.defer( function(){
 			test.done( true )
 		} )
 	} )

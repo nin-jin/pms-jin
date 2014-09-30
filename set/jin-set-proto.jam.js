@@ -93,13 +93,20 @@ $jin.method({ '$jin.set..shift': function( ){
  * @method push
  * @member $jin.set
  */
-$jin.method({ '$jin.set..push': function( value ){
+$jin.method({ '$jin.set..push': function( ){
 	var index = this.index()
-	if( index[ value ] !== void 0 ) return
-	
-	index[ value ] = this.length
-	
-	return Array.prototype.push.call( this, value )
+    
+    var thisLength = this.length
+    var argsLength = arguments.length
+    for( var i = 0 ; i < argsLength ; ++i ) {
+        var value = arguments[ i ]
+        var key = '' + value
+        if( index[ key ] !== void 0 ) continue
+
+        index[ key ] = thisLength
+        this[ thisLength ] = value
+        ++thisLength
+    }
 }})
 
 /**

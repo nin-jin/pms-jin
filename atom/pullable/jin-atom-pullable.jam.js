@@ -77,7 +77,7 @@ $jin.method({ '$jin.atom.pullable.induce': function( ){
 $jin.method({ '$jin.atom.pullable.schedule': function( ){
 	if( $jin.atom.pullable._defer ) return
 
-	$jin.atom.pullable._defer = $jin.defer( $jin.atom.pullable.induce )
+	$jin.atom.pullable._defer = new $jin.defer( $jin.atom.pullable.induce )
 }})
 
 /**
