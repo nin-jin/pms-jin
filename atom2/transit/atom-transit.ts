@@ -129,30 +129,30 @@ module $jin.atom2 {
             return this._slavesCount
         }
 
-        private _get( value : ValueType ){
+        _get( value : ValueType ){
             return value
         }
 
-        private _pull( prev : ValueType ){
+        _pull( prev : ValueType ){
             return prev
         }
 
-        private _merge( next : ValueType , prev : ValueType ){
+        _merge( next : ValueType , prev : ValueType ){
             return next
         }
 
-        private _put( next : ValueType , prev : ValueType ){
-            this._value = next
+        _put( next : ValueType , prev : ValueType ){
+            this.push( next )
         }
 
-        private _reap(){
+        _reap(){
             this.destroy()
         }
 
-        private _notify( next : ValueType , prev : ValueType ){
+        _notify( next : ValueType , prev : ValueType ){
         }
 
-        private _fail( error : Error ){
+        _fail( error : Error ){
         }
 
         push( next : ValueType ) : ValueType{

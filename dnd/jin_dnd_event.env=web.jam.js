@@ -25,7 +25,7 @@ $jin.method({ '$jin.dnd.event..view': function( dom, x, y ){
 		transfer.setDragImage( node, x, y )
 	} catch( e ){ }
 	
-	$jin.schedule( 0, function(){
+	new $jin.schedule( 0, function(){
 		dom.parent( null )
 	})
 

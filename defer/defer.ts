@@ -8,8 +8,7 @@ module $jin {
             if( this._schedule ) return
             if( !this._queue.length ) return
             
-            this._schedule = new $jin.schedule( $jin.defer.run )
-            this._schedule.start( 0 )
+            this._schedule = new $jin.schedule( 0, $jin.defer.run )
         }
         
         static start( defer : $jin.defer ) {

@@ -6,8 +6,9 @@ module $jin {
         _handler : () => void
         _timer : number
 
-        constructor( handler : () => void ) {
+        constructor( timeout : number , handler : () => void ) {
             this._handler = handler
+            this.start( timeout )
         }
         
         isScheduled() {

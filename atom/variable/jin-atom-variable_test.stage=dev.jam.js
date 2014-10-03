@@ -63,7 +63,7 @@ $jin.test( function defer_resolve( test ){
 		test.equal( value, 1 ).done( true )
 	} )
 	
-	$jin.schedule( 0, function(){
+	new $jin.schedule( 0, function(){
 		x.put( 1 )
 	})
 } )
@@ -120,7 +120,7 @@ $jin.test( function defer_fail( test ){
 		test.equal( error, error2 ).done( true )
 	} )
 	
-	$jin.schedule( 0, function(){
+	new $jin.schedule( 0, function(){
 		x.fail( error )
 	})
 } )

@@ -16,7 +16,7 @@ $jin.atom.prop({ '$jin.date.today':
 		var dailyMS = 24 * 60 * 60 * 1000
 		var delay = dailyMS - nowMS
 
-		$jin.schedule( delay, function( ){
+		new $jin.schedule( delay, function( ){
 			$jin.date.today_atom().pull()
 		} )
 

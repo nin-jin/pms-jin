@@ -312,7 +312,7 @@ $jin.method({ '$jin.file.base..uri': function( base ){
  * @member $jin.file.base
  */
 $jin.property({ '$jin.file.base..update': function( ){
-    return $jin.schedule( 100, this.notify.bind( this ) )
+    return new $jin.schedule( 100, this.notify.bind( this ) )
 }})
 
 /**

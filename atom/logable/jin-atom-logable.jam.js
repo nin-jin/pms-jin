@@ -31,7 +31,7 @@ $jin.property({ '$jin.atom.logable.history': function( ){
 $jin.property({ '$jin.atom.logable.deferLog': function( next  ){
 	if( arguments.length ) return next
 	
-	return $jin.schedule( 0, function defferedLogging( ){
+	return new $jin.schedule( 0, function defferedLogging( ){
 		this.deferLog( void 0 )
 		
 		if( console.groupCollapsed ) console.groupCollapsed( '$jin.atom.logable' )
