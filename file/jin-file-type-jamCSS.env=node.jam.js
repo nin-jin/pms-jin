@@ -23,7 +23,7 @@ $jin.method({ '$jin.file.type.jamCSS.ext': function( ){
  * @method dependList
  * @member $jin.file.type.jamCSS
  */
-$jin.atom.prop({ '$jin.file.type.jamCSS..dependList': {
+$jin.atom1.prop({ '$jin.file.type.jamCSS..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
 		var depends = {}

@@ -143,7 +143,7 @@ module $jin.ball {
         }
     }
     
-    var baseContext = $jin.ball.make( '', {
+    export var baseContext = $jin.ball.make( '', {
         '#' : [ new $jin.ball.nodeFunc( '[$jin.ball.node.remark]', context => null ) ],
         '<' : [ new $jin.ball.nodeFunc( '[$jin.ball.node.assign]', context => {
             console.log( context.list[0].rows().toString())
@@ -162,19 +162,4 @@ module $jin.ball {
         } ) ]
     } );
     
-    var input = $jin.ball.parse(
-        "# sample program\n" +
-        "title < string =qwerty\n" +
-        "false < bool =false\n" +
-        "disabled-val < false\n" +
-        "input\n" +
-        "\t@ value concat\n" +
-        "\t\tstring =title\n" +
-        "\t\tstring =123456\n" +
-        "\t@ disabled disabled-val\n"
-    );
-
-    console.log( input.rows().toString() );
-    console.log( baseContext.rows().toString() );
-    console.log( input.execute( baseContext ).rows().toString() );
 }

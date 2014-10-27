@@ -23,7 +23,7 @@ $jin.method({ '$jin.file.type.ts.ext': function( ){
  * @method dependList
  * @member $jin.file.type.ts
  */
-$jin.atom.prop.list({ '$jin.file.type.ts..dependList': {
+$jin.atom1.prop.list({ '$jin.file.type.ts..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
 		var depends = {}

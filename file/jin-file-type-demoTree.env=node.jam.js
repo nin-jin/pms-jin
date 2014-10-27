@@ -23,7 +23,7 @@ $jin.method({ '$jin.file.type.demoTree.ext': function( ){
  * @method dependList
  * @member $jin.file.type.demoTree
  */
-$jin.atom.prop({ '$jin.file.type.demoTree..dependList': {
+$jin.atom1.prop({ '$jin.file.type.demoTree..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
 		var depends = {}
@@ -45,7 +45,7 @@ $jin.atom.prop({ '$jin.file.type.demoTree..dependList': {
  * @method jsFiles
  * @member $jin.file.type.demoTree
  */
-$jin.atom.prop.list({ '$jin.file.type.demoTree..jsFiles': {
+$jin.atom1.prop.list({ '$jin.file.type.demoTree..jsFiles': {
 	resolves: [ '$jin.file.base..jsFiles' ],
 	pull: function( prev ){
 		var target = this.parent().buildFile( this.name(), {}, 'js' )

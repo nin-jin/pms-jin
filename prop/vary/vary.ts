@@ -14,6 +14,7 @@ module $jin.prop {
             super( config.name )
             
             this._host = config.owner || this
+            
             if( config.pull ) this._pull = config.pull
             if( config.get ) this._get = config.get
             if( config.merge ) this._merge = config.merge
@@ -57,12 +58,13 @@ module $jin.prop {
 
         get() : ValueType {
             var value = this.value()
-            if( value === undefined ){
-                value = this._pull( value )
-                value = this._merge( value, value )
-                this._host[ this.objectName ] = value
-            }
-            return this._get( value )
+            if( value !== undefined ) return this._get( value )
+            
+            var next = this._pull( value )
+            next = this._merge( next, value )
+            this._host[ this.objectName ] = next
+            
+            return this._get( next )
         }
 
         pull() : ValueType {
@@ -70,6 +72,12 @@ module $jin.prop {
             value = this._pull( value )
             value = this.push( value )
             return value
+        }
+        
+        update() {
+            if( this.value() !== undefined ) {
+                this.pull()
+            }
         }
 
         set( next : ValueType ){

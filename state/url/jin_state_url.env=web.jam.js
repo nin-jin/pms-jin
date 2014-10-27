@@ -6,20 +6,20 @@
  */
 $jin.klass({ '$jin.state.url': [] })
 
-$jin.atom.prop( '$jin.state.url.href',
+$jin.atom1.prop( '$jin.state.url.href',
 {   pull: function( ){
         return document.location.href
     }
 ,   put: String
 } )
 
-$jin.atom.prop( '$jin.state.url.hash',
+$jin.atom1.prop( '$jin.state.url.hash',
 {   pull: function( ){
         return $jin.uri.query( $jin.uri.parse( this.href() ).hash() ).raw()
     }
 } )
 
-$jin.atom.prop( '$jin.state.url.listener',
+$jin.atom1.prop( '$jin.state.url.listener',
 {   pull: function( ){
         return setInterval( function( ){
             $jin.state.url.href_atom().pull()
@@ -27,7 +27,7 @@ $jin.atom.prop( '$jin.state.url.listener',
     }
 } )
 
-$jin.atom.prop.hash( '$jin.state.url.item',
+$jin.atom1.prop.hash( '$jin.state.url.item',
 {   pull: function( key ){
         this.listener()
         var val = this.hash()[ key ]

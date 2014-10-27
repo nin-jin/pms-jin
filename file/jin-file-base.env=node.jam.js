@@ -47,7 +47,7 @@ $jin.property({ '$jin.file.base..path': function( path ){
  * @method stat
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..stat': {
+$jin.atom1.prop({ '$jin.file.base..stat': {
 	pull: function( prev ){
 		try {
 			var stat = this.constructor.nativeAPI().statSync( this.path() )
@@ -65,7 +65,7 @@ $jin.atom.prop({ '$jin.file.base..stat': {
  * @method version
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..version': {
+$jin.atom1.prop({ '$jin.file.base..version': {
 	pull: function( ){
 		var stat = this.stat()
 		if( !stat ) return ''
@@ -79,7 +79,7 @@ $jin.atom.prop({ '$jin.file.base..version': {
  * @method exists
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..exists': {
+$jin.atom1.prop({ '$jin.file.base..exists': {
 	put: function( exists ){
 		if( exists == this.exists() ) return exists
 		
@@ -113,7 +113,7 @@ $jin.atom.prop({ '$jin.file.base..exists': {
  * @method isDir
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..isDir': {
+$jin.atom1.prop({ '$jin.file.base..isDir': {
 	pull: function( ){
 		var stat = this.stat()
 		if( !stat ) return stat
@@ -127,7 +127,7 @@ $jin.atom.prop({ '$jin.file.base..isDir': {
  * @method isFile
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..isFile': {
+$jin.atom1.prop({ '$jin.file.base..isFile': {
 	pull: function( ){
 		var stat = this.stat()
 		if( !stat ) return false
@@ -159,7 +159,7 @@ $jin.property({ '$jin.file.base..ext': function( ){
  * @method content
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..content': {
+$jin.atom1.prop({ '$jin.file.base..content': {
 	pull: function( content ){
 		try {
 			var content = this.constructor.nativeAPI().readFileSync( this.path() )
@@ -241,7 +241,7 @@ $jin.method({ '$jin.file.base..child': function( name ){
  * @method childList
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..childList': {
+$jin.atom1.prop({ '$jin.file.base..childList': {
 	pull: function( ){
 		
 		var names= this.constructor.nativeAPI().readdirSync( this.path() )
@@ -330,7 +330,7 @@ $jin.method({ '$jin.file.base..notify': function( ){
  * @method watcher
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..watcher': {
+$jin.atom1.prop({ '$jin.file.base..watcher': {
 	pull: function( prev ){
 		return this.parent().nativeWatcher()
 	}
@@ -341,7 +341,7 @@ $jin.atom.prop({ '$jin.file.base..watcher': {
  * @method nativeWatcher
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..nativeWatcher': {
+$jin.atom1.prop({ '$jin.file.base..nativeWatcher': {
 	pull: function( prev ){
 		var handler = $jin.sync2async( function jin_file_handle_change( eventName, fileName ){
 			if( eventName === 'rename' ) return
@@ -426,7 +426,7 @@ $jin.method({ '$jin.file.base.priority': function( path ){
  * @method sourceList
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..sourceList': {
+$jin.atom1.prop({ '$jin.file.base..sourceList': {
 	pull: function( ){
 		if( this.isFile() ) return [ this ]
 		
@@ -442,7 +442,7 @@ $jin.atom.prop({ '$jin.file.base..sourceList': {
  * @method moduleList
  * @member $jin.file.base
  */
-$jin.atom.prop({ '$jin.file.base..moduleList': {
+$jin.atom1.prop({ '$jin.file.base..moduleList': {
 	pull: function( ){
 		return ( this.isDir() ? this.childList() : [ ] )
 		.filter( function( file ){

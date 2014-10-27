@@ -142,7 +142,7 @@ $jin.method({ '$jin.view..destroy': function( ){
  * @method focused
  * @member $jin.view
  */
-$jin.atom.prop({ '$jin.view..focused': {
+$jin.atom1.prop({ '$jin.view..focused': {
 	pull: function( ){
 		return null
 	},

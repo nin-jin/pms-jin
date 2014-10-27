@@ -6,13 +6,13 @@
  */
 $jin.klass({ '$jin.state.local': [] })
 
-$jin.atom.prop( '$jin.state.local.storage',
+$jin.atom1.prop( '$jin.state.local.storage',
 {   pull: function( ){
         return window.localStorage || {}
     }
 } )
 
-$jin.atom.prop( '$jin.state.local.listener',
+$jin.atom1.prop( '$jin.state.local.listener',
 {   pull: function( ){
         var context = this
         return $jin.dom( window ).listen( 'storage', function( event ){
@@ -30,7 +30,7 @@ $jin.atom.prop( '$jin.state.local.listener',
     }
 } )
 
-$jin.atom.prop.hash( '$jin.state.local.item',
+$jin.atom1.prop.hash( '$jin.state.local.item',
 {   pull: function( key ){
         this.listener()
         var val = this.storage()[ key ]

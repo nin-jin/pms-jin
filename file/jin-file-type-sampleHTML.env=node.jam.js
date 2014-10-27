@@ -23,10 +23,10 @@ $jin.method({ '$jin.file.type.sampleHTML.ext': function( ){
  * @method dependList
  * @member $jin.file.type.sampleHTML
  */
-$jin.atom.prop.list({ '$jin.file.type.sampleHTML..dependList': {
+$jin.atom1.prop.list({ '$jin.file.type.sampleHTML..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
-		var depends = {}
+		var depends = { 'jin/sample' : true }
 		
 		var content = String( this.content() )
 		
@@ -55,7 +55,7 @@ $jin.atom.prop.list({ '$jin.file.type.sampleHTML..dependList': {
  * @method jsFiles
  * @member $jin.file.type.sampleHTML
  */
-$jin.atom.prop.list({ '$jin.file.type.sampleHTML..jsFiles': {
+$jin.atom1.prop.list({ '$jin.file.type.sampleHTML..jsFiles': {
 	resolves: [ '$jin.file.base..jsFiles' ],
 	pull: function( prev ){
 		var target = this.parent().buildFile( this.name(), {}, 'js' )

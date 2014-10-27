@@ -3,7 +3,7 @@
  * @method jsCompiled
  * @member $jin.build
  */
-$jin.atom.prop({ '$jin.build..jsCompiled': {
+$jin.atom1.prop({ '$jin.build..jsCompiled': {
 	pull: function( prev ){
 		
 		var target = this.pack().buildFile( 'index', this.vary(), 'js' )

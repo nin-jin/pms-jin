@@ -1,6 +1,6 @@
 $jin.module( function(){ this[ '$jin.build' ] = {
 	
-	'.auto': [ $jin.atom.prop, {
+	'.auto': [ $jin.atom1.prop, {
 		pull: function( ){
 			var vary = this.vary()
 			

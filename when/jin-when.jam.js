@@ -6,7 +6,7 @@
  */
 $jin.method({ '$jin.when': function( list ){
 	
-	var response = $jin.atom({})
+	var response = $jin.atom1({})
 	var values = []
 	var awaitCount = list.length
 	

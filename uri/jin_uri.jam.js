@@ -234,14 +234,14 @@ $jin.method({ '$jin.uri.parse': function( string ){
             config.port = port
             return ''
         } )
+        .replace( /^\/\//, function( str, port ){
+	        config.slashes = true
+	        return ''
+        } )
         .replace( /^([^@]+)@/, function( str, auth ){
             var pair = auth.split( ':' )
             config.login = pair[0]
             config.password = pair[1]
-            return ''
-        } )
-        .replace( /^\/\//, function( str, port ){
-            config.slashes = true
             return ''
         } )
         return ''

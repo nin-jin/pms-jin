@@ -34,7 +34,7 @@ $jin.method({ '$jin.file.type.png.mime': function( ){
  * @method image
  * @member $jin.file.type.png
  */
-$jin.atom.prop({ '$jin.file.type.png..image': {
+$jin.atom1.prop({ '$jin.file.type.png..image': {
 	pull: function( ){
 		var png = new $node.pngjs.PNG
 		var atom = this.image_atom()
@@ -48,6 +48,6 @@ $jin.atom.prop({ '$jin.file.type.png..image': {
 			atom.fail( error )
 		} )
 		
-		throw $jin.atom.wait( 'Loading image from file system...' )
+		throw $jin.atom1.wait( 'Loading image from file system...' )
 	}
 }})

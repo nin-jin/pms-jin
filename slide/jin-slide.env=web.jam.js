@@ -19,7 +19,7 @@ $jin.property({ '$jin.slide..stack': null })
  * @method resizeCount
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..resizeCount': {
+$jin.atom1.prop({ '$jin.slide..resizeCount': {
 	pull: function( ){
 		$jin.dom.event.onResize.listen( window, function(){
 			this.resizeCount( this.resizeCount() + 1 )
@@ -33,7 +33,7 @@ $jin.atom.prop({ '$jin.slide..resizeCount': {
  * @method zoom
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..zoom': {
+$jin.atom1.prop({ '$jin.slide..zoom': {
 	pull: function( ){
 		this.resizeCount()
 		var size = Math.min( document.documentElement.clientWidth, document.documentElement.clientHeight )
@@ -47,7 +47,7 @@ $jin.atom.prop({ '$jin.slide..zoom': {
  * @method pageNodeList
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..pageNodeList': {
+$jin.atom1.prop({ '$jin.slide..pageNodeList': {
 	pull: function( ){
 		var nodes = $jin.doc().cssSelect( '#' + this.id() + ' > section' )
 		nodes.forEach( function( node ){
@@ -62,7 +62,7 @@ $jin.atom.prop({ '$jin.slide..pageNodeList': {
  * @method pageNodeMap
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..pageNodeMap': {
+$jin.atom1.prop({ '$jin.slide..pageNodeMap': {
 	pull: function( ){
 		var map = {}
 		this.pageNodeList().forEach( function( node ){
@@ -77,7 +77,7 @@ $jin.atom.prop({ '$jin.slide..pageNodeMap': {
  * @method pageNodeCurrent
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..pageNodeCurrent': {
+$jin.atom1.prop({ '$jin.slide..pageNodeCurrent': {
 	pull: function( prev ){
 		var id = $jin.state.url.item( 'slide' )
 		return this.pageNodeMap()[ id ] || this.pageNodeList()[ 0 ]
@@ -95,7 +95,7 @@ $jin.atom.prop({ '$jin.slide..pageNodeCurrent': {
  * @method pageNumber
  * @member $jin.slide
  */
-$jin.atom.prop({ '$jin.slide..pageNumber': {
+$jin.atom1.prop({ '$jin.slide..pageNumber': {
 	pull: function( prev ){
 		return this.pageNodeList().indexOf( this.pageNodeCurrent() )
 	},

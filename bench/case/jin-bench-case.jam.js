@@ -12,7 +12,7 @@ $jin.klass({ '$jin.bench.case': [ '$jin.view' ] })
  * @method index
  * @member $jin.bench.case
  */
-$jin.atom.prop({ '$jin.bench.case..index': {
+$jin.atom1.prop({ '$jin.bench.case..index': {
 	merge: $jin.ensure.number.range( 0, null )
 }})
 
@@ -21,7 +21,7 @@ $jin.atom.prop({ '$jin.bench.case..index': {
  * @method source
  * @member $jin.bench.case
  */
-$jin.atom.prop({ '$jin.bench.case..source': {
+$jin.atom1.prop({ '$jin.bench.case..source': {
 	pull: function( ){
 		return this.parent().sources()[ this.index() ]
 	},
@@ -38,7 +38,7 @@ $jin.atom.prop({ '$jin.bench.case..source': {
  * @method title
  * @member $jin.bench.case
  */
-$jin.atom.prop({ '$jin.bench.case..title': {
+$jin.atom1.prop({ '$jin.bench.case..title': {
 	pull: function( ){
 		return [ this.child( 'title', $jin.field ).label( 'Case title' ).valueProp( function(){} ) ]
 	}
@@ -49,7 +49,7 @@ $jin.atom.prop({ '$jin.bench.case..title': {
  * @method code
  * @member $jin.bench.case
  */
-$jin.atom.prop({ '$jin.bench.case..code': {
+$jin.atom1.prop({ '$jin.bench.case..code': {
 	pull: function( ){
 		return [ this.child( 'code', $jin.field ).label( 'Case source' ).valueProp( this.source.bind( this ) ) ]
 	}
@@ -60,7 +60,7 @@ $jin.atom.prop({ '$jin.bench.case..code': {
  * @method measure
  * @member $jin.bench.case
  */
-$jin.atom.prop({ '$jin.bench.case..measure': {
+$jin.atom1.prop({ '$jin.bench.case..measure': {
 	pull: function(){
 		return this.parent().measures()[ this.index() ] || { inner: {}, outer: {} }
 	}

@@ -12,21 +12,21 @@ $jin.klass({ '$jin.trade.legend.item': [ '$jin.view' ] })
  * @method name
  * @member $jin.trade.legend.item
  */
-$jin.atom.prop({ '$jin.trade.legend.item..name': {} })
+$jin.atom1.prop({ '$jin.trade.legend.item..name': {} })
 
 /**
  * @name $jin.trade.legend.item#color
  * @method color
  * @member $jin.trade.legend.item
  */
-$jin.atom.prop({ '$jin.trade.legend.item..color': {} })
+$jin.atom1.prop({ '$jin.trade.legend.item..color': {} })
 
 /**
  * @name $jin.trade.legend.item#isActive
  * @method isActive
  * @member $jin.trade.legend.item
  */
-$jin.atom.prop({ '$jin.trade.legend.item..isActive': {
+$jin.atom1.prop({ '$jin.trade.legend.item..isActive': {
 	pull: function( ){
 		return true
 	}

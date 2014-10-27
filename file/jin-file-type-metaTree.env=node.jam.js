@@ -23,7 +23,7 @@ $jin.method({ '$jin.file.type.metaTree.ext': function( ){
  * @method dependList
  * @member $jin.file.type.metaTree
  */
-$jin.atom.prop({ '$jin.file.type.metaTree..dependList': {
+$jin.atom1.prop({ '$jin.file.type.metaTree..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
 		var depends = {}

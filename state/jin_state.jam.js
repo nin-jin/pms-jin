@@ -1,4 +1,4 @@
-//$jin.atom.prop.hash({ handler:  function $jin_state_item( key, value ){
+//$jin.atom1.prop.hash({ handler:  function $jin_state_item( key, value ){
 //    
 //    if( arguments.length < 2 ) return
 //    

@@ -57,7 +57,7 @@ $jin.property({ '$jin.doc..sizeListener': function( ){
  * @method size
  * @member $jin.doc
  */
-$jin.atom.prop({ '$jin.doc..size': {
+$jin.atom1.prop({ '$jin.doc..size': {
 	resolves: [ '$jin.dom..size' ],
 	pull: function( ){
 		this.sizeListener()

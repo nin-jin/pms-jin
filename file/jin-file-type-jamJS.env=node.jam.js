@@ -23,7 +23,7 @@ $jin.method({ '$jin.file.type.jamJS.ext': function( ){
  * @method dependList
  * @member $jin.file.type.jamJS
  */
-$jin.atom.prop({ '$jin.file.type.jamJS..dependList': {
+$jin.atom1.prop({ '$jin.file.type.jamJS..dependList': {
 	resolves: [ '$jin.file.base..dependList' ],
 	pull: function( ){
 		var depends = {}
@@ -46,7 +46,7 @@ $jin.atom.prop({ '$jin.file.type.jamJS..dependList': {
  * @method content
  * @member $jin.file.type.jamJS
  */
-$jin.atom.prop({ '$jin.file.type.jamJS..content': {
+$jin.atom1.prop({ '$jin.file.type.jamJS..content': {
 	resolves: [ '$jin.file.base..content' ],
 	pull: function( ){
 		var next = this['$jin.file.base..content']()

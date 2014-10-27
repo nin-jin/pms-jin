@@ -12,21 +12,21 @@ $jin.klass({ '$jin.field': [ '$jin.view' ] })
  * @method label
  * @member $jin.field
  */
-$jin.atom.prop({ '$jin.field..label': {} })
+$jin.atom1.prop({ '$jin.field..label': {} })
 
 /**
  * @name $jin.field#valueProp
  * @method valueProp
  * @member $jin.field
  */
-$jin.atom.prop({ '$jin.field..valueProp': {} })
+$jin.atom1.prop({ '$jin.field..valueProp': {} })
 
 /**
  * @name $jin.field#editor
  * @method editor
  * @member $jin.field
  */
-$jin.atom.prop({ '$jin.field..editor': {
+$jin.atom1.prop({ '$jin.field..editor': {
 	pull: function( ){
 		return [ this.child( 'editor', $jin.editor ).valueProp( this.valueProp() ) ]
 	}

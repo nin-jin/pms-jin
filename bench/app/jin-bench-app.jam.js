@@ -12,7 +12,7 @@ $jin.klass({ '$jin.bench.app': [ '$jin.view' ] })
  * @method setupCode
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..setupCode': {
+$jin.atom1.prop({ '$jin.bench.app..setupCode': {
 	pull: function( ){
 		return ( $jin.state.url.item( 'setup' ) || [] ).join( '' )
 	},
@@ -27,7 +27,7 @@ $jin.atom.prop({ '$jin.bench.app..setupCode': {
  * @method tearDownCode
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..tearDownCode': {
+$jin.atom1.prop({ '$jin.bench.app..tearDownCode': {
 	pull: function( ){
 		return ( $jin.state.url.item( 'teardown' ) || [] ).join( '' )
 	},
@@ -42,7 +42,7 @@ $jin.atom.prop({ '$jin.bench.app..tearDownCode': {
  * @method titleEditor
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..titleEditor': {
+$jin.atom1.prop({ '$jin.bench.app..titleEditor': {
 	pull: function( ){
 		return [ this.child( 'title', $jin.field ).label( 'Benchmark title' ).valueProp( function(){} ) ]
 	}
@@ -53,7 +53,7 @@ $jin.atom.prop({ '$jin.bench.app..titleEditor': {
  * @method setup
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..setup': {
+$jin.atom1.prop({ '$jin.bench.app..setup': {
 	pull: function( ){
 		return [ this.child( 'setup', $jin.field ).label( 'Set Up' ).valueProp( this.setupCode.bind( this ) ) ]
 	}
@@ -64,7 +64,7 @@ $jin.atom.prop({ '$jin.bench.app..setup': {
  * @method tearDown
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..tearDown': {
+$jin.atom1.prop({ '$jin.bench.app..tearDown': {
 	pull: function( ){
 		return [ this.child( 'tearDown', $jin.field ).label( 'Tear Down' ).valueProp( this.tearDownCode.bind( this ) ) ]
 	}
@@ -75,7 +75,7 @@ $jin.atom.prop({ '$jin.bench.app..tearDown': {
  * @method sources
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..sources': {
+$jin.atom1.prop({ '$jin.bench.app..sources': {
 	pull: function( ){
 		var next = $jin.state.url.item( 'source' ) || [ 'with({ a: 1 }){\n/*in*/\n    a\n/*out*/\n}' ]
 		next = next.filter( function( source ){
@@ -95,7 +95,7 @@ $jin.atom.prop({ '$jin.bench.app..sources': {
  * @method measures
  * @member $jin.bench.app
  */
-$jin.atom.prop({ '$jin.bench.app..measures': {
+$jin.atom1.prop({ '$jin.bench.app..measures': {
 	pull: function(){
 		return []
 	}

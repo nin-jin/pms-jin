@@ -21,13 +21,13 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 		return this.urn().query()
 	}],
 	
-	'.modules': [ $jin.atom.prop.list, {
+	'.modules': [ $jin.atom1.prop.list, {
 		pull: function( ){
 			return this.pack().deepModuleList()
 		}
 	}],
 	
-	'.sources': [ $jin.atom.prop.list, {
+	'.sources': [ $jin.atom1.prop.list, {
 		pull: function( prev ){
 			var tree = this.dependTree()
 			var sources = []
@@ -43,7 +43,7 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 		}
 	}],
 	
-	'.jsSources': [ $jin.atom.prop.list, {
+	'.jsSources': [ $jin.atom1.prop.list, {
 		pull: function( prev ){
 			var tsFiles = []
 			
@@ -64,7 +64,7 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 						var errors = result.map( function( unit ){
 							return unit.diagnostics
 						} )
-						done( errors )
+						done( errors.join( '\n' ).replace( / \[(\d+:\d+)\]/g, ':$1' ).replace( /\n+/g, '\n' ) )
 					} )
 				} )
 				
@@ -92,7 +92,7 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 		}
 	}],
 	
-	'.cssSources': [ $jin.atom.prop.list, {
+	'.cssSources': [ $jin.atom1.prop.list, {
 		pull: function( prev ){
 			return [].concat.apply( [], this.sources().map( function( src ){
 				return src.cssFiles()
@@ -101,6 +101,3 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 	}]
 	
 }})
-
-
-

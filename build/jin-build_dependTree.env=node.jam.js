@@ -3,7 +3,7 @@
  * @method dependTree
  * @member $jin.build
  */
-$jin.atom.prop({ '$jin.build..dependTree': {
+$jin.atom1.prop({ '$jin.build..dependTree': {
 	pull: function( prev ){
 		var root = $jin.file( '.' )
 		

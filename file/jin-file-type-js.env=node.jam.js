@@ -34,7 +34,7 @@ $jin.method({ '$jin.file.type.js.mime': function( ){
  * @method jsFiles
  * @member $jin.file.type.js
  */
-$jin.atom.prop({ '$jin.file.type.js..jsFiles': {
+$jin.atom1.prop({ '$jin.file.type.js..jsFiles': {
 	resolves: [ '$jin.file.base..jsFiles' ],
 	pull: function( ){
 		return [ this ]

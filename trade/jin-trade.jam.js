@@ -12,7 +12,7 @@ $jin.klass({ '$jin.trade': [ '$jin.view' ] })
  * @method graph
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..graph': {
+$jin.atom1.prop({ '$jin.trade..graph': {
 	pull: function( ){
 		try {
 			return this.make( 'graph', $jin.plotter ).plots( this.plots() )
@@ -27,7 +27,7 @@ $jin.atom.prop({ '$jin.trade..graph': {
  * @method plots
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..plots': {
+$jin.atom1.prop({ '$jin.trade..plots': {
 	pull: function( ){
 		var next = {}
 		
@@ -87,7 +87,7 @@ $jin.atom.prop({ '$jin.trade..plots': {
  * @method legend
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..legend': {
+$jin.atom1.prop({ '$jin.trade..legend': {
 	pull: function( ){
 		var plots = this.plots()
 		var colors = this.graph().colors()
@@ -106,7 +106,7 @@ $jin.atom.prop({ '$jin.trade..legend': {
  * @method history
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..history': {
+$jin.atom1.prop({ '$jin.trade..history': {
 	pull: function( prev ){
 		var history = $jin.state.local.item( this.id() + ';history' )
 		if( history ){
@@ -131,7 +131,7 @@ $jin.atom.prop({ '$jin.trade..history': {
 			document.body.appendChild( script )
 		}
 		
-		if( !history ) throw $jin.atom.wait( 'Loading month history from cryptsy.com...' )
+		if( !history ) throw $jin.atom1.wait( 'Loading month history from cryptsy.com...' )
 		
 		return history
 	}
@@ -142,7 +142,7 @@ $jin.atom.prop({ '$jin.trade..history': {
  * @method volume
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..volume': {
+$jin.atom1.prop({ '$jin.trade..volume': {
 	pull: function( ){
 		var history = this.history()
 		var last = history[0]
@@ -159,7 +159,7 @@ $jin.atom.prop({ '$jin.trade..volume': {
  * @method fees
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..fees': {
+$jin.atom1.prop({ '$jin.trade..fees': {
 	pull: function( ){
 		return 0.003
 	}
@@ -170,7 +170,7 @@ $jin.atom.prop({ '$jin.trade..fees': {
  * @method startBTC
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..startBTC': {
+$jin.atom1.prop({ '$jin.trade..startBTC': {
 	pull: function( ){
 		return 1
 	}
@@ -181,7 +181,7 @@ $jin.atom.prop({ '$jin.trade..startBTC': {
  * @method strategies
  * @member $jin.trade
  */
-$jin.atom.prop({ '$jin.trade..strategies': {
+$jin.atom1.prop({ '$jin.trade..strategies': {
 	pull: function( ){
 		var next = {}
 		

@@ -1,10 +1,4 @@
-/**
- * @name $jin.pipe
- * @method pipe
- * @member $jin
- * @static
- */
-$jin.method({ '$jin.pipe': function( funcs ){
+$jin.pipe = function( funcs ){
 	switch( funcs.length ){
 		case 0: return $jin.pipe.nop
 		case 1: return funcs[0]
@@ -16,14 +10,8 @@ $jin.method({ '$jin.pipe': function( funcs ){
 				return outer( inner( value ) )
 			}
 	}
-}})
+}
 
-/**
- * @name $jin.pipe.nop
- * @method nop
- * @member $jin.pipe
- * @static
- */
-$jin.method({ '$jin.pipe.nop': function( value ){
+$jin.pipe.nop = function( value ){
 	return value
-}})
+}

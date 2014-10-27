@@ -52,7 +52,7 @@ Or(!) simple use its in JAM-file "foo-bar.jam.js":
 
 ```js
 $jin.klass({ '$foo.bar': [ '$jin.view' ] })
-$jin.atom.prop({ '$foo.bar.title': {
+$jin.atom1.prop({ '$foo.bar.title': {
 	pull: function( ){
 		return Math.random()
 	},

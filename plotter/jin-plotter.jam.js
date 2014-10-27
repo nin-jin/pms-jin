@@ -30,7 +30,7 @@ $jin.method({ '$jin.plotter..colors': function( ){
  * @method rect
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..rect': {
+$jin.atom1.prop({ '$jin.plotter..rect': {
 	pull: function( next ){
 		var min = $jin.vector([ 0, 0 ])
 		var max = $jin.vector([ 0, 0 ])
@@ -60,14 +60,14 @@ $jin.atom.prop({ '$jin.plotter..rect': {
  * @method plots
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..plots': {} })
+$jin.atom1.prop({ '$jin.plotter..plots': {} })
 
 /**
  * @name $jin.plotter#size
  * @method size
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..size': {
+$jin.atom1.prop({ '$jin.plotter..size': {
 	pull: function(){
 		return $jin.vector([ this.width(), this.height() ])
 	}
@@ -78,7 +78,7 @@ $jin.atom.prop({ '$jin.plotter..size': {
  * @method width
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..width': {
+$jin.atom1.prop({ '$jin.plotter..width': {
 	pull: function(){
 		return $jin.doc().size().x()
 	}
@@ -89,7 +89,7 @@ $jin.atom.prop({ '$jin.plotter..width': {
  * @method height
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..height': {
+$jin.atom1.prop({ '$jin.plotter..height': {
 	pull: function(){
 		return $jin.doc().size().y()
 	}
@@ -100,7 +100,7 @@ $jin.atom.prop({ '$jin.plotter..height': {
  * @method generation
  * @member $jin.plotter
  */
-$jin.atom.prop({ '$jin.plotter..generation': {
+$jin.atom1.prop({ '$jin.plotter..generation': {
 	pull: function( prev ){
 		var plots = this.plots()
 		var screen = this.screen()

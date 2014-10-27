@@ -27,7 +27,7 @@ $jin.method({ '$jin.pointer.onChange': function( event ){
  * @member $jin.pointer
  * @static
  */
-$jin.atom.prop({ '$jin.pointer.lastEvent': {
+$jin.atom1.prop({ '$jin.pointer.lastEvent': {
 	pull: function(){
 		this.listener();
 	},
@@ -44,7 +44,7 @@ $jin.atom.prop({ '$jin.pointer.lastEvent': {
  * @member $jin.pointer
  * @static
  */
-$jin.atom.prop({ '$jin.pointer.target': {
+$jin.atom1.prop({ '$jin.pointer.target': {
 	pull: function( ){
 		var event = this.lastEvent()
 		if( !event ) return event
@@ -59,7 +59,7 @@ $jin.atom.prop({ '$jin.pointer.target': {
  * @member $jin.pointer
  * @static
  */
-$jin.atom.prop({ '$jin.pointer.offset': {
+$jin.atom1.prop({ '$jin.pointer.offset': {
 	pull: function( ){
 		var event = this.lastEvent()
 		if( !event ) return event

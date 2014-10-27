@@ -60,10 +60,10 @@ $jin.method({ '$jin.async2sync': function( func ){
                 if( !done ){
                     var fibers= $node.fibers
                     fiber= fibers.current
-					var slave = $jin.atom.current
-					$jin.atom.current = null
+					var slave = $jin.atom1.current
+					$jin.atom1.current = null
                     fibers.yield()
-					$jin.atom.current = slave
+					$jin.atom1.current = slave
                     if( error ) error.stack+= '\n--fiber--' + (new Error).stack.replace( /^[^\n]*/, '' )
                 }
                 

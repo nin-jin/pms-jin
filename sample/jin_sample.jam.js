@@ -13,7 +13,7 @@ $jin.klass({ '$jin.sample': [ '$jin.dom' ] })
  * @static
  * @member $jin.sample
  */
-$jin.atom.prop({ '$jin.sample.strings': {
+$jin.atom1.prop({ '$jin.sample.strings': {
 	value: '',
 	put: function( next, prev ){
 		return $jin.sample.strings() + next
@@ -26,7 +26,7 @@ $jin.atom.prop({ '$jin.sample.strings': {
  * @static
  * @member $jin.sample
  */
-$jin.atom.prop({ '$jin.sample.templates': {
+$jin.atom1.prop({ '$jin.sample.templates': {
 	pull: function( ){
 		var strings = this.strings()
 		if( !strings ) throw new Error( 'Please, set up $jin.sample.strings' )
@@ -40,7 +40,7 @@ $jin.atom.prop({ '$jin.sample.templates': {
  * @static
  * @member $jin.sample
  */
-$jin.atom.prop.hash({ '$jin.sample.dom': {
+$jin.atom1.prop.hash({ '$jin.sample.dom': {
 	pull: function( name ){
 		var selector = '[' + name + ']'
 		
@@ -57,7 +57,7 @@ $jin.atom.prop.hash({ '$jin.sample.dom': {
  * @static
  * @member $jin.sample
  */
-$jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
+$jin.atom1.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 	var node = this.dom( name )
 	
 	var path = []
@@ -79,7 +79,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 						path: path.slice(),
 						coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '=' + key,
 						attach: function( rule, sample, current ){
-							var cover = $jin.atom(
+							var cover = $jin.atom1(
 							{	name: rule.coverName
 							,	context: sample
 							,	pull: function jin_sample_pullChilds( ){
@@ -91,7 +91,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 
 									return prop.call( view )
 								}
-							, 	merge: function contentPull( nextItems, prevItems ){ return $jin.atom.bound( function( ){
+							, 	merge: function contentPull( nextItems, prevItems ){ return $jin.atom1.bound( function( ){
 									if( !prevItems ) prevItems = []
 									
 									if( nextItems == null ){
@@ -242,7 +242,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 								}
 								sample.entangle( $jin.dom( current ).listen( 'scroll', handler ) )
 							}
-							var cover = $jin.atom(
+							var cover = $jin.atom1(
 							{	name: rule.coverName
 							,	context: sample
 							,	pull: function jin_sample_pullProp( ){
@@ -343,7 +343,7 @@ $jin.atom.prop.hash({ '$jin.sample.rules': { pull: function( name ){
 					coverName: '$jin.sample:' + name + '/' + path.join( '/' ) + '/@' + attrName + '=' + key,
 					path: path.slice(),
 					attach: function( rule, sample, node ){
-						var cover = $jin.atom(
+						var cover = $jin.atom1(
 						{	name: rule.coverName
 						,	context: sample
 						,	pull: function jin_sample_pullAttr( ){
@@ -428,7 +428,7 @@ $jin.property({ '$jin.sample..type': String })
  * @method view
  * @member $jin.sample
  */
-$jin.atom.prop({ '$jin.sample..view': {
+$jin.atom1.prop({ '$jin.sample..view': {
 	push: function( next, prev ){
 		if( next === prev ) return prev
 		
@@ -452,7 +452,7 @@ $jin.atom.prop({ '$jin.sample..view': {
  * @method nativeNode
  * @member $jin.sample
  */
-$jin.atom.prop({ '$jin.sample..nativeNode': {
+$jin.atom1.prop({ '$jin.sample..nativeNode': {
 	resolves: [ '$jin.dom..nativeNode' ],
 	pull: function( ){
 		var rules = this.constructor.rules( this.type() )

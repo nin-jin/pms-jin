@@ -3,7 +3,7 @@
  * @method jsIndexWeb
  * @member $jin.build
  */
-$jin.atom.prop.list({ '$jin.build..jsIndexWeb': {
+$jin.atom1.prop.list({ '$jin.build..jsIndexWeb': {
 	pull: function( prev ){
 		
 		var target = this.pack().buildFile( 'index', this.vary(), 'js' )

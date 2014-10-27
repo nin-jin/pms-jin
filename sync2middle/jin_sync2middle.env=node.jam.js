@@ -1,26 +1,27 @@
-this.$jin.sync2middle=
-$jin.proxy( { apply: function( func, self, args ){
-    var req = args[ 0 ]
-    var res = args[ 1 ]
-    var next = args[ 2 ]
+this.$jin.sync2middle = function( func ){
     
-    var started = Date.now()
-    
-    var thread = $jin.sync2async( func )
-    
-    thread( req, res, function( error, result ){
-        var time = Date.now() - started
-        res.setHeader( 'x-jin-sync2middle-time', time )
+    return function( req, res, next ) {
+
+        var thread = $jin.sync2async( func )
+
+        thread( req, res, function jin_sync2middle_thread( error, result ){
+			
+            if( error ){
+                next( error )
+            } else if( result == null ){
+                next()
+            } else {
+                res.setHeader( 'Cache-Control', result.cache || 'no-cache,no-store' )
+                res.type( result.type || '.txt' )
+	            if( result.cookies ) {
+		            result.cookies.forEach( function( cookie ){
+			            res.cookie( cookie.name, cookie.value, cookie )
+		            } )
+	            }
+                res.send( String( result.content ) )
+            }
+            
+        } )
         
-        if( error ){
-            next( error )
-        } else if( result == null ){
-            next()
-        } else {
-            res.type( result.type || '.txt' )
-            res.setHeader( 'Cache-Control', result.cache || 'no-cache' )
-            res.send( String( result.content ) )
-        }
-    } )
-    
-} } )
+    }
+}

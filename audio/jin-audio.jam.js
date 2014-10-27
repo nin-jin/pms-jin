@@ -4,7 +4,7 @@
  * @static
  * @member $jin.audio
  */
-$jin.atom.prop({ '$jin.audio.input': {
+$jin.atom1.prop({ '$jin.audio.input': {
 	pull: function( ){
 		
 		var constraint = { audio: true }
@@ -30,7 +30,7 @@ $jin.atom.prop({ '$jin.audio.input': {
  * @static
  * @member $jin.audio
  */
-$jin.atom.prop({ '$jin.audio.inputText': {
+$jin.atom1.prop({ '$jin.audio.inputText': {
 	pull: function( ){
 		
 		var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -69,7 +69,7 @@ $jin.atom.prop({ '$jin.audio.inputText': {
  * @static
  * @member $jin.audio
  */
-$jin.atom.prop({ '$jin.audio.output': {
+$jin.atom1.prop({ '$jin.audio.output': {
 	pull: function( ){
 		return []
 	},

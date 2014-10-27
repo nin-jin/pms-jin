@@ -4,7 +4,7 @@
  * @static
  * @member $jin.chat
  */
-$jin.atom.prop({ '$jin.chat.streamer': {
+$jin.atom1.prop({ '$jin.chat.streamer': {
 	pull: function(){
 		return $jin.audio.input()
 	},
@@ -20,7 +20,7 @@ $jin.atom.prop({ '$jin.chat.streamer': {
  * @static
  * @member $jin.chat
  */
-$jin.atom.prop({ '$jin.chat.logger': {
+$jin.atom1.prop({ '$jin.chat.logger': {
 	pull: function(){
 		return $jin.audio.inputText()
 	},

@@ -14,7 +14,7 @@ $jin.klass({ '$jin.editor': [ '$jin.view' ] })
  * @method isEditable
  * @member $jin.editor
  */
-$jin.atom.prop({ '$jin.editor..isEditable': {
+$jin.atom1.prop({ '$jin.editor..isEditable': {
 	pull: function( ){
 		return true
 	}
@@ -25,7 +25,7 @@ $jin.atom.prop({ '$jin.editor..isEditable': {
  * @method valueProp
  * @member $jin.editor
  */
-$jin.atom.prop({ '$jin.editor..valueProp': {
+$jin.atom1.prop({ '$jin.editor..valueProp': {
 	pull: function( ){
 		return $jin.value()
 	}
@@ -55,7 +55,7 @@ $jin.method({ '$jin.editor..render': function( ){
  * @method value
  * @member $jin.editor
  */
-$jin.atom.prop({ '$jin.editor..value': {
+$jin.atom1.prop({ '$jin.editor..value': {
 	pull: function( ){
 		return this.valueProp()()
 	},

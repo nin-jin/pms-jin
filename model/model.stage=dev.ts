@@ -2,42 +2,33 @@ class User extends $jin.model {
     static objectPath = $jin.model.classRegister( 'User' )
 
     get name() {
-        return new $jin.atom2.transit<string>({
-            pull : prev => 'Man ' + this.objectPath
-        })
-    }
-
-    get age() {
-        return new $jin.atom2.transit<number>({
-            pull : prev => 35
+        return new $jin.atom.prop<string>({
+            pull : prev => 'Anonimous'
         })
     }
 
 }
 
-new $jin.atom2.transit({
+var newUserName = new $jin.atom.prop({
     pull : () => {
         var user1 = new User
-        var user2 = new User
-        console.log( user1.name.get(), user1.age.get() )
-        console.log( user2.name.get(), user2.age.get() )
-    }
-}).pull()
+        return user1.name.get()
+    },
+    notify : next => {
+        console.log( next )
+    },
+    reap: () => null
+}).get()
 
 class UserNext extends $jin.model {
     static objectPath = $jin.model.classRegister( 'User' )
 
     get name() {
-        return new $jin.atom2.transit<string>({
-            pull : prev => 'Man ' + this.objectPath
+        return new $jin.atom.prop<string>({
+            pull : prev => 'User ' + this.objectPath
         })
     }
 
-    get age() {
-        return new $jin.atom2.transit<number>({
-            pull : prev => Math.round( Math.random() * 50 )
-        })
-    }
 }
 
 eval('User = UserNext')

@@ -34,7 +34,7 @@ $jin.method({ '$jin.file.type.css.mime': function( ){
  * @method cssFiles
  * @member $jin.file.type.css
  */
-$jin.atom.prop({ '$jin.file.type.css..cssFiles': {
+$jin.atom1.prop({ '$jin.file.type.css..cssFiles': {
 	resolves: [ '$jin.file.base..cssFiles' ],
 	pull: function( ){
 		return [ this ]

@@ -10,7 +10,7 @@ module $jin {
         }
 
         static classAtom( key : string ){
-            return new $jin.atom2.transit<string>( {
+            return new $jin.atom.prop<string>( {
                 owner : $jin.model,
                 name : key
             } )

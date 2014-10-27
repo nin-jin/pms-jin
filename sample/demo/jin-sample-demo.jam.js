@@ -13,7 +13,7 @@ $jin.klass({ '$jin.sample.demo': [ '$jin.view' ] })
  * @static
  * @member $jin.sample.demo
  */
-$jin.atom.prop({ '$jin.sample.demo.strings': {
+$jin.atom1.prop({ '$jin.sample.demo.strings': {
 	value: '',
 	put: function( next, prev ){
 		return $jin.sample.demo.strings() + next
@@ -26,7 +26,7 @@ $jin.atom.prop({ '$jin.sample.demo.strings': {
  * @static
  * @member $jin.sample.demo
  */
-$jin.atom.prop({ '$jin.sample.demo.tree': {
+$jin.atom1.prop({ '$jin.sample.demo.tree': {
 	pull: function( ){
 		var strings = this.strings()
 		if( !strings ) throw new Error( 'Please, set up $jin.sample.demo.strings' )
@@ -39,21 +39,21 @@ $jin.atom.prop({ '$jin.sample.demo.tree': {
  * @method title
  * @member $jin.sample.demo
  */
-$jin.atom.prop({ '$jin.sample.demo..title': {} })
+$jin.atom1.prop({ '$jin.sample.demo..title': {} })
 
 /**
  * @name $jin.sample.demo#size
  * @method size
  * @member $jin.sample.demo
  */
-$jin.atom.prop({ '$jin.sample.demo..size': {} })
+$jin.atom1.prop({ '$jin.sample.demo..size': {} })
 
 /**
  * @name $jin.sample.demo#content
  * @method content
  * @member $jin.sample.demo
  */
-$jin.atom.prop({ '$jin.sample.demo..content': {} }) 
+$jin.atom1.prop({ '$jin.sample.demo..content': {} }) 
 
 /**
  * @name $jin.sample.demo.list
@@ -70,7 +70,7 @@ $jin.klass({ '$jin.sample.demo.list': [ '$jin.view' ] })
  * @member $jin.sample.demo.list
  * @static
  */
-$jin.atom.prop({ '$jin.sample.demo.list..items': {
+$jin.atom1.prop({ '$jin.sample.demo.list..items': {
 	pull: function( ){
 		function makeValues( sub, view ){
 			if( typeof sub === 'string' ) return sub

@@ -3,7 +3,7 @@
  * @method today
  * @static
  */
-$jin.atom.prop({ '$jin.date.today':
+$jin.atom1.prop({ '$jin.date.today':
 {	put: function( val ){
 		if( val instanceof Date ) return val
 
