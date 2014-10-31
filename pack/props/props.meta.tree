@@ -1,0 +1,7 @@
+include =jin/prop/vary
+include =jin/prop/proxy
+include =jin/atom/prop
+include =jin/atom/list
+include =jin/atom/numb
+include =jin/atom/flag
+include =jin/atom/str

@@ -36,18 +36,20 @@ $jin.atom1.prop.hash({ '$jin.debuild..js' : {
         var concater = new $node[ 'concat-with-sourcemaps' ]( true, target.relate(), '\n;\n' )
         build.jsSources().forEach( function( src ){
             var srcMap = src.parent().resolve( src.name() + '.map' )
+            var content = src.content().toString().replace( /# sourceMappingURL=/g , '' )
             if( srcMap.exists() ) {
-                concater.add( src.relate(), src.content().toString(), srcMap.content().toString() )
+                var json = JSON.parse( srcMap.content() )
+                json.sources = json.sources.map( function( source ){
+                    return src.parent().resolve( source ).relate( target.parent() )
+                }) 
+                concater.add( src.relate(), content, JSON.stringify( json ) )
             } else {
-                concater.add( src.relate(), src.content().toString() )
+                concater.add( src.relate(), content )
             }
         } )
 
-	    var map = JSON.parse( concater.sourceMap )
-	    map.sourceRoot = $jin.file('.' ).relate( targetMap.parent() )
-	    
         target.content( concater.content + '\n//# sourceMappingURL=' + targetMap.relate( target.parent() ) )
-        targetMap.content( JSON.stringify( map ) )
+        targetMap.content( concater.sourceMap )
         
         return target.version()
     }
@@ -65,12 +67,13 @@ $jin.atom1.prop.hash({ '$jin.debuild..css' : {
         var concater = new $node[ 'concat-with-sourcemaps' ]( true, target.relate(), '\n' )
         build.cssSources().forEach( function( src ){
             var srcMap = src.parent().resolve( src.name() + '.map' )
+            var content = src.content().toString().replace( /# sourceMappingURL=/g , '' )
             if( srcMap.exists() ) {
                 var json = JSON.parse( srcMap.content() )
                 json.sourceRoot = src.parent().relate( target.parent() )
-                concater.add( src.relate(), src.content().toString(), JSON.stringify( json ) )
+                concater.add( src.relate(), content, JSON.stringify( json ) )
             } else {
-                concater.add( src.relate(), src.content().toString() )
+                concater.add( src.relate(), content )
             }
         } )
 

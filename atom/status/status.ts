@@ -7,4 +7,3 @@ module $jin.atom {
         static error = new status( 'error' )
     }
 }
-    

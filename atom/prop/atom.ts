@@ -3,15 +3,15 @@ module $jin.atom {
     // Base implementation of reactive property 
     export class prop<ValueType,OwnerType extends $jin.object> extends $jin.object {
         
-        static currentMaster : $jin.atom.prop
+        static currentSlave : $jin.atom.prop
 
         private static _defer : $jin.defer
         private static _updatePlan : $jin.atom.prop<any,any>[][] = []
         private static _reapPlan : { [ id : string ] : $jin.atom.prop<any,any> } = {}
 
         static swap( atom : $jin.atom.prop<any,any> ) {
-            var last = this.currentMaster
-            this.currentMaster = atom
+            var last = this.currentSlave
+            this.currentSlave = atom
             return last
         }
 
@@ -216,7 +216,7 @@ module $jin.atom {
         }
 
         touch(){
-            var slave = $jin.atom.prop.currentMaster
+            var slave = $jin.atom.prop.currentSlave
             if( slave ){
                 this.lead( slave )
                 slave.obey( this )
