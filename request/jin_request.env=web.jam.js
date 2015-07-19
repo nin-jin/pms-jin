@@ -1,7 +1,7 @@
 $jin.request = function( options ){
     var xhr = new XMLHttpRequest
 	var body = options.body
-	if( $jin.type( body ) === 'Object' ){
+	if( $jin_type( body ) === 'Object' ){
 		var form = new FormData
 		for( var key in body ){
 			form.append( key, body[ key ] )
@@ -9,17 +9,26 @@ $jin.request = function( options ){
 		body = form
 	}
 	xhr.withCredentials = true
+	if( options.responseType ) {
+		xhr.responseType = options.responseType
+	}
+	xhr.open( options.method || 'GET', options.uri, !options.sync )
+	if( options.headers ) {
+		for( var name in options.headers ) {
+			options.headers[ name].forEach( function( value ) {
+				xhr.setRequestHeader( name , value )
+			})
+		}
+	}
 	if( options.sync ){
-		xhr.open( options.method || 'GET', options.uri, false )
 		if( options.type ) xhr.setRequestHeader( 'Content-Type', options.type )
 		xhr.send( body )
 		return xhr
 	} else {
-		var atom = $jin.atom1({ name: '$jin.request:' + options.uri })
-		xhr.open( options.method || 'GET', options.uri, true )
+		var atom = new $jin.atom.prop({ name: '$jin.request:' + options.uri })
 		if( options.type ) xhr.setRequestHeader( 'Content-Type', options.type )
 		xhr.onload = function( ){
-			atom.put( xhr )
+			atom.push( xhr )
 		}
 		xhr.onerror = function( ){
 			atom.fail( xhr )

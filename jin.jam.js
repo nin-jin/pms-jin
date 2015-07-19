@@ -1,6 +1,1 @@
-/**
- * @name $jin
- * @class $jin
- * @singleton
- */
-this.$jin = {}
+var $jin = this.$jin = {}

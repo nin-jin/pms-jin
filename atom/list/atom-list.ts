@@ -1,7 +1,11 @@
 module $jin.atom {
     
-    export class list<ItemType,OwnerType extends $jin.object> extends $jin.atom.prop<ItemType[],OwnerType> {
-        
+    export class list < ItemType , OwnerType extends $jin.object.iface > extends $jin.atom.prop < ItemType[] , OwnerType > {
+
+        constructor( config ) {
+            return <any>super( config )
+        }
+
         merge( next : ItemType[] , prev : ItemType[] ) {
             next = super.merge( next , prev )
             
@@ -13,6 +17,22 @@ module $jin.atom {
             }
             
             return prev
+        }
+
+        notify( error? : Error , next? : ItemType[] , prev? : ItemType[] ) {
+            super.notify( error , next , prev )
+            if( prev ) {
+                if( next ) {
+                    var dropped = prev.filter( item => next.indexOf( item ) === -1 )
+                } else {
+                    var dropped = prev
+                }
+                dropped.forEach( item => {
+                    if( !item ) return
+                    if( item.owner === this ) return
+                    item['destroy']()
+                } )
+            }
         }
         
         append( values : ItemType[] ) {

@@ -2,10 +2,10 @@
  * @name $jin.sample.demo
  * @class $jin.sample.demo
  * @mixins $jin.klass
- * @mixins $jin.view
+ * @mixins $jin.view1
  * @returns $jin.sample.demo
  */
-$jin.klass({ '$jin.sample.demo': [ '$jin.view' ] })
+$jin.klass({ '$jin.sample.demo': [ '$jin.view1' ] })
 
 /**
  * @name $jin.sample.demo.strings
@@ -59,10 +59,10 @@ $jin.atom1.prop({ '$jin.sample.demo..content': {} })
  * @name $jin.sample.demo.list
  * @class $jin.sample.demo.list
  * @mixins $jin.klass
- * @mixins $jin.view
+ * @mixins $jin.view1
  * @returns $jin.sample.demo.list
  */
-$jin.klass({ '$jin.sample.demo.list': [ '$jin.view' ] })
+$jin.klass({ '$jin.sample.demo.list': [ '$jin.view1' ] })
 
 /**
  * @name $jin.sample.demo.list#items

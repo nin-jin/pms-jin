@@ -1,75 +1,93 @@
 module $jin.prop {
-
-    export class vary<ValueType,HostType> extends $jin.object {
-
+    
+    export class vary<ValueType , OwnerType extends { objectId : string } > extends $jin.object < OwnerType > {
+        
         constructor( config : {
-            owner? : HostType
+            owner? : OwnerType
             name? : string
-            get? : ( value : ValueType ) => ValueType
-            pull? : ( prev : ValueType ) => ValueType
-            merge? : ( next : ValueType, prev : ValueType ) => ValueType
-            put? : ( next : ValueType, prev : ValueType ) => any
-            clear? : ( prev : ValueType ) => any
+            get? : ( prop : $jin.prop.vary<ValueType,OwnerType> , value : ValueType ) => ValueType
+            pull? : ( prop : $jin.prop.vary<ValueType,OwnerType> , prev : ValueType ) => ValueType
+            merge? : ( prop : $jin.prop.vary<ValueType,OwnerType> , next : ValueType, prev : ValueType ) => ValueType
+            notify? : ( prop : $jin.prop.vary<ValueType,OwnerType> , next : ValueType, prev : ValueType ) => void
+            put? : ( prop : $jin.prop.vary<ValueType,OwnerType> , next : ValueType, prev : ValueType ) => any
+            clear? : ( prop : $jin.prop.vary<ValueType,OwnerType> , prev : ValueType ) => any
         } ) {
-            super( config.name )
-            
-            this._host = config.owner || this
-            
+            super({
+                owner : config.owner || <any>this ,
+                name : config.name || '_value'
+            })
+
             if( config.pull ) this._pull = config.pull
             if( config.get ) this._get = config.get
             if( config.merge ) this._merge = config.merge
+            if( config.notify ) this._notify = config.notify
             if( config.put ) this._put = config.put
             if( config.clear ) this._clear = config.clear
             
             return this
         }
 
-        private _host : HostType
-        private _get( value : ValueType ){
+        set owner( next : OwnerType ) {
+            this._owner = next
+        }
+        get owner() {
+            return this._owner
+        }
+
+        protected _get( prop : $jin.prop.vary<ValueType,OwnerType> , value : ValueType ){
             return value
         }
-        private _pull( prev : ValueType ){
+        protected _pull( prop : $jin.prop.vary<ValueType,OwnerType> , prev : ValueType ){
             return prev
         }
-        private _merge( next : ValueType , prev : ValueType ){
+        protected _merge( prop : $jin.prop.vary<ValueType,OwnerType>, next : ValueType , prev : ValueType ){
             return next
         }
-        private _put( next : ValueType , prev : ValueType ){
-            this._host[ this.objectName ] = next
+        protected _notify( prop : $jin.prop.vary<ValueType,OwnerType> , next : ValueType , prev : ValueType ){
         }
-        private _clear( prev : ValueType ){
+        protected _put( prop : $jin.prop.vary<ValueType,OwnerType> , next : ValueType , prev : ValueType ){
+            this.push( next )
+        }
+        protected _clear( prop : $jin.prop.vary<ValueType,OwnerType> , prev : ValueType ){
         }
 
         clear() {
-            var prev = this._host[ this.objectName ]
-            this._host[ this.objectName ] = undefined
-            this._clear( prev )
+            var prev = this.owner[ this.name ]
+            this.owner[ this.name ] = undefined
+            this._clear( this , prev )
         }
 
         value( ) : ValueType {
-            return this._host[ this.objectName ]
+            return this.owner[ this.name ]
         }
 
         push( next : ValueType ) : ValueType {
-            next = this._merge( next, this.value() )
-            this._host[ this.objectName ] = next
+            var prev = this.owner[ this.name ]
+            if( next === prev ) return next
+
+            next = this._merge( this , next, prev )
+            if( next === prev ) return next
+
+            this.owner[ this.name ] = next
+
+            this._notify( this , next , prev )
+
             return next
         }
 
         get() : ValueType {
-            var value = this.value()
-            if( value !== undefined ) return this._get( value )
-            
-            var next = this._pull( value )
-            next = this._merge( next, value )
-            this._host[ this.objectName ] = next
-            
-            return this._get( next )
+            var host = this.owner
+            var field = this.name
+            var value = host[ field ]
+            if( value === undefined ) {
+                value = this.pull()
+            }
+            return this._get( this , value )
         }
 
         pull() : ValueType {
             var value = this.value()
-            value = this._pull( value )
+            value = this._pull( this , value )
             value = this.push( value )
             return value
         }
@@ -80,12 +98,12 @@ module $jin.prop {
             }
         }
 
-        set( next : ValueType ){
-            var prev = this.value()
-            next = this._merge( next, prev )
+        set( next : ValueType , prev : ValueType = this.value() ){
+            next = this._merge( this , next, prev )
             if( next !== prev ){
-                this._put( next , prev )
+                this._put( this , next , prev )
             }
+            return this.owner
         }
 
     }

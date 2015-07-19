@@ -51,7 +51,7 @@ $jin.atom1.prop({ '$jin.file.base..stat': {
 	pull: function( prev ){
 		try {
 			var stat = this.constructor.nativeAPI().statSync( this.path() )
-			this.watcher()
+			//this.watcher()
 		} catch( error ){
 			if( error.code !== 'ENOENT' ) throw error
 			stat = null
@@ -163,7 +163,7 @@ $jin.atom1.prop({ '$jin.file.base..content': {
 	pull: function( content ){
 		try {
 			var content = this.constructor.nativeAPI().readFileSync( this.path() )
-			this.watcher()
+			//this.watcher()
 		} catch( error ){
 			error.message += ' (' + this.path() + ')'
 			throw error
@@ -254,7 +254,7 @@ $jin.atom1.prop({ '$jin.file.base..childList': {
 				return dir.child( name )
 			} )
 			//dir.childList( childs )
-			this.watcher()
+			//this.watcher()
 			return childs
 		//} )
 	}
@@ -320,56 +320,56 @@ $jin.property({ '$jin.file.base..update': function( ){
  * @method notify
  * @member $jin.file.base
  */
-$jin.method({ '$jin.file.base..notify': function( ){
-	this.update( void 0 )
-	this.watcher_atom().notify()
-}})
+//$jin.method({ '$jin.file.base..notify': function( ){
+//	this.update( void 0 )
+//	this.watcher_atom().notify()
+//}})
 
 /**
  * @name $jin.file.base#watcher
  * @method watcher
  * @member $jin.file.base
  */
-$jin.atom1.prop({ '$jin.file.base..watcher': {
-	pull: function( prev ){
-		return this.parent().nativeWatcher()
-	}
-}})
+//$jin.atom1.prop({ '$jin.file.base..watcher': {
+//	pull: function( prev ){
+//		return this.parent().nativeWatcher()
+//	}
+//}})
 
 /**
  * @name $jin.file.base#nativeWatcher
  * @method nativeWatcher
  * @member $jin.file.base
  */
-$jin.atom1.prop({ '$jin.file.base..nativeWatcher': {
-	pull: function( prev ){
-		var handler = $jin.sync2async( function jin_file_handle_change( eventName, fileName ){
-			if( eventName === 'rename' ) return
-			if( eventName !== 'change' ) $jin.log.error( new Error( 'Unknown event name (' + eventName + ')' ) )
-			
-			if( !fileName ) return
-			if( /\.tmp$|[_~]$/.test( fileName ) ) return
-			
-			this.child( fileName ).update()
-		}.bind( this ) )
-		
-		var watcher = this.constructor.nativeAPI().watch
-		(   this.path()
-		,   { persistent: false }
-		,   handler
-		)
-		
-		watcher.on( 'error', function(){
-			this.update()
-		}.bind( this ) )
-		
-		this.entangle({ destroy: function( ){
-			watcher.close()
-		} })
-		
-		return watcher
-	}
-}})
+//$jin.atom1.prop({ '$jin.file.base..nativeWatcher': {
+//	pull: function( prev ){
+//		var handler = $jin.sync2async( function jin_file_handle_change( eventName, fileName ){
+//			if( eventName === 'rename' ) return
+//			if( eventName !== 'change' ) $jin.log.error( new Error( 'Unknown event name (' + eventName + ')' ) )
+//
+//			if( !fileName ) return
+//			if( /\.tmp$|[_~]$/.test( fileName ) ) return
+//
+//			this.child( fileName ).update()
+//		}.bind( this ) )
+//
+//		var watcher = this.constructor.nativeAPI().watch
+//		(   this.path()
+//		,   { persistent: false }
+//		,   handler
+//		)
+//
+//		watcher.on( 'error', function(){
+//			this.update()
+//		}.bind( this ) )
+//
+//		this.entangle({ destroy: function( ){
+//			watcher.close()
+//		} })
+//
+//		return watcher
+//	}
+//}})
 
 /**
  * @name $jin.file.base.ext
@@ -513,99 +513,6 @@ $jin.method({ '$jin.file.base..buildFile': function( prefix, vary, postfix ){
  */
 $jin.method({ '$jin.file.base..dependList': function( ){
 	return [ ]
-}})
-
-/**
- * @name $jin.file.base#dependTree
- * @method dependTree
- * @member $jin.file.base
- */
-$jin.method({ '$jin.file.base..dependTree': function( vary, moduleList ){
-    var root = this
-    
-    if( !vary ) vary= {}
-    var varyFilter= []
-    for( var key in vary ){
-        var val= vary[ key ]
-        varyFilter.push( '\\.' + key + '=(?!' + val + '\\.)' )
-    }
-    varyFilter= RegExp( varyFilter.join( '|' ) || '^$' )
-    
-    var indexSrcs = []
-    var touchedMods = []
-    var root = this
-    
-    if( !moduleList ) moduleList = this.deepModuleList()
-    
-    var tree = moduleList.map( function proceedDep( mod ){
-        var subTree = []
-        
-        var pack = root.child( mod.relate( root ).replace( /\/.*/, '' ) )
-        pack.require()
-        
-        while( !mod.exists() ) mod = mod.parent()
-        
-        if( mod === root ) return
-        
-        if( ~touchedMods.indexOf( mod ) ) return
-        touchedMods.push( mod )
-        
-        var depMods = []
-        
-        var parent = mod.parent()
-        if( parent !== root ) depMods.push( parent )
-        
-        var srcs = mod.sourceList()
-        
-        srcs = srcs.filter( function( src ){
-            return !varyFilter.test( src.name() )
-        } )
-        
-        if( !srcs.length ) return
-        
-        srcs.sort( function( a, b ){
-            var aNames = a.name().split( '.' )
-            var bNames = b.name().split( '.' )
-            var aName= aNames[0]
-            var bName= bNames[0]
-            if( aName.length < bName.length ) return -1
-            if( aName.length > bName.length ) return 1
-            if( aName < bName ) return -1
-            if( aName > bName ) return 1
-            if( aNames.length < bNames.length ) return -1
-            if( aNames.length > bNames.length ) return 1
-            if( a.name() < b.name() ) return -1
-            if( a.name() > b.name() ) return 1
-            return 0
-        })
-        
-        srcs.forEach( function( src ){
-            var srcDeps = src.dependList().map( function( path ){
-                if( path[0] === '.' ) var dep = src.parent().resolve( path )
-                else var dep = root.resolve( path )
-                return dep
-            } )
-            depMods = depMods.concat( srcDeps )
-        } )
-        
-        var depList =  depMods.map( proceedDep ).filter( function( dep ){ return dep } )
-        
-        srcs = srcs.filter( function( src ){
-            return !~indexSrcs.indexOf( src )
-        } )
-        indexSrcs = indexSrcs.concat( srcs )
-        
-        depHash = {}
-        depList.forEach( function( dep ){
-            for( var key in dep ) depHash[ key ] = dep[ key ]
-        } )
-        depHash[ '' ] = srcs.map( function( file ){ return file.relate() } )
-        var node = {}
-        node[ mod.relate() ] = depHash
-        return node
-    } )
-    
-    return tree
 }})
 
 /**

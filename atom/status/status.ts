@@ -5,5 +5,6 @@ module $jin.atom {
         static pull = new status( 'pull' )
         static actual = new status( 'actual' )
         static error = new status( 'error' )
+        static destroyed = new status( 'destroyed' )
     }
 }

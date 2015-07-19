@@ -30,9 +30,9 @@ $jin.atom1.prop({ '$jin.file.type.metaTree..dependList': {
 		
 		var meta= $jin.tree.parse( this.content() )
 		meta.select(' include / ').values().forEach( function( path ){
-			depends[ path.trim() ] = true
+			depends[ path.trim() ] = 0
 		} )
 		
-		return Object.keys( depends )
+		return depends
 	}
 }})

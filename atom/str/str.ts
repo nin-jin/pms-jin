@@ -1,6 +1,6 @@
 module $jin.atom {
     
-    export class str < OwnerType extends $jin.object > extends $jin.atom.prop < string , OwnerType > {
+    export class str extends $jin.atom.prop < string > {
         
         append( value ) {
             this.set( this.get() + value )

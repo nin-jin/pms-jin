@@ -33,11 +33,11 @@ $jin.atom1.prop({ '$jin.file.type.jamJS..dependList': {
 		.replace
 		(   /\$([a-z][a-z0-9]+(?:[._][a-z0-9]+)*)/ig
 		,   function( str, path ){
-				depends[ path.replace( /[._-]/g, '/' ) ] = true
+				depends[ path.replace( /[._-]/g, '/' ) ] = 1
 			}
 		)
 		
-		return Object.keys( depends )
+		return depends
 	}
 }})
 
@@ -66,6 +66,7 @@ $jin.atom1.prop({ '$jin.file.type.jamJS..content': {
  * @member $jin.file.type.jamJS
  */
 $jin.method({ '$jin.file.type.jamJS.normalize': function( src ){
+    return src
 	src = String( src ).replace( /((\/\*\*)((?:[\s\S](?!\/\*\*))*?)(\*\/[ \t]*[\n\r]*))?(([ \t]*)[$]jin\.(method|definer|klass|error|konst|property(?:\.(?:list|hash))?|atom\.prop(?:\.(?:list|hash))?)\(\{\s['"]([$\w.#]+)['"]:([^\n\r]+))/g, function( str, comm, prefix, doc, suffix, def, indent, type, name, config ){
         var tags = {}
         if( doc ) doc.replace( / \*(?:[ \t]+@(\w+))?(?:[ \t]([^\n\r]+))?/g, function( str, tagName, tagValue ){

@@ -131,6 +131,9 @@ $jin.method({ '$jin.uri..json': function( json ){
     return json
 }})
 
+$jin.method({ '$jin.uri..toJSON': function( json ){
+    return this.json()
+}})
 /**
  * @name $jin.uri#resolve
  * @method resolve
@@ -172,8 +175,8 @@ $jin.method({ '$jin.uri..toString': function( ){
     if( this.slashes() ) link += '//'
     
     if( this.login() ){
-        link += this.login()
-        if( this.password() ) link += ':' + this.password()
+        link += encodeURIComponent( this.login() )
+        if( this.password() ) link += ':' + encodeURIComponent( this.password() )
         link += '@'
     }
     
@@ -240,8 +243,8 @@ $jin.method({ '$jin.uri.parse': function( string ){
         } )
         .replace( /^([^@]+)@/, function( str, auth ){
             var pair = auth.split( ':' )
-            config.login = pair[0]
-            config.password = pair[1]
+            config.login = pair[0] && decodeURIComponent( pair[0] )
+            config.password = pair[1] && decodeURIComponent( pair[1] )
             return ''
         } )
         return ''

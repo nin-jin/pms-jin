@@ -11,4 +11,5 @@ declare module $jin {
         mock<Type>( path : string , value : Type );
     }
     export function test ( script : ( test : testClass ) => void ) : void
+    export function test ( config : { [ index: string ] : ( test : testClass ) => void } ) : void
 }

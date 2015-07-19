@@ -51,7 +51,7 @@ Put into foo/bar file "foo-bar.meta.tree":
 Or(!) simple use its in JAM-file "foo-bar.jam.js":
 
 ```js
-$jin.klass({ '$foo.bar': [ '$jin.view' ] })
+$jin.klass({ '$foo.bar': [ '$jin.view1' ] })
 $jin.atom1.prop({ '$foo.bar.title': {
 	pull: function( ){
 		return Math.random()

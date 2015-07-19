@@ -1,9 +1,9 @@
-class User extends $jin.model {
-    static objectPath = $jin.model.classRegister( 'User' )
+class User extends $jin.model<any> {
+    static objectId = $jin.model.classRegister( 'User' )
 
-    get name() {
-        return new $jin.atom.prop<string>({
-            pull : prev => 'Anonimous'
+    get login() {
+        return new $jin.atom.prop<string,User>({
+            pull : prev => 'anonimous'
         })
     }
 
@@ -11,21 +11,18 @@ class User extends $jin.model {
 
 var newUserName = new $jin.atom.prop({
     pull : () => {
-        var user1 = new User
-        return user1.name.get()
-    },
-    notify : next => {
-        console.log( next )
+        var user1 = new User({ })
+        return user1.login.get()
     },
     reap: () => null
 }).get()
 
-class UserNext extends $jin.model {
-    static objectPath = $jin.model.classRegister( 'User' )
+class UserNext extends $jin.model<any> {
+    static objectId = $jin.model.classRegister( 'User' )
 
-    get name() {
-        return new $jin.atom.prop<string>({
-            pull : prev => 'User ' + this.objectPath
+    get login() {
+        return new $jin.atom.prop<string,UserNext>({
+            pull : prev => 'user_' + this.objectId
         })
     }
 

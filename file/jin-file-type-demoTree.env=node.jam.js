@@ -32,11 +32,11 @@ $jin.atom1.prop({ '$jin.file.type.demoTree..dependList': {
 		.replace
 		(   /([a-z][a-z0-9]+(?:-[a-z0-9]+)+)/ig
 		,   function( str, path ){
-				depends[ path.replace( /[._-]/g, '/' ) ] = true
+				depends[ path.replace( /[._-]/g, '/' ) ] = 0
 			}
 		)
 		
-		return Object.keys( depends )
+		return depends
 	}
 }})
 

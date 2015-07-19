@@ -48,6 +48,6 @@ $jin.atom1.prop({ '$jin.file.type.png..image': {
 			atom.fail( error )
 		} )
 		
-		throw $jin.atom1.wait( 'Loading image from file system...' )
+		//throw $jin.atom1.wait( 'Loading image from file system...' )
 	}
 }})

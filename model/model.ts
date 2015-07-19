@@ -1,28 +1,37 @@
 module $jin {
     
-    export class model extends $jin.object {
+    export class model < OwnerType extends $jin.object.iface > extends $jin.object < OwnerType > {
 
-        static objectPath = '$jin.model'
-        
-        static classRegister( classId : string ) {
-            $jin.model.classAtom( classId ).notify()
+        static objectId = '$jin.model'
+
+        static classRegister( classId : string , superId? : string ) {
+            var classAtom = $jin.model.classAtom( classId )
+            classAtom.notify()
+            if( superId ) {
+                var superAtom = $jin.model.classAtom(superId)
+                classAtom.obey(superAtom)
+                superAtom.lead(classAtom)
+            }
             return classId
         }
 
         static classAtom( key : string ){
-            return new $jin.atom.prop<string>( {
+            return new $jin.atom.prop<string,typeof $jin.model>( {
                 owner : $jin.model,
-                name : key
+                name : key,
+                persist : true
             } )
         }
-        
-        constructor() {
-            super()
-            $jin.model.classAtom( this['constructor']['objectPath'] ).touch()
+
+        constructor( config ) {
+            super( config )
+            $jin.model.classAtom( (<any>this.constructor).objectId ).touch()
         }
-        
-        destroy() {
+
+        toString() {
+            return this.objectId
         }
+
     }
     
     module model {

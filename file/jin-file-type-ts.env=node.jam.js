@@ -28,15 +28,33 @@ $jin.atom1.prop.list({ '$jin.file.type.ts..dependList': {
 	pull: function( ){
 		var depends = {}
 		
-		String( this.content() )
-		.replace( /\/\*[\s\S]*?\*\//g, '' )
-		.replace
-		(   /\$([a-z][a-z0-9]+(?:[._][a-z0-9]+)*)/ig
-		,   function( str, path ){
-				depends[ path.replace( /[._-]/g, '/' ) ] = true
-			}
-		)
-		
-		return Object.keys( depends )
+		var lines = String( this.content()).replace( /\/\*[\s\S]*?\*\//g, '' ).split( '\n' )
+
+		lines.forEach( function( line ){
+			line = line.replace( /\/\/.*/ , '' )
+			var indent = /^((?:    )+|\t+)*/.exec( line )
+			var priority = indent[0].length
+			if( indent[0][0] === ' ' ) priority /= 4
+			line.replace
+			(   /\$([a-z][a-z0-9]+(?:[._][a-z0-9]+)*)/ig
+				,   function( str, path ){
+					var name = path.replace( /[._-]/g, '/' )
+					if( typeof depends[ name ] === 'number' ) {
+						depends[ name ] = Math.min( depends[ name ] , priority )
+					} else {
+						depends[ name ] = priority
+					}
+				}
+			)
+		})
+
+		return depends
+	}
+}})
+
+$jin.atom1.prop({ '$jin.file.type.ts..jsFiles': {
+	resolves: [ '$jin.file.base..jsFiles' ],
+	pull: function( ){
+		return [ this ]
 	}
 }})

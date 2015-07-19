@@ -1,15 +1,15 @@
 module $jin.prop.test {
 
     $jin.test( test => {
-        var obj = new $jin.prop.vary<number>({})
+        var obj = new $jin.prop.vary<number,any>({})
         test.equal( obj.get(), undefined )
         obj.set( 777 )
         test.equal( obj.get(), 777 )
     } )
 
-    class VarySimple {
+    class VarySimple extends $jin.object<any> {
         get value( ){
-            return new $jin.prop.vary<number>({
+            return new $jin.prop.vary<number,VarySimple>({
                 owner : this,
                 name : '_value'
             })
@@ -17,52 +17,52 @@ module $jin.prop.test {
     }
 
     $jin.test( test => {
-        var obj = new VarySimple
+        var obj = new VarySimple({ })
         test.equal( obj.value.get(), undefined )
         obj.value.set( 777 )
         test.equal( obj.value.get(), 777 )
     } )
 
-    class VaryLazy {
+    class VaryLazy extends $jin.object<any> {
         defaultValue = 666
         get value( ){
-            return new $jin.prop.vary<number>({
+            return new $jin.prop.vary<number,VaryLazy>({
                 owner : this,
                 name : '_value',
-                pull : prev => this.defaultValue,
-                merge: ( next , prev ) => next + 111
+                pull : prop => this.defaultValue,
+                merge: ( prop , next , prev ) => next + 111
             })
         }
     }
 
     $jin.test( test => {
-        var obj = new VaryLazy
+        var obj = new VaryLazy({ })
         test.equal( obj.value.get(), 777 )
         obj.defaultValue = 555
         test.equal( obj.value.get(), 777 )
         obj.value.pull()
         test.equal( obj.value.get(), 666 )
         obj.value.set( 666 )
-        test.equal( obj.value.get(), 777 )
+        test.equal( obj.value.get(), 888 )
         obj.value.clear()
         test.equal( obj.value.get(), 666 )
     } )
 
-    class VaryShare {
+    class VaryShare extends $jin.object<any> {
         static sharedValue = 0
         get value( ){
-            return new $jin.prop.vary<number>({
+            return new $jin.prop.vary<number,VaryShare>({
                 owner : this,
                 name : '_value',
-                put : next => VaryShare.sharedValue = next + .111,
-                pull : prev => 666,
-                get: value => VaryShare.sharedValue + value
+                put : ( prop , next ) => VaryShare.sharedValue = next + .111,
+                pull : prop => 666,
+                get: ( prop , value ) => VaryShare.sharedValue + value
             })
         }
     }
     
     $jin.test( test => {
-        var obj = new VaryShare
+        var obj = new VaryShare({ })
         test.equal( obj.value.get(), 666 )
         obj.value.set( 111 )
         test.equal( obj.value.get(), 777.111 )

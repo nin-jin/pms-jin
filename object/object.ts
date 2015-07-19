@@ -1,83 +1,111 @@
 module $jin {
-    
+
     // Common object behaviour:
     // - Unique identifier
     // - Control lifetime
-    export class object {
-        
-        // Seed for identifiers
-        private static _object_seed = 0
+    // - Runtime create subclasses
+    export class object < OwnerType extends { objectId : string } > {
 
-        // Creates subclass with fields from config
-        static create( config ) {
-            var parent = this
-            var klass = config.hasOwnProperty( 'constructor' ) ? config['constructor'] : function( ){
+        static objectId = '$jin.object'
+        private static _objectIdSeed = 0
+
+        static makeConstructor( parent ) {
+            return function jin_object( ){
                 parent.apply( this, arguments )
             }
+        }
+
+        static makeClass( config ) {
+            var parent = this
+
+            var klass = config.hasOwnProperty( 'constructor' )
+                ? config['constructor']
+                : this.makeConstructor( parent )
+
             klass.prototype = Object.create( this.prototype )
+
+            for( var key in this ) {
+                if( this[ key ] === void 0 ) continue
+                klass[ key ] = this[ key ]
+            }
+
             for( var key in config ) {
+                if( config[ key ] === void 0 ) continue
                 klass.prototype[ key ] = config[ key ]
             }
-            return klass
+
+            return <typeof parent> klass
         }
-        
-        //static _owner : $jin.object
-        
-        _owner : $jin.object
-        
-        //static objectName : string
-        
-        // Name unique for owner
-        objectName : string
-        
-        constructor( name? : string ) {
-            this.objectName = name || '' + ++$jin.object._object_seed
+
+        objectId : string
+        name : string
+
+        constructor( config : {
+            owner? : OwnerType
+            name? : string
+        } ) {
+            var name = config.name || ( '_' +  ++$jin.object._objectIdSeed )
+            this.name = name
+
+            var owner = config.owner || <any>this.constructor
+            //if( owner[ name ] ) return owner[ name ]
+
+            this.objectId = owner.objectId + '.' + name
+            this.owner = owner
         }
-        
+
         destroy() {
-            this.havings.forEach( having => having.destroy() )
+            this.havings.forEach( obj => {
+                obj.destroy()
+            } )
             this.owner = null
         }
-        
-        // Objects whose owner is this, they destroys when owner destroys
-        get havings() {
+
+        get havings( ) {
             var havings = []
-            for( var field in this ) {
-                if( !this.hasOwnProperty( field ) ) continue
-                var value = this[ field ]
+            for( var key in this ) {
+                if( !this.hasOwnProperty( key ) ) continue
+                var value = this[ key ]
                 if( !value ) continue
-                if( value.owner !== this ) continue
-                havings.push( value )
+                if( value._owner !== this ) continue
+                if( havings.indexOf( value ) === -1 ) havings.push( value )
             }
             return havings
         }
-        
-        // Object which control lifetime of this
-        set owner( owner : $jin.object ) {
-            if( owner ){
-                owner[ this.objectName ] = this
-            } else {
-                if( !this._owner ) return
-                this._owner[ this.objectName ] = null
+
+        _owner : OwnerType
+        set owner( next : OwnerType ) {
+            var prev = this._owner
+            if( next === prev ) return
+            if( prev ) {
+                prev[ this.name ] = null
             }
-            this._owner = owner
+            if( next ) {
+                //if( next[ this.name ] && next[ this.name ] !== this ) {
+                //    throw new $jin.error( 'Having name conflict', { name : this.name } )
+                //} else {
+                    next[ this.name ] = this
+                //}
+            }
+            this._owner = next
         }
-        
         get owner() {
             return this._owner
         }
-        
-        // Human readable unique identifier
-        get objectPath() {
-            var path = this.objectName
-            if( this._owner ) path = this._owner.objectPath + '.' + path
-            return path
-        }
 
-        toString() {
-            return this.objectName
+        get overLord() {
+            var owner = this.owner
+            if( !owner ) return this
+
+            return owner['overLord']
         }
 
     }
-    
+
+    export module object {
+        export interface iface {
+            objectId : string
+        }
+    }
+
 }

@@ -4,7 +4,7 @@ module $jin.prop {
 
         constructor( config : {
             pull? : () => ValueType
-            put? : ( next : ValueType ) => void
+            put? : ( next? : ValueType ) => void
         } ){
             if( config.pull ) this.get = config.pull
             if( config.put ) this.set = config.put
@@ -15,7 +15,7 @@ module $jin.prop {
             return undefined
         }
 
-        set( next : ValueType ){
+        set( next? : ValueType ){
         }
 
     }

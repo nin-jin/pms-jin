@@ -14,7 +14,7 @@ $jin.klass({ '$jin.vector': [ '$jin.wrapper' ] })
  */
 $jin.method({ '$jin.vector..init': function( data ){
 	if( !arguments.length ) data = []
-	switch( $jin.type( data ) ){
+	switch( $jin_type( data ) ){
 		case 'Array':
 			return this['$jin.wrapper..init']( data )
 		case 'Object':
@@ -63,15 +63,15 @@ $jin.method({ '$jin.vector..z': function( val ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector.merge': function( merger, left, right ){
-	left = $jin.vector( left ).raw()
-	right = $jin.vector( right ).raw()
+	left = this( left ).raw()
+	right = this( right ).raw()
 	
 	var res = left.map( function( l, index ){
 		var r = right[ index ]
 		return merger( l, r )
 	} )
 	
-	return $jin.vector( res )
+	return this( res )
 }})
 
 /**
@@ -80,7 +80,7 @@ $jin.method({ '$jin.vector.merge': function( merger, left, right ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector..summ': function( right ){
-	return $jin.vector.merge( $jin.merge.summ, this, right )
+	return this.constructor.merge( $jin.merge.summ, this, right )
 }})
 
 /**
@@ -89,7 +89,7 @@ $jin.method({ '$jin.vector..summ': function( right ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector..sub': function( right ){
-	return $jin.vector.merge( $jin.merge.sub, this, right )
+	return this.constructor.merge( $jin.merge.sub, this, right )
 }})
 
 /**
@@ -98,7 +98,7 @@ $jin.method({ '$jin.vector..sub': function( right ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector..mult': function( right ){
-	return $jin.vector.merge( $jin.merge.mult, this, right )
+	return this.constructor.merge( $jin.merge.mult, this, right )
 }})
 
 /**
@@ -107,5 +107,5 @@ $jin.method({ '$jin.vector..mult': function( right ){
  * @member $jin.vector
  */
 $jin.method({ '$jin.vector..div': function( right ){
-	return $jin.vector.merge( $jin.merge.div, this, right )
+	return this.constructor.merge( $jin.merge.div, this, right )
 }})

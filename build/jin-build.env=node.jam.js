@@ -46,46 +46,42 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 	'.jsSources': [ $jin.atom1.prop.list, {
 		pull: function( prev ){
 			var tsFiles = []
-			
+
 			var jsFiles = [].concat.apply( [], this.sources().map( function( src ){
-				if( /\.ts$/.test( src.name() ) ){
-					tsFiles.push( src )
-					return [ src ]
-				}
-				return src.jsFiles()
+				var files = src.jsFiles()
+				files.forEach( function( file ) {
+					if (!/\.ts$/.test(file.name())) return
+					tsFiles.push(file)
+				} )
+				return files
 			} ) )
 			
 			if( tsFiles.length ){
-				var tsapi = $node['typescript.api']
-				var create = tsapi.create
-				var compile = $jin.async2sync( function( units, done ){
-					tsapi.compile( units, function( result ){
-						if( tsapi.check( result ) ) return done( null, result )
-						var errors = result.map( function( unit ){
-							return unit.diagnostics
-						} )
-						done( errors.join( '\n' ).replace( / \[(\d+:\d+)\]/g, ':$1' ).replace( /\n+/g, '\n' ) )
-					} )
-				} )
-				
-				tsapi.reset({ mapSourceFiles: true })
-				
-				var defs = { web: './node_modules/typescript.api/decl/lib.d.ts', node: './node_modules/typescript.api/decl/node.d.ts' }[ this.vary().env ]
-				var sources = [ $jin.file( defs ) ].concat( tsFiles ).map( function( src ){
-					return tsapi.create( src.path(), src.content().toString() )
+				var program = $node.typescript.createProgram( tsFiles.map( String ), {
+					noEmitOnError: false,
+					noImplicitAny: false,
+					target: $node.typescript.ScriptTarget.ES5,
+					outDir: this.pack().resolve( '-mix' ).toString(),
+					removeComments: true,
+					sourceMap: true
 				})
-				var result = compile( sources )
-				
-				result.forEach( function( res ){
-					var src = $jin.file( res.script.name )
-					var target = src.parent().buildFile( src.name().replace( /\.ts$/, '.js' ), {}, '' )
-					target.content( res.content )
-					var mapping = src.parent().buildFile( src.name().replace( /\.ts$/, '.js.map' ), {}, '' )
-					var map = JSON.parse( res.sourcemap )
-					map.sources = map.sources.map( function( path ){ return '../' + path } )
-					mapping.content( JSON.stringify( map ) )
+				var result = program.emit()
+
+				var errors = $node.typescript.getPreEmitDiagnostics(program).concat(result.diagnostics)
+				var logs = []
+
+				errors.forEach( function( error ) {
+					var pos = error.file.getLineAndCharacterOfPosition(error.start)
+					var message = $node.typescript.flattenDiagnosticMessageText(error.messageText, '\n')
+					logs.push( error.file.fileName + ':' + pos.line + ':' + pos.character + '\n ' + message )
+				});
+
+				if( logs.length ) throw new Error( logs.join( '\n' ) )
+
+				tsFiles.forEach( function( src ){
+					var target = this.pack().buildFile( src.relate().replace( /\.ts$/, '.js' ), {}, '' )
 					jsFiles[ jsFiles.indexOf( src ) ] = target
-				} )
+				}.bind(this) )
 			}
 			
 			return jsFiles

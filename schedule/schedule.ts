@@ -7,7 +7,7 @@ module $jin {
         _timer : number
 
         constructor( timeout : number , handler : () => void ) {
-            this._handler = handler
+            this._handler = $jin.sync2async( handler )
             this.start( timeout )
         }
         

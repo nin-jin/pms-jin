@@ -3,7 +3,7 @@
  * @method dependTree
  * @member $jin.build
  */
-$jin.atom1.prop({ '$jin.build..dependTree': {
+$jin.atom1.prop({ '$jin.build..dependTree' : {
 	pull: function( prev ){
 		var root = $jin.file( '.' )
 		
@@ -17,29 +17,33 @@ $jin.atom1.prop({ '$jin.build..dependTree': {
 		
 		var indexSrcs = []
 		var touchedMods = []
+		var touchedPriors = []
 		
 		var moduleList = this.modules()
 		
-		var tree = moduleList.map( function proceedDep( mod ){
+		var tree = moduleList
+			.map( function(m){ return proceedDep( m , 0 ) } )
+			.filter( function( v ) { return v } ) 
+		
+		function proceedDep( mod , priority ){
 			var subTree = []
 			
 			var pack = root.child( mod.relate( root ).replace( /\/.*/, '' ) )
 			pack.require()
 			
-			//var names = mod.relate( root ).split( '/' )
-			//mod = root
-			//while( names.length ){
-			//	var cur = mod.child( names[0] )
-			//	if( mod.childList().indexOf( cur ) === -1 ) break
-			//	names.shift()
-			//	mod = cur
-			//}
 			while( !mod.exists() ) mod = mod.parent()
 			
 			if( mod === root ) return
 			
-			if( ~touchedMods.indexOf( mod ) ) return
+			var touchedIndex = touchedMods.lastIndexOf( mod ) 
+			if( touchedIndex >= 0 ) {
+				if( touchedIndex = touchedMods.length - 1 ) return 
+				if( priority >= touchedPriors[ touchedIndex + 1 ] ) {
+					return
+				}
+			}
 			touchedMods.push( mod )
+			touchedPriors.push( priority )
 			
 			var depMods = []
 			
@@ -70,16 +74,25 @@ $jin.atom1.prop({ '$jin.build..dependTree': {
 				return 0
 			})
 			
+			var priors = {}
 			srcs.forEach( function( src ){
-				var srcDeps = src.dependList().map( function( path ){
+				var dpl = src.dependList()
+				Object.keys( dpl ).forEach( function( path ){
 					if( path[0] === '.' ) var dep = src.parent().resolve( path )
 					else var dep = root.resolve( path )
+					depMods.push( dep )
+					if( typeof priors[ dep ] === 'number' ) {
+						priors[ dep ] = Math.min( priors[ dep ] , dpl[ path ] )
+					} else {
+						priors[ dep ] = dpl[ path ]
+					}
 					return dep
 				} )
-				depMods = depMods.concat( srcDeps )
 			} )
 			
-			var depList =  depMods.map( proceedDep ).filter( function( dep ){ return dep } )
+			var depList = depMods
+				.map( function(m){ return proceedDep( m , priors[ m ] ) } )
+				.filter( function( dep ){ return dep } )
 			
 			srcs = srcs.filter( function( src ){
 				return !~indexSrcs.indexOf( src )
@@ -87,6 +100,7 @@ $jin.atom1.prop({ '$jin.build..dependTree': {
 			indexSrcs = indexSrcs.concat( srcs )
 			
 			depHash = {}
+			depHash[ ':priority' ] = priority
 			depList.forEach( function( dep ){
 				for( var key in dep ) depHash[ key ] = dep[ key ]
 			} )
@@ -94,8 +108,10 @@ $jin.atom1.prop({ '$jin.build..dependTree': {
 			var node = {}
 			node[ mod.relate() ] = depHash
 			return node
-		} )
-		
+		}
+
+		this.pack().buildFile( $jin.vary2string( 'index' , this.vary() , 'json' ) ).content( JSON.stringify( tree , null , '\t' ) )
+
 		return tree
 	}
 }})

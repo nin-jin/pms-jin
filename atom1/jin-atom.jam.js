@@ -53,7 +53,7 @@ $jin.glob( '$jin.atom1.current', null )
  * @mixins $jin.error
  * @returns $jin.atom1.wait
  */
-$jin.error({ '$jin.atom1.wait': [] })
+//$jin.error({ '$jin.atom1.wait': [] })
 
 /**
  * Временно отключить автоматическое слежение за зависимостями, выполнить функцию и включить слежение обратно.

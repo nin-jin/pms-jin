@@ -7,6 +7,23 @@
 $jin.klass({ '$jin.test': [] })
 
 /**
+ * @name $jin.test.exec
+ * @method exec
+ * @member $jin.test
+ * @static
+ */
+$jin.method({ '$jin.test.exec': function( tests ){
+    if( typeof tests === 'function' ){
+        return this['$jin.klass.exec']( tests )
+    }
+    var res = {}
+    for( var key in tests ) {
+        res[ key ] = this['$jin.klass.exec']( tests[ key ] )
+    }
+    return res
+}})
+
+/**
  * @name $jin.test.completeList
  * @method completeList
  * @static
@@ -37,7 +54,7 @@ $jin.property({ '$jin.test.running': Array })
  * @member $jin.test
  */
 $jin.method({ '$jin.test.start': function( ){
-	setTimeout( function(){
+	setTimeout( function $jin_test_start_defer(){
 		var next = this.pendingList().shift()
 		if( next ) next.run()
 	}.bind( this ), 0 )
@@ -128,7 +145,7 @@ $jin.method({ '$jin.test..run': function( ){
     var test = this
     
     var complete = false
-    this.callback( function( ){
+    this.callback( function $jin_test_run_executor( ){
         if( typeof this.code() === 'string' )
             this.code( new Function( 'test', this.code() ) )
         
@@ -251,7 +268,7 @@ $jin.method({ '$jin.test..unique': function( ){
 $jin.method({ '$jin.test..callback': function( func ){
     var test = this
 	func = $jin.thread( func )
-    return function( ){
+    return function $jin_test_callback_wrapper( ){
         var mockHash = test.mockHash()
 		for( var name in mockHash ) mockHash[ name ].mocking( true )
         var res = func.apply( this, arguments )

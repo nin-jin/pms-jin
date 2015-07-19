@@ -34,7 +34,7 @@ $jin.atom1.prop.list({ '$jin.file.type.sampleHTML..dependList': {
 		.replace
 		(   /<([a-z0-9]{2,}(?:[_-][a-z0-9]{2,})+)/gi
 		,   function( str, path ){
-				depends[ path.replace( /[_-]/g, '/' ) ] = true
+				depends[ path.replace( /[_-]/g, '/' ) ] = 1
 			}
 		)
 		
@@ -42,11 +42,11 @@ $jin.atom1.prop.list({ '$jin.file.type.sampleHTML..dependList': {
 		.replace
 		(   /[ \t\n]([a-z0-9]{2,}(?:[_-][a-z0-9]{2,})+)="/gi
 		,   function( str, path ){
-				depends[ path.replace( /[_-]/g, '/' ) ] = true
+				depends[ path.replace( /[_-]/g, '/' ) ] = 1
 			}
 		)
 		
-		return Object.keys( depends )
+		return depends
 	}
 }})
 

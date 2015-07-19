@@ -4,10 +4,10 @@ document.execCommand( 'DefaultParagraphSeparator', false, 'div' )
  * @name $jin.editor
  * @class $jin.editor
  * @mixins $jin.klass
- * @mixins $jin.view
+ * @mixins $jin.view1
  * @returns $jin.editor
  */
-$jin.klass({ '$jin.editor': [ '$jin.view' ] })
+$jin.klass({ '$jin.editor': [ '$jin.view1' ] })
 
 /**
  * @name $jin.editor#isEditable
@@ -87,21 +87,25 @@ $jin.atom1.prop({ '$jin.editor..value': {
 		var sel = $jin.dom.range.create()
 		var target = this.element()
 		
-		var offsetStart = $jin.dom( target.rangeContent().equalize( 'end2start', sel ).nativeRange().cloneContents() ).text().length
-		var offsetEnd = $jin.dom( target.rangeContent().equalize( 'end2end', sel ).nativeRange().cloneContents() ).text().length
-		
-		this.element().tree( content )
-		
-		var zone = target.rangeContent()
-		var selStart = zone.clone().move( offsetStart )
-		var selEnd = zone.clone().move( offsetEnd )
-		
-		zone
-			.equalize( 'start2start', selStart )
-			.equalize( 'end2end', selEnd )
-			.select()
-		
-		$jin.log( offsetStart, offsetEnd )
+		if( target.parent() && target.rangeContent().hasRange( sel ) ) {
+
+			var offsetStart = $jin.dom(target.rangeContent().equalize('end2start', sel).nativeRange().cloneContents()).text().length
+			var offsetEnd = $jin.dom(target.rangeContent().equalize('end2end', sel).nativeRange().cloneContents()).text().length
+
+			this.element().tree(content)
+
+			var zone = target.rangeContent()
+			var selStart = zone.clone().move(offsetStart)
+			var selEnd = zone.clone().move(offsetEnd)
+
+			zone
+				.equalize('start2start', selStart)
+				.equalize('end2end', selEnd)
+				.select()
+		} else {
+			this.element().tree(content)
+		}
+		//$jin.log( offsetStart, offsetEnd )
 		
 		//$jin.log( 'to', JSON.stringify( this.element().text() ) )
 	}

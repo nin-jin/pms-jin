@@ -2,10 +2,10 @@
  * @name $jin.bench.case
  * @class $jin.bench.case
  * @mixins $jin.klass
- * @mixins $jin.view
+ * @mixins $jin.view1
  * @returns $jin.bench.case
  */
-$jin.klass({ '$jin.bench.case': [ '$jin.view' ] })
+$jin.klass({ '$jin.bench.case': [ '$jin.view1' ] })
 
 /**
  * @name $jin.bench.case#index

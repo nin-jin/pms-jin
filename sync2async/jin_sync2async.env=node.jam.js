@@ -24,8 +24,9 @@ this.$jin.sync2async= function( func ){
 
 		var fibers= $node.fibers
 
-		if( fibers.current ) proc()
-		else fibers( proc ).run()
+		//if( fibers.current ) proc()
+		//else
+		fibers( proc ).run()
 	}
 }
 

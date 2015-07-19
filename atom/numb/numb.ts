@@ -1,6 +1,6 @@
 module $jin.atom {
     
-    export class numb < OwnerType extends $jin.object > extends $jin.atom.prop < number , OwnerType > {
+    export class numb extends $jin.atom.prop < number > {
         
         summ( value ) {
             this.set( this.get() + value )

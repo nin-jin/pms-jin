@@ -3,9 +3,9 @@
  * @class $jin.plotter
  * @returns $jin.plotter
  * @mixins $jin.klass
- * @mixins $jin.view
+ * @mixins $jin.view1
  */
-$jin.klass({ '$jin.plotter': [ '$jin.view' ] })
+$jin.klass({ '$jin.plotter': [ '$jin.view1' ] })
 
 /**
  * @name $jin.plotter#screen

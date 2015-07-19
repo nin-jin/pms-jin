@@ -40,3 +40,21 @@ $jin.atom1.prop({ '$jin.file.type.css..cssFiles': {
 		return [ this ]
 	}
 }})
+
+$jin.atom1.prop({ '$jin.file.type.css..dependList': {
+	resolves: [ '$jin.file.base..dependList' ],
+	pull: function( ){
+		var depends = {}
+
+		String( this.content() )
+		.replace( /\/\*[\s\S]*?\*\//g, '' )
+		.replace
+		(   /(?:\[|\$|\.| _)([a-z][a-z0-9]+(?:[-_][a-z0-9]+)+)/ig
+			,   function( str, path ){
+				depends[ path.replace( /[._-]/g, '/' ) ] = 1
+			}
+		)
+
+		return depends
+	}
+}})
