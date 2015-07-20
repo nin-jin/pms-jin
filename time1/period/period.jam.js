@@ -46,8 +46,8 @@ $jin.method({ '$jin.time1.period.exec': function( period ){
 				
 				return this['$jin.klass.exec']( items )
 			}
-			
-			var parser = /^[+-](\d+)(?::(\d+))?$/i
+
+            var parser = /^[+-](\d\d)(?::?(\d\d))?$/i
 			var found = parser.exec( period )
 			if( found ){
 				

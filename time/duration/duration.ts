@@ -52,7 +52,7 @@ module $jin.time {
 						})
 					}
 
-					var parser = /^[+-](\d+)(?::(\d+))?$/i
+					var parser = /^[+-](\d\d)(?::?(\d\d))?$/i
 					var found = parser.exec( <string>duration )
 					if( found ){
 						return new this({
