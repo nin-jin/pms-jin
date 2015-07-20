@@ -10,7 +10,7 @@ module $jin {
 				var first = $jin.concater( funcs.slice( 0 , mid ) )
 				var second = $jin.concater( funcs.slice( mid ) )
 				return function( value ){
-					return first.call( this , value ) + second.call( this , value )
+					return first( value ) + second( value )
 				}
 		}
 	}

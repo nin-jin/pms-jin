@@ -33,13 +33,19 @@ console.log( time.moment().toString() ) // logs current time
 - instance is timestamp representation (forever have time and timezone)
 - instance is mutable object
 - inconsistent, poor api
-* zero lib size, but very large client code
-+ fastest
+- zero lib size, but very large client code
+- fastest
 
 Speed of iso8601 serialization:
 ```js
 var m = new Date ; console.time('test') ; for( var i = 0 ; i < 100000 ; ++i ) m.toISOString() ; console.timeEnd('test')
 // 150ms
+```
+
+Speed of iso8601 parsing:
+```js
+console.time('test') ; for( var i = 0 ; i < 10000 ; ++i ) new Date( '2015-07-20T07:48:28.338+03:00' ) ; console.timeEnd('test')
+// 13ms
 ```
 
 ## MomentJS
@@ -49,7 +55,7 @@ var m = new Date ; console.time('test') ; for( var i = 0 ; i < 100000 ; ++i ) m.
 - instance is mutable object
 - large lib size (100kb core + plugins)
 - slow
-* too more specific features, but some basics supports only by plugins
+- too more specific features, but some basics supports only by plugins
 
 Speed of iso8601 serialization:
 ```js
@@ -57,18 +63,30 @@ var m = moment() ; console.time('test') ; for( var i = 0 ; i < 100000 ; ++i ) t.
 // 470ms
 ```
 
+Speed of iso8601 parsing:
+```js
+console.time('test') ; for( var i = 0 ; i < 10000 ; ++i ) moment( '2015-07-20T07:48:28.338+03:00' ) ; console.timeEnd('test')
+// 440ms
+```
+
 ## $jin.time
 
 - all time components stores separately
 - instance is immmutable object
-* cool consistent core, but some needed features not implemented yet
-+ small lib size (35kb)
-+ fast
+- cool consistent core, but some needed features not implemented yet
+- small lib size (35kb)
+- fast
 
 Speed of iso8601 serialization:
 ```js
 var m = $jin.time.moment() ; console.time('test') ; for( var i = 0 ; i < 100000 ; ++i ) m.toString() ; console.timeEnd('test')
 // 180ms
+```
+
+Speed of iso8601 parsing:
+```js
+console.time('test') ; for( var i = 0 ; i < 10000 ; ++i ) $jin.time.moment( '2015-07-20T07:48:28.338+03:00' ) ; console.timeEnd('test')
+// 65ms
 ```
 
 # API
@@ -153,6 +171,19 @@ $jin.time.moment( '2015-07-19' ).shift( 'P16D' ) // $jin.time.moment( '2015-08-0
 $jin.time.moment( '2015-07-19T19:24+03:00' ).toOffset( 'Z' ) // $jin.time.moment( '2015-07-19T16:24+00:00' )
 ```
 
+### Serialization
+
+```js
+$jin.time.moment().toString( 'YYYY-MM-DD hh:mm (WeekDay)' ) // "2015-07-20 07:22 (Monday)"
+```
+
+Mnemonics:
+- single letter for numbers: *M* - month number, *D* - day of month.
+- uppercase letters for dates, lowercase for times: *M* - month number , *m* - minutes number
+- repeated letters for define register count: *YYYY* - full year, *YY* - shot year, *MM* - padded month number
+- words for word representation: *Month* - month name, *WeekDay* - day of week name
+- shortcuts: *WD* - short day of week, *Mon* - short month name.
+
 ## Durations
 
 ### Creating
@@ -225,16 +256,16 @@ $jin.time.range( 'P14D/2015-08-02' ) // by two end moment and duration
 
 // by components
 $jin.time.range({
-	from : '2015-07-19' ,
-	to : '2015-08-02' ,
+	start : '2015-07-19' ,
+	end : '2015-08-02' ,
 })
 $jin.time.range({
-	from : '2015-07-19' ,
+	start : '2015-07-19' ,
 	duration : 'P14D' ,
 })
 $jin.time.range({
 	duration : 'P14D' ,
-	to : '2015-08-02' ,
+	end : '2015-08-02' ,
 })
 
 // by list of components
@@ -247,13 +278,33 @@ $jin.time.range([ null , '2015-08-02' , 'P14D' ])
 
 ```js
 // component value (third are calculated by defined two)
-$jin.time.range( '2015/P1Y' ).to // $jin.time.moment( '2016' )
-$jin.time.range( 'P1Y/2016' ).from // $jin.time.moment( '2015' )
+$jin.time.range( '2015/P1Y' ).end // $jin.time.moment( '2016' )
+$jin.time.range( 'P1Y/2016' ).start // $jin.time.moment( '2015' )
 $jin.time.range( '2015/2016' ).duration // $jin.time.duration( 'PT31536000S' )
 
 // iso8601
 $jin.time.range( '2015-01/P1M' ).toString() // '2015-01/P1MT'
 $jin.time.range( '2015-01/P1M' ).toJSON() // '2015-01/P1MT'
+```
+
+## Localization
+
+To add some language support use typescript subclassing:
+
+```js
+class moment_class_ru extends $jin.time.moment_class {
+	static monthLong = [ 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь' ]
+	static monthShort = [ 'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек' ]
+	static weekDayLong = [ 'Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота' ]
+	static weekDayShort = [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ]
+}
+$jin.time.moment['ru'] = moment_class_ru.make.bind( moment_class_ru )
+```
+
+Then you can use it:
+
+```js
+$jin.time.moment['ru']().toString( 'YYYY-MM-DD (WD)' ) // "2015-07-20 (Пн)"
 ```
 
 ## To Do

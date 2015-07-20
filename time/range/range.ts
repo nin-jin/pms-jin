@@ -1,8 +1,8 @@
 module $jin.time {
 
 	export interface range_iconfig {
-		from? : number | number[] | Date | string | $jin.time.moment_iconfig
-		to? : number | number[] | Date | string | $jin.time.moment_iconfig
+		start? : number | number[] | Date | string | $jin.time.moment_iconfig
+		end? : number | number[] | Date | string | $jin.time.moment_iconfig
 		duration? : number | number[] | string | $jin.time.duration_iconfig
 	}
 
@@ -19,14 +19,14 @@ module $jin.time {
 				case 'String':
 					var chunks = (<string>range).split( '/' )
 					var config = {}
-					config[ /^P/i.test( chunks[0] ) ? 'duration' : 'from' ] = chunks[0]
-					config[ /^P/i.test( chunks[1] ) ? 'duration' : 'to' ] = chunks[1]
+					config[ /^P/i.test( chunks[0] ) ? 'duration' : 'start' ] = chunks[0]
+					config[ /^P/i.test( chunks[1] ) ? 'duration' : 'end' ] = chunks[1]
 					return this.make( config )
 
 				case 'Array':
 					return new this({
-						from : range[0] ,
-						to : range[1] ,
+						start : range[0] ,
+						end : range[1] ,
 						duration : range[2] ,
 					})
 
@@ -40,38 +40,38 @@ module $jin.time {
 
 		}
 
-		_from : $jin.time.moment_class
-		get from() {
-			if( this._from ) return this._from
+		_start : $jin.time.moment_class
+		get start() {
+			if( this._start ) return this._start
 			var Range = <typeof range_class>this.constructor
-			return this._from = this._to.shift( Range.Duration.make().sub( this._duration ) )
+			return this._start = this._end.shift( Range.Duration.make().sub( this._duration ) )
 		}
 
-		_to : $jin.time.moment_class
-		get to() {
-			if( this._to ) return this._to
-			return this._to = this._from.shift( this._duration )
+		_end : $jin.time.moment_class
+		get end() {
+			if( this._end ) return this._end
+			return this._end = this._start.shift( this._duration )
 		}
 
 		_duration : $jin.time.duration_class
 		get duration() {
 			if( this._duration ) return this._duration
 			var Range = <typeof range_class>this.constructor
-			return this._duration = Range.Duration.make( this._to.valueOf() - this.from.valueOf() )
+			return this._duration = Range.Duration.make( this._end.valueOf() - this.start.valueOf() )
 		}
 
 		constructor( config : range_iconfig ) {
 			super()
 			var Range = <typeof range_class>this.constructor
-			this._from = config.from && Range.Moment.make( config.from )
-			this._to = config.to && Range.Moment.make( config.to )
+			this._start = config.start && Range.Moment.make( config.start )
+			this._end = config.end && Range.Moment.make( config.end )
 			this._duration = config.duration && Range.Duration.make( config.duration )
 		}
 
 		toJSON() { return this.toString() }
 
 		toString( ) {
-			return ( this._from || this._duration ).toString() + '/' + ( this._to || this._duration ).toString()
+			return ( this._start || this._duration ).toString() + '/' + ( this._end || this._duration ).toString()
 		}
 
 	}

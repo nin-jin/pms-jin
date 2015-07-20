@@ -124,7 +124,7 @@ module $jin.time {
 		}
 
 		valueOf() {
-			var day = this.year * 365 + this.month * 30 + this.day
+			var day = this.year * 365 + this.month * 30.4 + this.day
 			var second = ( ( day * 24 + this.hour ) * 60 + this.minute ) * 60 + this.second
 			return second * 1000
 		}
