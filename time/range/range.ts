@@ -19,8 +19,16 @@ module $jin.time {
 				case 'String':
 					var chunks = (<string>range).split( '/' )
 					var config = {}
-					config[ /^P/i.test( chunks[0] ) ? 'duration' : 'start' ] = chunks[0]
-					config[ /^P/i.test( chunks[1] ) ? 'duration' : 'end' ] = chunks[1]
+					if( chunks[0] ) {
+						config[ /^P/i.test( chunks[ 0 ] ) ? 'duration' : 'start' ] = chunks[ 0 ]
+					} else {
+						config['start'] = $jin.time.moment()
+					}
+					if( chunks[1] ) {
+						config[ /^P/i.test( chunks[ 1 ] ) ? 'duration' : 'end' ] = chunks[ 1 ]
+					} else {
+						config['end'] = $jin.time.moment()
+					}
 					return this.make( config )
 
 				case 'Array':
