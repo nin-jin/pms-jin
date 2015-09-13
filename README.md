@@ -1,11 +1,11 @@
-Contents
+Stable modules
 ========
 
-[$jin.atom](atom/jin-atom.doc.md) - FRP in your JS
+[$jin.time](time/readme.md) - proper date/time/duration/range arithmetic
 
-[$jin.method](method/jin-method.doc.md) - method definer
+[$jin.method](method/jin-method.doc.md) - method definer (obsolete, use TS instead)
 
-Building
+Building your package
 =======
 
 Instal builder
@@ -17,16 +17,16 @@ Create build-script "build.js" and put into:
 ```js
 with( require( 'pms' ) ) // loads prebuilded builder (may be old version)
 $pms.application( function( ){
-    with( $jin.build( 'jin/build?env=node' ).jsIndexNode()[0].load() ){ // install, build and load $jin.build package
+    with( $jin.build( 'jin/build?env=node' ).jsIndexNode()[0].load() ){ // build and load $jin.build package
     	$jin.build( 'jin/atom?env=web' ).jsCompiled() // builds $jin.atom standalone js-library
 	
 	// builds js for $foo.bar
-    	$jin.build( 'jin/slide?env=web' ).jsIndexWeb()
-    	$jin.build( 'jin/slide?env=web' ).jsCompiled()
+    	$jin.build( 'jin/slide?env=web' ).jsIndexWeb() // use jsCompiled instead
+    	$jin.build( 'jin/slide?env=web' ).jsCompiled() // supports TS and source maps
 
 	// builds css for $foo.bar
-    	$jin.build( 'jin/slide?env=web' ).cssIndex()
-    	$jin.build( 'jin/slide?env=web' ).cssCompiled()
+    	$jin.build( 'jin/slide?env=web' ).cssIndex() // use cssCompiled instaed 
+    	$jin.build( 'jin/slide?env=web' ).cssCompiled() // supports Stylus and source maps
     	
     	//wait for file changes
     	$jin.alert( 'Press any key to stop automatic rebuild' )
@@ -46,20 +46,12 @@ Create your namespace(foo) and application(bar) directories:
 Put into foo/bar file "foo-bar.meta.tree":
 
 	include =jin/atom
-	include = jin/view
+	include =jin/view
 
 Or(!) simple use its in JAM-file "foo-bar.jam.js":
 
 ```js
-$jin.klass({ '$foo.bar': [ '$jin.view1' ] })
-$jin.atom1.prop({ '$foo.bar.title': {
-	pull: function( ){
-		return Math.random()
-	},
-	push: function( next ){
-		window.name = next
-	}
-} })
+$jin.alert( 'Hello world' ) // Isomorphic alert
 ```
 
 Then run building:
