@@ -75,7 +75,7 @@ module $jin.db {
                 }
             }
             
-            return { fetch : fetchPlan => {
+            return { fetch : ( fetchPlan = {} ) => {
                 var plan = this.serializePlan( fetchPlan )
                 if( $jin.param( 'verbose' ) ) $jin.log.info( 'Query', query , plan )
                 var result = $jin.sync.promise( this.DB().get().query( query , { fetchPlan : plan } ) )
