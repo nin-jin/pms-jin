@@ -11,7 +11,6 @@ module $jin.atom {
         private static _defer : $jin.defer
         private static _updatePlan : $jin.atom.prop<any,any>[][] = []
         private static _reapPlan : { [ id : string ] : $jin.atom.prop<any,any> } = {}
-        private static _minDeep = 0
 
         static swap( atom : $jin.atom.prop<any,any> ) {
             var last = this.currentSlave
@@ -31,7 +30,6 @@ module $jin.atom {
             var queue = plan[ deep ]
             if( !queue ) queue = plan[ deep ] = []
             queue.push( atom )
-            if( deep < this._minDeep ) this._minDeep = deep
 
             this.induceSchedule()
         }
@@ -44,16 +42,17 @@ module $jin.atom {
 
         static induce(){
             var updatePlan = $jin.atom.prop._updatePlan
-            while( $jin.atom.prop._minDeep < updatePlan.length  ){
-                var queue = updatePlan[ $jin.atom.prop._minDeep ++ ]
+            for( var deep = 0 ; deep < updatePlan.length ; ++deep ){
+                var queue = updatePlan[ deep ]
                 if( !queue ) continue
                 if( !queue.length ) continue
 
                 var atom = queue.shift()
-                if( queue.length ) $jin.atom.prop._minDeep --
                 if( atom.status === $jin.atom.status.clear ){
                     atom.pull()
                 }
+
+                deep = -1
             }
 
             var reapPlan = $jin.atom.prop._reapPlan
@@ -229,7 +228,7 @@ module $jin.atom {
         }
 
         notify( error? : Error , next? : ValueType , prev? : ValueType ){
-            if( $jin.atom.prop.enableLogs || ( error && !( error instanceof $jin.atom.wait ) ) ) {
+            if( $jin.atom.prop.enableLogs ) {
                 $jin.log( this.objectId )
                 if( error ) {
                     $jin.log.error( error )
@@ -340,6 +339,7 @@ module $jin.atom {
                     master.dislead( this )
                 }
                 
+                if( this.status === $jin.atom.status.clear ) debugger
             }
         }
 
@@ -354,12 +354,7 @@ module $jin.atom {
         }
 
         put( next : ValueType , prev : ValueType ) {
-            var lastCurrent = $jin.atom.prop.swap( null )
-            try {
-                return this._put( this , next , prev )
-            } finally {
-                $jin.atom.prop.swap( lastCurrent )
-            }
+            return this._put( this , next , prev )
         }
 
         mutate( mutate : ( prev : ValueType ) => ValueType ) {
