@@ -60,16 +60,16 @@ $jin.method({ '$jin.async2sync': function( func ){
                 if( !done ){
                     var fibers= $node.fibers
                     fiber= fibers.current
-					var slave = $jin.atom1.current
-                    var slave2 = $jin.atom.currentSlave
+					//var slave = $jin.atom1.current
+                    //var slave2 = $jin.atom.currentSlave
                     var defered = $jin.defer._queue
-					$jin.atom1.current = null
-                    $jin.atom.currentSlave = null
-                    $jin.defer._queue = []
+                    //$jin.atom1.current = null
+                    //$jin.atom.currentSlave = null
+                    //$jin.defer._queue = []
                     fibers.yield()
-					$jin.atom1.current = slave
-                    $jin.atom.currentSlave = slave2
-                    $jin.defer._queue = defered
+                    //$jin.atom1.current = slave
+                    //$jin.atom.currentSlave = slave2
+                    //$jin.defer._queue = defered
                     if( error ) error.stack+= '\n--fiber--' + (new Error).stack.replace( /^[^\n]*/, '' )
                 }
                 
