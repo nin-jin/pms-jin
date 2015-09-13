@@ -58,6 +58,7 @@ $jin.module( function(){ this[ '$jin.build' ] = {
 			
 			if( tsFiles.length ){
 				var program = $node.typescript.createProgram( tsFiles.map( String ), {
+                    experimentalDecorators: true,
 					noEmitOnError: false,
 					noImplicitAny: false,
 					target: $node.typescript.ScriptTarget.ES5,
