@@ -6,6 +6,6 @@
  */
 module $jin {
     export function application( app , done? ) {
-        return $jin.sync2async( app ).call( null , done || function(){} )
+        return $jin.sync2async( app ).call( null , done )
     }
 }
