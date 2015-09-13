@@ -19,7 +19,7 @@ module $jin.db {
                         host: this.uri.host(),
                         port: this.uri.port(),
                         username: 'root',
-                        password: ( $jin.param( 'root' ) || [ process.env.ORIENTDB_ROOT_PASSWORD ] )[0]
+                        password: ( $jin.param( 'root' ) || [ process.env.ORIENTDB_ROOT_PASSWORD || 'root' ] )[0]
                     } )
                     return server
                 }
