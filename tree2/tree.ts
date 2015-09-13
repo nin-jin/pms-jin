@@ -173,7 +173,7 @@ class $jin_tree2 {
 					childs.push( child )
 				}
 				return new $jin_tree2({
-					type : "map" ,
+					type : "dict" ,
 					childs : childs ,
 					baseUri : baseUri
 				})
@@ -221,7 +221,7 @@ class $jin_tree2 {
 		if( this.type === 'false' ) return false
 		if( this.type === 'null' ) return null
 		
-		if( this.type === 'map' ) {
+		if( this.type === 'dict' ) {
 			var obj = {}
 			for( var child of this.childs ) {
 				var key = child.type || child.value
