@@ -12,7 +12,7 @@ $jin.atom1.prop({ '$jin.build..jsCompiled': {
 		var concater = new $node[ 'concat-with-sourcemaps' ]( true, target.relate(), '\n;\n' )
 		this.jsSources().forEach( function( src ){
 			var srcMap = src.parent().resolve( src.name() + '.map' )
-			var content = src.content().toString().replace( /# sourceMappingURL=/g , '' )
+			var content = src.content().toString().replace( /^#\ssourceMappingURL=/g , '' )
 			if( srcMap.exists() ) {
 				var json = JSON.parse( srcMap.content() )
 				json.sources = json.sources.map( function( source ){

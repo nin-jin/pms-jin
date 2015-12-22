@@ -69,7 +69,7 @@ class $jin_tree2 {
 		var stack = [ root ]
 		
 		var row = 0
-		var lines = str.split( /\n/ )
+		var lines = String( str ).split( /\n/ )
 		lines.forEach( line => {
 			++ row
 			
@@ -271,7 +271,7 @@ class $jin_tree2 {
 	select( path : string[] | string ) {
 		if( typeof path === 'string' ) path = (<string>path).split( / +/ )
 		
-		var next = [ this ]
+		var next = [ <$jin_tree2>this ]
 		for( var type of path ) {
 			if( !next.length ) break
 			var prev = next

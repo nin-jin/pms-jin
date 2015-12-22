@@ -18,8 +18,7 @@ module $jin {
         static classAtom( key : string ){
             return new $jin.atom.prop<string,typeof $jin.model>( {
                 owner : $jin.model,
-                name : key,
-                persist : true
+                name : key
             } )
         }
 
