@@ -251,11 +251,12 @@ class $jin_tree2 {
 			return new Date( this.value )
 		}
 		
-		if( String( Number( this.type ) ) == this.type ) return Number( this.type )
+		if( String( Number( this.type ) ) == this.type.trim() ) return Number( this.type )
 		
 		throw $jin2_error({
 			reason : 'Unknown type' ,
-			type : this.type
+			type : this.type ,
+            uri : this.uri ,
 		})
 	}
 	
