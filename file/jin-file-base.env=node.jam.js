@@ -483,7 +483,7 @@ $jin.method({ '$jin.file.base..require': function( ){
         break
     }
     
-    var repo = repository && repository.url
+    var repo = repository && repository.url.replace( /^git\+/ , '' )
     if( !repo ) throw new Error( 'Repository for (' + this.name() + ') not found' )
     if( repository.type !== 'git' ){
         throw new Error( 'Please, install this package manualy from (' + repo + ')' )
