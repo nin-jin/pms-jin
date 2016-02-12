@@ -44,39 +44,6 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
 				if( !param.type || /^-/.test( param.type ) ) return
 				
 				switch( param.type[0] ) {
-					/*case '@' :
-						var items = param.childs.map( function( item ) {
-							switch( item.type ) {
-								case '<' :
-									addProp( item.childs[0] )
-									return 'this.' + item.childs[0].type + '()'
-								case '' :
-									return '$'+'jin2_atom( () => (' + JSON.stringify( item.value ) + ') )'
-								default :
-									return ''
-							}
-						} )
-						attrs[ param.type.substring(1) ] = items.join(' + ')
-						return
-					case '.' :
-						switch( param.childs[0].type ) {
-							case '<' :
-								addProp( param.childs[0].childs[0] )
-								fields[ param.type.substring(1) ] = 'this.' + param.childs[0].childs[0].type + '()'
-								return
-							default :
-								fields[ param.type.substring(1) ] = '$' + 'jin2_atom( () => (' + JSON.stringify( param.childs[0] ) + ') )'
-								return
-						}
-					case '*' :
-						switch( param.childs[0].type ) {
-							case '>' :
-								addProp( param.childs[0].childs[0] )
-								events[ param.type.substring(1) ] = 'this.' + param.childs[0].childs[0].type + '()'
-								return
-							default :
-								return
-						}*/
 					default :
 						var firstVal = param.childs[0]
 						if( firstVal ) {
@@ -96,13 +63,13 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
         												throw new Error( 'view.tree syntax error: ' + over + over.uri ) 
                                                 }
                                             } )
-                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return new $'+'jin2_atom_own( () => { \n\t\tvar view = new ' + firstVal.childs[0].type + '\n' + overs.join('') + '\t\treturn view\n\t} ) }\n'
+                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() {\n\t\tvar view = new ' + firstVal.childs[0].type + '\n' + overs.join('') + '\t\treturn view\n\t}\n'
                                             return
                                         default :
                                             members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return new $'+'jin2_atom( () => (' + JSON.stringify( firstVal.childs[0] ) + ') ) }\n'
                                             return 
                                     }
-                                case '<':
+                                case '<': // binding
                                     if( param.childs.length === 1 ) {
                                         addProp( param.childs[0].childs[0] , prefix + param.type + '_' )
                                         members[ param.type ] = '\t' + param.type +'() { return this.' + param.childs[0].childs[0].type + '() }\n'
