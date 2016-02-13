@@ -36,9 +36,6 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
 			var parent = def.childs[0].childs[0]
 
 			var members = {}
-			var fields = {}
-			var attrs = {}
-			var events = {}
 			parent.childs.forEach( function( param ) { addProp( param , '' ) } )
             function addProp( param , prefix ) {
 				if( !param.type || /^-/.test( param.type ) ) return
@@ -58,7 +55,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
                                                         addProp( over.childs[0].childs[0] , prefix + param.type + '_' )
                                                         return '\t\tview.' + over.type + ' = () => this.' + over.childs[0].childs[0].type + '()\n'
                                                     case ':' :
-                                                        return '\t\tview.' + over.type + ' = () => new $'+'jin2_atom( () => ( ' + JSON.stringify( over.childs[0].childs[0] ) + ' ) )\n'
+                                                        return '\t\tview.' + over.type + ' = () => this.prop( () => ( ' + JSON.stringify( over.childs[0].childs[0] ) + ' ) )\n'
                                                     default :
         												throw new Error( 'view.tree syntax error: ' + over + over.uri ) 
                                                 }
@@ -66,7 +63,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
                                             members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() {\n\t\tvar view = new ' + firstVal.childs[0].type + '\n' + overs.join('') + '\t\treturn view\n\t}\n'
                                             return
                                         default :
-                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return new $'+'jin2_atom( () => (' + JSON.stringify( firstVal.childs[0] ) + ') ) }\n'
+                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( () => (' + JSON.stringify( firstVal.childs[0] ) + ') ) }\n'
                                             return 
                                     }
                                 case '<': // binding
@@ -92,7 +89,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
 												throw new Error( 'view.tree syntax error: ' + item + item.uri ) 
 										}
 									} )
-									members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return new $'+'jin2_atom( () => [ ' + items.join(' , ') + ' ] ) }\n'
+									members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( () => [ ' + items.join(' , ') + ' ] ) }\n'
 									return 
 							}
 						} else {
@@ -101,23 +98,8 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
 				}
 			}
 			
-			var paths = Object.keys( fields )
-			if( paths.length ) members[ 'field' ] = '\tfield(){ return {\n' + paths.map( function( path ) {
-				return '\t\t' + JSON.stringify( path ) + ': ' + fields[ path ] + ',\n'
-			} ).join('') + '\t} }\n'
-			
-			var attrNames = Object.keys( attrs )
-			if( attrNames.length ) members[ 'attr' ] = '\tattr() { return {\n' + attrNames.map( function( name ) {
-				return '\t\t' + JSON.stringify( name ) + ': ' + attrs[ name ] + ',\n'
-			} ).join('') + '\t} }\n'
-			
-			var eventNames = Object.keys( events )
-			if( eventNames.length ) members[ 'event' ] = '\tevent() { return {\n' + eventNames.map( function( name ) {
-				return '\t\t' + JSON.stringify( name ) + ': ' + events[ name ] + ',\n'
-			} ).join('') + '\t} }\n'
-			
 			var body = Object.keys( members ).map( function( name ) {
-				return members[ name ] || '\t' + name +'() {\n\t\treturn { get : () => null , set : next => null }\n\t}\n'	
+				return members[ name ] || '\t' + name +'() { return this.prop( null ) }\n\t}\n'	
 			}).join( '' )
 
 			var classes = 'module $'+'mol { @$'+'mol_replace export class ' + def.type + ' extends ' + parent.type + ' {\n' + body + '} }\n'
