@@ -55,7 +55,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
                                                         addProp( over.childs[0].childs[0] , prefix + param.type + '_' )
                                                         return '\t\tview.' + over.type + ' = () => this.' + over.childs[0].childs[0].type + '()\n'
                                                     case ':' :
-                                                        return '\t\tview.' + over.type + ' = () => this.prop( () => ( ' + JSON.stringify( over.childs[0].childs[0] ) + ' ) )\n'
+                                                        return '\t\tview.' + over.type + ' = () => this.prop( ' + JSON.stringify( over.childs[0].childs[0] ) + ' , () => {} )\n'
                                                     default :
         												throw new Error( 'view.tree syntax error: ' + over + over.uri ) 
                                                 }
@@ -63,7 +63,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
                                             members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() {\n\t\tvar view = new ' + firstVal.childs[0].type + '\n' + overs.join('') + '\t\treturn view\n\t}\n'
                                             return
                                         default :
-                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( () => (' + JSON.stringify( firstVal.childs[0] ) + ') ) }\n'
+                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( ' + JSON.stringify( firstVal.childs[0] ) + ' , () => {} ) }\n'
                                             return 
                                     }
                                 case '<': // binding
