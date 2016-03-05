@@ -63,7 +63,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
                                             members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() {\n\t\tvar view = new ' + firstVal.childs[0].type + '\n' + overs.join('') + '\t\treturn view\n\t}\n'
                                             return
                                         default :
-                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( ' + JSON.stringify( firstVal.childs[0] ) + ' , () => {} ) }\n'
+                                            members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( ' + JSON.stringify( firstVal.childs[0] ) + ' , a=>a ) }\n'
                                             return 
                                     }
                                 case '<': // binding
@@ -89,7 +89,7 @@ $jin.atom1.prop.list({ '$jin.file.type.viewTree..jsFiles': {
 												throw new Error( 'view.tree syntax error: ' + item + item.uri ) 
 										}
 									} )
-									members[ param.type ] = '\t@ $'+'jin2_grab ' + param.type +'() { return this.prop( () => [ ' + items.join(' , ') + ' ] ) }\n'
+									members[ param.type ] = '\t' + param.type +'() { return this.prop( () => [ ' + items.join(' , ') + ' ] ) }\n'
 									return 
 							}
 						} else {
