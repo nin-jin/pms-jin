@@ -30,18 +30,12 @@ class $jin_test2 {
 	
 	ok( value ) {
 		if( value ) return
-		throw $jin2_error({
-			reason : 'Not true' ,
-			value : String( value )
-		})
+		throw new Error( `Not true (${value})` )
 	}
 	
 	not( value ) {
 		if( !value ) return
-		throw $jin2_error({
-			reason : 'Not false' ,
-			value : String( value )
-		})
+		throw new Error( `Not false (${value})` )
 	}
 	
 	fail( message ) {
@@ -50,18 +44,12 @@ class $jin_test2 {
 	
 	equal( a , b ) {
 		if( a === b ) return 
-		throw $jin2_error({
-			reason : 'Not equal' ,
-			values : [ a , b ].map( String )
-		})
+		throw new Error( `Not equal (${a},${b})` )
 	}
 	
 	unique( a , b ) {
 		if( a !== b ) return
-		throw $jin2_error({
-			reason : 'Not unique' ,
-			values : [ a , b ].map( String )
-		})
+		throw new Error( `Not unique (${a},${b})` )
 	}
 	
 }

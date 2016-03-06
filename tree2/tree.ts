@@ -74,11 +74,7 @@ class $jin_tree2 {
 			++ row
 			
 			var chunks = /^(\t*)((?:[^\n\t= ]+ *)*)(=[^\n]*)?/.exec( line )
-			if( !chunks ) throw $jin2_error({
-				reason : 'Syntax error' ,
-				row : row ,
-				source : line
-			})
+			if( !chunks ) new Error( `Syntax error at ${baseUri}#${row}\n${line}` )
 			
 			var indent = chunks[1]
 			var path = chunks[2]
@@ -87,11 +83,7 @@ class $jin_tree2 {
 			var deep = indent.length
 			var types = path ? path.split( / +/ ) : []
 			
-			if( stack.length < deep ) throw $jin2_error({
-				reason : 'Too more tabs' ,
-				row : row ,
-				source : line
-			})
+			if( stack.length < deep ) throw new Error( `Too many tabs at ${baseUri}#${row}\n${line}` )
 			
 			stack.length  = deep + 1
 			var parent = stack[ deep ];
@@ -178,11 +170,7 @@ class $jin_tree2 {
 					baseUri : baseUri
 				})
 			default:
-				throw $jin2_error({
-					reason : 'Unsupported type' ,
-					type : type ,
-					uri : baseUri
-				});
+				throw new Error( `Unsupported type (${type}) at ${baseUri}` )
 		}
 	}
 	
@@ -227,11 +215,7 @@ class $jin_tree2 {
 				var key = child.type || child.value
 				if( key === '//' ) continue
 				var colon = child.select([ ':' ]).childs[0]
-				if( !colon ) throw $jin2_error({
-					reason : 'Syntax error',
-					required : 'Colon after key',
-					uri : child.uri
-				})
+				if( !colon ) throw new Error( `Required colon after key at ${child.uri}` )
 				var val = colon.childs[0].toJSON()
 				if( val !== undefined ) obj[ key ] = val
 			}
@@ -253,11 +237,7 @@ class $jin_tree2 {
 		
 		if( String( Number( this.type ) ) == this.type.trim() ) return Number( this.type )
 		
-		throw $jin2_error({
-			reason : 'Unknown type' ,
-			type : this.type ,
-            uri : this.uri ,
-		})
+		throw new Error( `Unknown type (${this.type}) at ${this.uri}` )
 	}
 	
 	get value() {
