@@ -15,7 +15,7 @@ $jin.proxy( { get: function( prefix, name ){
         $jin.log.error( 'Module [' + path + '] not found')
         $jin.log.info( 'npm install ' + path )
         
-        var npm= $jin.autoloader().npm
+        var npm= $jin.autoloader('').npm
         $jin.async2sync( npm.load ).call( npm, {} )
         $jin.async2sync( npm.commands.install ).call( npm, [ path ] )
     }

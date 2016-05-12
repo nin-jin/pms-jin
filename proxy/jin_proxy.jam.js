@@ -4,7 +4,7 @@ $jin.proxy = function( handler ){
         throw new Error( 'Can not find Proxy API. In node.js use --harmony flag to enable.' )
 
     if( typeof Proxy === 'function' ) return function( target ){
-        return Proxy( target, handler )
+        return new Proxy( Object( target ), handler )
     }
     
     var oldTraps= new function( ){
