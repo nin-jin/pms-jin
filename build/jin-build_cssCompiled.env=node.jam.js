@@ -15,7 +15,8 @@ $jin.atom1.prop.list({ '$jin.build..cssCompiled': {
 			else root = root2
 		} )
 
-		var processor = $node.postcss( $node.cssnext().plugins )
+		var cssnext = $node.cssnext
+		var processor = $node.postcss( cssnext().plugins )
 		var result = processor.process( root , { to : target.relate() , map : { inline : false } } )
 		target.content( result.css )
 		targetMap.content( JSON.stringify( result.map , null , '\t' ) )
