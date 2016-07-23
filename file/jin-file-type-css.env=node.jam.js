@@ -49,7 +49,7 @@ $jin.atom1.prop({ '$jin.file.type.css..dependList': {
 		String( this.content() )
 		.replace( /\/\*[\s\S]*?\*\//g, '' )
 		.replace
-		(   /(?:\[|\$|\.| _)([a-z][a-z0-9]+(?:[-_][a-z0-9]+)+)/ig
+		(   /(?:\[|\$|\.| _|--)([a-z][a-z0-9]+(?:[-_][a-z0-9]+)+)/ig
 			,   function( str, path ){
 				depends[ path.replace( /[._-]/g, '/' ) ] = 1
 			}
