@@ -1,4 +1,4 @@
-$jin.test( function triplets( test ){
+$mol_test( function triplets( test ){
 	test.equal(
 		$jin.time.range('2015-01-01/P1M').end.toString(),
 		'2015-02-01'

@@ -1,4 +1,4 @@
-$jin.test( function parse_n_serial( test ){
+$mol_test( function parse_n_serial( test ){
 	test.equal( $jin.time.duration( 'P42.1Y' ).toString(), 'P42.1YT' )
 	test.equal( $jin.time.duration( 'P42.1M' ).toString(), 'P42.1MT' )
 	test.equal( $jin.time.duration( 'P42.1D' ).toString(), 'P42.1DT' )
@@ -8,7 +8,7 @@ $jin.test( function parse_n_serial( test ){
 	test.equal( $jin.time.duration( 'P1Y2M3DT4h5m6.7s' ).toString(), 'P1Y2M3DT4H5M6.7S' )
 })
 
-$jin.test( function format_typed( test ){
+$mol_test( function format_typed( test ){
 	test.equal(
 		$jin.time.duration( 'P1Y2M3DT4h5m6s' ).toString( 'P#Y#M#DT#h#m#s' ) ,
 		'P1Y2M3DT4H5M6S'
