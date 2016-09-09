@@ -4,7 +4,7 @@ module $jin.time {
 
 		static patterns : any = {}
 
-		static formatter( pattern ) {
+		static formatter( pattern : string ) {
 			if( this.patterns[ pattern ] ) return this.patterns[ pattern ]
 
 			var tokens = Object.keys( this.patterns )
@@ -13,11 +13,12 @@ module $jin.time {
 				.map( ( token : string ) => token.replace( /([-+*.\[\]()\^])/g , '\\$1' ) )
 			var lexer = RegExp( '(.*?)(' + tokens.join( '|' ) + '|$)', 'g' )
 
-			var funcs = []
+			var funcs : any[] = []
 
-			pattern.replace( lexer, ( str, text, token ) => {
+			pattern.replace( lexer, ( str : string , text : string , token : string ) => {
 				if( text ) funcs.push( () => text )
 				if( token ) funcs.push( this.patterns[ token ] )
+				return str
 			})
 
 			return this.patterns[ pattern ] = $jin.concater( funcs )

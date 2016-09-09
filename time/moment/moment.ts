@@ -54,14 +54,15 @@ module $jin.time {
 					})
 
 				case 'Array':
+					let mom = <number[]> moment
 					return new (<typeof moment_class>this)({
-						year: moment[0],
-						month: moment[1],
-						day: moment[2],
-						hour: moment[3],
-						minute: moment[4],
-						second: moment[5],
-						offset: moment[6],
+						year: mom[0],
+						month: mom[1],
+						day: mom[2],
+						hour: mom[3],
+						minute: mom[4],
+						second: mom[5],
+						offset: mom[6],
 					})
 
 				case 'Object':
@@ -262,113 +263,113 @@ module $jin.time {
 		//  * words for word representation: Month - month name, WeekDay - day of week name
 		//  * shortcuts: WD - short day of week, Mon - short month name.
 		static patterns = {
-			'YYYY' : moment => {
+			'YYYY' : ( moment : moment_class )=> {
 				if( moment.year == null ) return ''
 				return String( moment.year )
 			} ,
-			'AD' : moment => {
+			'AD' : ( moment : moment_class )=> {
 				if( moment.year == null ) return ''
 				return String( Math.floor( moment.year / 100 ) + 1 )
 			} ,
-			'YY' : moment => {
+			'YY' : ( moment : moment_class )=> {
 				if( moment.year == null ) return ''
 				return String( moment.year % 100 )
 			} ,
-			'Month' : moment => {
+			'Month' : ( moment : moment_class )=> {
 				if( moment.month == null ) return ''
-				return moment.constructor.monthLong[ moment.month ]
+				return (<typeof moment_class>moment.constructor).monthLong[ moment.month ]
 			} ,
-			'Mon' : moment => {
+			'Mon' : ( moment : moment_class )=> {
 				if( moment.month == null ) return ''
-				return moment.constructor.monthShort[ moment.month ]
+				return (<typeof moment_class>moment.constructor).monthShort[ moment.month ]
 			} ,
-			'-MM' : moment => {
+			'-MM' : ( moment : moment_class )=> {
 				if( moment.month == null ) return ''
-				return '-' + moment.constructor.patterns[ 'MM' ]( moment )
+				return '-' + (<typeof moment_class>moment.constructor).patterns[ 'MM' ]( moment )
 			} ,
-			'MM' : moment => {
+			'MM' : ( moment : moment_class )=> {
 				if( moment.month == null ) return ''
 				var month = moment.month + 1
 				return ( month < 10 )
 					? ( '0' + month )
 					: ( '' + month )
 			} ,
-			'M' : moment => {
+			'M' : ( moment : moment_class )=> {
 				if( moment.month == null ) return ''
 				return String( moment.month + 1 )
 			} ,
-			'WeekDay' : moment => {
+			'WeekDay' : ( moment : moment_class )=> {
 				if( moment.weekDay == null ) return ''
-				return moment.constructor.weekDayLong[ moment.weekDay ]
+				return (<typeof moment_class>moment.constructor).weekDayLong[ moment.weekDay ]
 			} ,
-			'WD' : moment => {
+			'WD' : ( moment : moment_class )=> {
 				if( moment.weekDay == null ) return ''
-				return moment.constructor.weekDayShort[ moment.weekDay ]
+				return (<typeof moment_class>moment.constructor).weekDayShort[ moment.weekDay ]
 			} ,
-			'-DD' : moment => {
+			'-DD' : ( moment : moment_class )=> {
 				if( moment.day == null ) return ''
-				return '-' + moment.constructor.patterns[ 'DD' ]( moment )
+				return '-' + (<typeof moment_class>moment.constructor).patterns[ 'DD' ]( moment )
 			} ,
-			'DD' : moment => {
+			'DD' : ( moment : moment_class )=> {
 				if( moment.day == null ) return ''
 				var day = moment.day + 1
 				return ( day < 10 )
 					? ( '0' + day )
 					: String( day )
 			} ,
-			'D' : moment => {
+			'D' : ( moment : moment_class )=> {
 				if( moment.day == null ) return ''
 				return String( moment.day + 1 )
 			} ,
-			'Thh' : moment => {
+			'Thh' : ( moment : moment_class )=> {
 				if( moment.hour == null ) return ''
-				return 'T' + moment.constructor.patterns[ 'hh' ]( moment )
+				return 'T' + (<typeof moment_class>moment.constructor).patterns[ 'hh' ]( moment )
 			} ,
-			'hh' : moment => {
+			'hh' : ( moment : moment_class )=> {
 				if( moment.hour == null ) return ''
 				return ( moment.hour < 10 )
 					? ( '0' + moment.hour )
 					: String( moment.hour )
 			} ,
-			'h' : moment => {
+			'h' : ( moment : moment_class )=> {
 				if( moment.hour == null ) return ''
 				return String( moment.hour )
 			} ,
-			':mm' : moment => {
+			':mm' : ( moment : moment_class )=> {
 				if( moment.minute == null ) return ''
-				return ':' + moment.constructor.patterns[ 'mm' ]( moment )
+				return ':' + (<typeof moment_class>moment.constructor).patterns[ 'mm' ]( moment )
 			} ,
-			'mm' : moment => {
+			'mm' : ( moment : moment_class )=> {
 				if( moment.minute == null ) return ''
 				return ( moment.minute < 10 )
 					? ( '0' + moment.minute )
 					: String( moment.minute )
 			} ,
-			'm' : moment => {
+			'm' : ( moment : moment_class )=> {
 				if( moment.minute == null ) return ''
 				return String( moment.minute )
 			},
-			':ss' : moment => {
+			':ss' : ( moment : moment_class )=> {
 				if( moment.second == null ) return ''
-				return ':' + moment.constructor.patterns[ 'ss' ]( moment )
+				return ':' + (<typeof moment_class>moment.constructor).patterns[ 'ss' ]( moment )
 			},
-			'ss' : moment => {
+			'ss' : ( moment : moment_class )=> {
 				if( moment.second == null ) return ''
 				var second = Math.floor( moment.second )
 				return ( second < 10 )
 					? ( '0' + second )
 					: String( second )
 			},
-			's' : moment => {
+			's' : ( moment : moment_class )=> {
 				if( moment.second == null ) return ''
 				return String( Math.floor( moment.second ) )
 			} ,
-			'.sss' : moment => {
+			'.sss' : ( moment : moment_class )=> {
 				if( moment.second == null ) return ''
 				if( moment.second - Math.floor( moment.second ) === 0 ) return ''
-				return '.' + moment.constructor.patterns[ 'sss' ]( moment )
+				return '.' + (<typeof moment_class>moment.constructor).patterns[ 'sss' ]( moment )
 			},
-			'sss' : moment => {
+			'sss' : ( moment : moment_class )=> {
 				if( moment.second == null ) return ''
 				var millisecond = Math.floor( ( moment.second - Math.floor( moment.second ) ) * 1000 )
 				return ( millisecond < 10 )
@@ -377,7 +378,7 @@ module $jin.time {
 					? ( '0' + millisecond )
 					: String( millisecond )
 			},
-			'Z' : moment => {
+			'Z' : ( moment : moment_class )=> {
 				var offset = moment.offset
 				if( !offset ) return ''
 

@@ -21,13 +21,14 @@ module $jin.time {
 					return new this({ second : <number>duration / 1000 })
 
 				case 'Array':
+					let dur = <number[]> duration
 					return new this({
-						year : duration[0] ,
-						month : duration[1] ,
-						day : duration[2] ,
-						hour : duration[3] ,
-						minute : duration[4] ,
-						second : duration[5] ,
+						year : dur[0] ,
+						month : dur[1] ,
+						day : dur[2] ,
+						hour : dur[3] ,
+						minute : dur[4] ,
+						second : dur[5] ,
 					})
 
 				case 'Object':
@@ -136,31 +137,31 @@ module $jin.time {
 		}
 
 		static patterns = {
-			'#Y' : duration => {
+			'#Y' : ( duration : duration_class )=> {
 				if( !duration.year ) return ''
 				return duration.year + 'Y'
 			} ,
-			'#M' : duration => {
+			'#M' : ( duration : duration_class )=> {
 				if( !duration.month ) return ''
 				return duration.month + 'M'
 			} ,
-			'#D' : duration => {
+			'#D' : ( duration : duration_class )=> {
 				if( !duration.day ) return ''
 				return duration.day + 'D'
 			} ,
-			'#h' : duration => {
+			'#h' : ( duration : duration_class )=> {
 				if( !duration.hour ) return ''
 				return duration.hour + 'H'
 			} ,
-			'#m' : duration => {
+			'#m' : ( duration : duration_class )=> {
 				if( !duration.minute ) return ''
 				return duration.minute + 'M'
 			} ,
-			'#s' : duration => {
+			'#s' : ( duration : duration_class )=> {
 				if( !duration.second ) return ''
 				return duration.second + 'S'
 			} ,
-			'+hh' : duration => {
+			'+hh' : ( duration : duration_class )=> {
 				var hour = duration.hour
 				var sign = '+'
 				if( hour < 0 ) {
@@ -171,7 +172,7 @@ module $jin.time {
 						? ( sign + '0' + hour )
 						: ( sign + hour )
 			} ,
-			'mm' : duration => {
+			'mm' : ( duration : duration_class )=> {
 				return ( duration.minute < 10 )
 					? ( '0' + duration.minute )
 					: String( duration.minute )
