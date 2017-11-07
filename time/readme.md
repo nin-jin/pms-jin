@@ -2,6 +2,8 @@
 
 Small, simple, powerfull, and fast TypeScript/JavaScript library for proper date/time/duration/range arithmetic.
 
+**Deprecated. Use [$mol_time](https://github.com/eigenmethod/mol/tree/master/time) instead.**
+
 # Installation
 
 ## Direct
